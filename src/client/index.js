@@ -12,5 +12,4 @@ const App = () => (
   </Router>
 )
 
-ReactDOM.hydrate(<App suppressHydrationWarning={true} />, 
-  document.getElementById('root'))
+ReactDOM.hydrate(<App suppressHydrationWarning={true} />, document.getElementById('root'))

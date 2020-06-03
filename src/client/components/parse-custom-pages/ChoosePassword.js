@@ -1,19 +1,19 @@
 import React from 'react'
 import Header from '../Header'
 import Footer from '../Footer'
+import ParseClient, { ParseClasses } from '../../utils/Parse'
 import Styles from '../../utils/Styles'
 
-class AdminHome extends React.Component {
+class ChoosePassword extends React.Component {
     constructor(props) {
         super(props)
     }
 
     state = {
-
+        loading: false
     }
 
     componentDidMount() {
-
     }
 
     render() {
@@ -21,7 +21,10 @@ class AdminHome extends React.Component {
             <div>
                 <Header {...this.props}/>
                 <div style={Styles.container}>
-                    AdminHome
+                    <div>
+                        {this.state.loading? "Loading..." : ""}
+                    </div>
+                    <div>ChoosePassword</div>
                 </div>
                 <Footer />
             </div>
@@ -30,4 +33,4 @@ class AdminHome extends React.Component {
     }
 }
 
-export default AdminHome
+export default ChoosePassword

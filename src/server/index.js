@@ -1,13 +1,14 @@
 
 import view from './view'
 import error404 from './errors/error404'
+import React from 'react'
 import ReactDOMServer from 'react-dom/server'
-import { StaticRouter } from 'react-router-dom'
+import { StaticRouter as Router } from 'react-router-dom'
 import ComponentsRoutes from '../client/ComponentsRoutes'
+import Paths from './utils/Paths'
 
 var express = require("express")
 var path = require("path")
-var cookieParser = require("cookie-parser")
 var logger = require("morgan")
 var ParseServer = require("parse-server").ParseServer
 var ParseDashboard = require("parse-dashboard")
@@ -25,11 +26,11 @@ var app = express()
 app.use(logger("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cookieParser())
-app.use(express.static("public", { maxAge: 31557600000 }))
 
+//app.use(cookieParser())
 //app.use(API_ROOT + "stripe", Stripe)
-//app.use('/public', express.static(path.resolve(__dirname, 'public')))
+//app.use(express.static("public", { maxAge: 31557600000 }))
+app.use('/client', express.static(path.resolve(__dirname, '../client')))
 
 var api = new ParseServer({
     databaseURI: process.env.DATABASE_URL,
@@ -37,7 +38,7 @@ var api = new ParseServer({
     appId: process.env.appId,
     restAPIKey: process.env.restAPIKey,
     javascriptKey: process.env.javascriptKey,
-    serverURL: `${process.env.serverUrl}/parse`,
+    serverURL: `${process.env.serverUrl}/api/parse`,
     masterKey: process.env.masterKey,
 
     sessionLength: 86400,
@@ -52,7 +53,7 @@ var api = new ParseServer({
     // The public URL of your app.
     // This will appear in the link that is used to verify email addresses and reset passwords.
     // Set the mount path as it is in serverURL
-    publicServerURL: `${process.env.serverUrl}/parse`,
+    publicServerURL: `${process.env.serverUrl}/api/parse`,
     // Your apps name. This will appear in the subject and body of the emails that are sent.
     appName: 'Story Stretch',
     // The email adapter
@@ -94,13 +95,13 @@ var api = new ParseServer({
 });
 
 // make the Parse Server available at /api/parse
-app.use("/api/parse", api);
+app.use("/api/parse", api)
 
 var dashboard = new ParseDashboard(
   {
     apps: [
       {
-        serverURL: `${process.env.serverUrl}/parse`,
+        serverURL: `${process.env.serverUrl}/api/parse`,
         appId: process.env.appId,
         masterKey: process.env.readOnlyMasterKey,
         appName: process.env.appName,
@@ -123,7 +124,7 @@ var dashboard = new ParseDashboard(
 // make the Parse Dashboard available at /api/dashboard
 app.use("/api/dashboard", dashboard);
 
-app.get(["/", "/user/home", "/admin/home"], (req, res) => {
+app.get(Paths, (req, res) => {
   var meta = {
     title: "Get title, pre, and seo with path",
     pre: [],
@@ -135,18 +136,15 @@ app.get(["/", "/user/home", "/admin/home"], (req, res) => {
   }
 
   var body = ReactDOMServer.renderToString(
-    <StaticRouter location={req.url} context={{}}>
+    <Router location={req.url} context={{}}>
       <ComponentsRoutes initialData={initialData}/>
-    </StaticRouter>
+    </Router>
   )
 
   res.set("Content-Type", "text/html")
-  res.status(200).send(view({
-    meta: meta,
-    initialData: initialData,
-    body: body
-  }))
+  res.status(200).send(view(meta, initialData, body))
 })
+
 
 app.use("*", (req, res) => {
   res.set("Content-Type", "text/html")
@@ -154,6 +152,6 @@ app.use("*", (req, res) => {
 })
 
 
-app.listen(process.env.PORT, function() {
+app.listen(process.env.PORT, () => {
   console.log('parse-server-example running on port 1337.');
-});
+})

@@ -16,8 +16,13 @@ const js = {
   use: {
     loader: 'babel-loader',
     options: {
-      presets: ['react', 'env'],
-      plugins: ['transform-class-properties']
+      presets: [
+        "@babel/env",
+        "@babel/preset-react"
+      ],
+      plugins: [
+        '@babel/plugin-proposal-class-properties'
+      ]
     }
   }
 }

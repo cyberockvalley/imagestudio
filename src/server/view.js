@@ -1,6 +1,8 @@
+import { EXAMPLE_MODE_TRUE } from "../Constants"
 
 export default (meta, initialData, body) => {
-    return `
+    var EXAMPLE_RES = ''
+    var template = `
     <!DOCTYPE html>
     <html lang="en">
         <head>
@@ -31,16 +33,26 @@ export default (meta, initialData, body) => {
             <script>
                 windows.__initialData__ = ${JSON.stringify(initialData)}
             </script>
+            <style type="text/css">
+            .json-key     { color: brown; }
+            .json-string  { color: olive; }
+            .json-number  { color: navy; }
+            .json-boolean { color: teal; }
+            .json-null    { color: dimgray; }
+            </style>
         </head>
-        <body>
+        <body style="width:100%;margin:0;padding:0">
             <div id="root">
                 ${body}
             </div>
+            <script src="/client/vendors~index.js"></script>
+            <script src="/client/index.js"></script>
             <!-- Load stylesheets onload -->
-            <script type="text/javascript>
-                
+            <script type="text/javascript">
             </script>
         </body>
     </html>
     `
+    
+    return template
 }
