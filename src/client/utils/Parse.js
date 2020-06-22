@@ -2,7 +2,7 @@ const ParseClient = require('parse')
 
 ParseClient.initialize('123456A', '123456J')
 
-ParseClient.serverURL = "http://dev.domain.com:1337/api/parse"
+ParseClient.serverURL = "http://dev.domain.com:1337/api/v1"
 
 ParseClient.enableEncryptedUser()
 ParseClient.secret =  'Test screct Key'

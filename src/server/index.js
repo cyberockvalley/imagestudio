@@ -38,7 +38,7 @@ var api = new ParseServer({
     appId: process.env.appId,
     restAPIKey: process.env.restAPIKey,
     javascriptKey: process.env.javascriptKey,
-    serverURL: `${process.env.serverUrl}/api/parse`,
+    serverURL: `${process.env.serverUrl}/api/v1`,
     masterKey: process.env.masterKey,
 
     sessionLength: 86400,
@@ -53,7 +53,7 @@ var api = new ParseServer({
     // The public URL of your app.
     // This will appear in the link that is used to verify email addresses and reset passwords.
     // Set the mount path as it is in serverURL
-    publicServerURL: `${process.env.serverUrl}/api/parse`,
+    publicServerURL: `${process.env.serverUrl}/api/v1`,
     // Your apps name. This will appear in the subject and body of the emails that are sent.
     appName: 'Story Stretch',
     // The email adapter
@@ -94,14 +94,14 @@ var api = new ParseServer({
     }*/
 });
 
-// make the Parse Server available at /api/parse
-app.use("/api/parse", api)
+// make the Parse Server available at /api/v1
+app.use("/api/v1", api)
 
 var dashboard = new ParseDashboard(
   {
     apps: [
       {
-        serverURL: `${process.env.serverUrl}/api/parse`,
+        serverURL: `${process.env.serverUrl}/api/v1`,
         appId: process.env.appId,
         masterKey: process.env.readOnlyMasterKey,
         appName: process.env.appName,

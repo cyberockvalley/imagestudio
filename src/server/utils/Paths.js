@@ -1,7 +1,9 @@
 const Paths = [
-    "/", "/user/home", "/admin/home", "/create", "/login", "/user/upload",
-    "/auth-process/invalid-link", "/auth-process/verify-email-success",
-    "/auth-process/password-reset-success", "/auth-process/choose-password"
+    "/", "/contact", "/about", "/blog", "/reviews", "/blog/:title",
+    "/videos", "/videos/music", "/videos/commercial", 
+    "/portfolio", "/portfolio/stories", 
+    "/portfolio/stories/:title",
+    "/packages", "/packages/:title", "/movies"
 ]
 
 export default Paths
