@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
+import VideoEditable from "./editables/VideoEditable";
+import EditableStateContext from "./editables/EditableStateContext";
+import { lastValueOrThis } from "../../both/Functions";
 
 class HeaderVideoBanner extends React.Component {
+  static contextType = EditableStateContext
+  constructor(props) {
+    super(props)
+  }
   render() {
     return (
       <section
@@ -9,38 +16,23 @@ class HeaderVideoBanner extends React.Component {
           overflow: "hidden"
         }}
       >
-        <div
-          id="introVideoDesktop"
-          className="d-none d-lg-block"
-          style={{
-            position: "relative",
-            backgroundPosition: "center center",
-            backgroundRepeat: "no-repeat",
-            height: "100%",
-            backgroundSize: "51%"
-          }}
-        >
-          <iframe
-            src="/imagestudio/videos/intro2.mp4"
-            allow="autoplay; fullscreen"
-            allowFullScreen
-            width={1366}
-            height="768.375"
-            frameBorder={0}
-          />
-        </div>
-        <div
+        <VideoEditable 
           id="introVideoMobile"
-          className="d-block d-lg-none"
           style={{
             position: "relative",
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
             height: "100vh",
-            backgroundSize: "51%",
-            backgroundColor: "#000"
+            width: "100%",
+            backgroundColor: "#000",
+            overflow: "hidden"
           }}
-        ></div>
+          
+          name="site_info_header_video"
+          {...this.props.videoEditableProps}
+          textEditableProps={this.props.textEditableProps}
+          title="site_info_header_video_title"
+          description="site_info_header_video_description" showInfo/>
       </section>
     );
   }

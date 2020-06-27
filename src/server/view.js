@@ -1,8 +1,7 @@
 import { EXAMPLE_MODE_TRUE } from "../Constants"
 
-export default (meta, initialData, body) => {
-    var EXAMPLE_RES = ''
-    var template = `
+export default (helmet, initialData, body) => {
+    return `
     <!DOCTYPE html>
     <html lang="en">
         <head>
@@ -18,22 +17,10 @@ export default (meta, initialData, body) => {
             
             <link rel="stylesheet" href="/client/res/css/styles.css">
             <link rel="stylesheet" href="/client/res/css/mansory.css">
-            <title>${meta.title}</title>
-            <!--PREFETCH, PRECONNECT... METAs START-->
-            ${
-                meta.pre.map((metaItem, index) => {
-                    return `<link rel="${metaItem.pre_name}" href="${metaItem.href}"\n`
-                })
-            }
-            <!--PREFETCH, PRECONNECT... METAs END-->
-
-            <!--SOCIAL PLATFORMS & SEO METAs START-->
-            ${
-                meta.seo.map((metaItem, index) => {
-                    return `<${metaItem.tag} ${metaItem.key}="${metaItem.value}" content="${metaItem.content}"\n`
-                })
-            }
-            <!--SOCIAL PLATFORMS & SEO METAs END-->
+            ${helmet.title.toString()}
+            ${helmet.meta.toString()}
+            ${helmet.link.toString()}
+            
 
             <!---InitialData-->
             <script>
@@ -60,14 +47,12 @@ export default (meta, initialData, body) => {
             
             <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js?ver=3.4.0'></script>
             <script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js?ver=4.3.11'></script>
-            <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+            <!--<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
             <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
             <script>
-                AOS.init()
-            </script>
+                //AOS.init()
+            </script>-->
         </body>
     </html>
     `
-    
-    return template
 }

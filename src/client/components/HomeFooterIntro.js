@@ -1,39 +1,68 @@
-import React from "react";
+import React, { useContext } from "react";
+import TextEditable from "./editables/TextEditable";
+import { lastValueOrThis } from "../../both/Functions";
+import EditableStateContext from "./editables/EditableStateContext";
+import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
 
 class HomeFooterIntro extends React.Component {
+  static contextType = EditableStateContext
+  constructor(props) {
+    super(props)
+  }
+
   render() {
     return (
       <div>
         <div
-          className="d-none d-sm-block"
+          className="d-none d-sm-flex"
           style={{
             display: "flex",
             justifyContent: "center"
           }}
         >
           <div className="get-in-touch">
-            <h3>Let's get in touch</h3>
-            <div>Communication is key</div>
+            <h3>
+              <TextEditable 
+                      name={"site_info_get_in_touch_title"} height="100px"
+                      {...this.props.textEditableProps} is_input_text/>
+            </h3>
+            <div>
+              <TextEditable 
+                      name={"site_info_get_in_touch_sub_title"}
+                      {...this.props.textEditableProps} is_input_text/>
+            </div>
           </div>
         </div>
         <div className="contact-us">
           <div className="col-md-6 d-none d-sm-block">
             <div>
-              Choosing your wedding photography and videography crew shouldn’t
-              be taken lightly. We understand how important this step is to you
-              and we are here to answer any questions you might have.
+              <TextEditable 
+                      name={"site_info_text_above_contact_details"}
+                      {...this.props.textEditableProps} />
             </div>
             <div className="contact-info">
-              <a href="mailto:info@imagestudio.com">
-                <span>info@imagestudio.com </span>
+              <a href={"mailto:" + (lastValueOrThis(this.context, "site_info_email", EMPTY_TEXT_ELEMENT_DATA).data)}>
+                <span>
+                  <TextEditable 
+                      name={"site_info_email"}
+                      {...this.props.textEditableProps} is_input_text/>
+                </span>
                 <i className="fa fa-2x fa-at" />
               </a>
-              <a href="https://instagram.com">
-                <span>@imagestudio </span>
+              <a target="_blank" href={"https://instagram.com/" + (lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA).data)}>@
+                <span>
+                  <TextEditable 
+                      name={"site_info_instagram_username"}
+                      {...this.props.textEditableProps} is_input_text/>
+                </span>
                 <i className="fa fa-2x fa-instagram" />
               </a>
-              <a href="tel:+39 644 232 2234">
-                <span>+39 644 232 2234 </span>
+              <a href={"tel:" + (lastValueOrThis(this.context, "site_info_phone_number", EMPTY_TEXT_ELEMENT_DATA).data)}>
+                <span>
+                  <TextEditable 
+                      name={"site_info_phone_number"}
+                      {...this.props.textEditableProps} is_input_text/>
+                </span>
                 <i className="fa fa-2x fa-phone" />
               </a>
             </div>

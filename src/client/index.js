@@ -7,9 +7,9 @@ const initialData = window.__initialData__
 delete window.__initialData__
 
 const App = () => (
-  <Router>
-    <ComponentsRoutes initialData={initialData} />
-  </Router>
+    <Router>
+      <ComponentsRoutes initialData={initialData} />
+    </Router>
 )
 
 ReactDOM.hydrate(<App suppressHydrationWarning={true} />, document.getElementById('root'))

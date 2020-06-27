@@ -1,16 +1,47 @@
+import { isClient } from "./Functions"
+
 const ParseClient = require('parse')
+if(!isClient()) {
+        const ParseClient = require('parse/node')
+
+}
 
 ParseClient.initialize('123456A', '123456J')
 
-ParseClient.serverURL = "http://dev.domain.com:1337/api/v1"
+ParseClient.serverURL = "http://192.168.43.58:1337/parse"
 
-ParseClient.enableEncryptedUser()
-ParseClient.secret =  'Test screct Key'
+export const WEBSITE_HOME_ADDRESS = "http://dev.domain.com:1337/"
 
-export const ParseClasses = {
-    Product: ParseClient.Object.extend("Product")
+//ParseClient.enableEncryptedUser()
+//ParseClient.secret =  'Test secrect Key'
+
+export const getParseRole = () => {
+        return "admins"
 }
 
+export const ParseClasses = {Product: ParseClient.Object.extend("Product"),
+    Page: ParseClient.Object.extend("Page"),
+    TextElement: ParseClient.Object.extend("TextElement"),
+    ImageElement: ParseClient.Object.extend("ImageElement"),
+    VideoElement: ParseClient.Object.extend("VideoElement"),
+    IframeElement: ParseClient.Object.extend("IframeElement"),
+    ListElement: ParseClient.Object.extend("ListElement"),
+
+    ImageData: ParseClient.Object.extend("ImageData"),
+    VideoData: ParseClient.Object.extend("VideoData"),
+    IframeData: ParseClient.Object.extend("IframeData"),
+
+    ListItem: ParseClient.Object.extend("ListItemElement"),
+}
+
+
+export const getParseQuery = obj => {
+        return new ParseClient.Query(obj)
+}
+
+export const buildElementKey = (username, pageKey, section, keyTitle) => {
+        return username + "_" + pageKey + "_" + section + "_" + keyTitle
+}
 export const handleParseError = e => {
     switch(e.code) {
         case PARSE_ERROR_CODES.OtherCause.code:
@@ -214,7 +245,8 @@ export const handleParseError = e => {
 
         
         case PARSE_ERROR_CODES.InvalidSessionToken.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidSessionToken.code + " of " + PARSE_ERROR_CODES.InvalidSessionToken.name + " is an " + PARSE_ERROR_CODES.InvalidSessionToken.description + " => " + e.message);
+                        console.log("ERROR " + PARSE_ERROR_CODES.InvalidSessionToken.code + " of " + PARSE_ERROR_CODES.InvalidSessionToken.name + " is an " + PARSE_ERROR_CODES.InvalidSessionToken.description + " => " + e.message);
+                        ParseClient.User.logOut()
 			break;
 
         

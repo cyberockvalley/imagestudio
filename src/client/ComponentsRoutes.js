@@ -13,6 +13,8 @@ import SingleWeddingStory from './components/SingleWeddingStory'
 import Shop from './components/Shop'
 import SingleProduct from './components/SingleProduct'
 import Movies from './components/Movies'
+import FileUpload from './components/admin/FileUpload'
+import AdminHome from './components/admin/AdminHome'
 
 const ComponentsRoutes = (props) => (
   <div className="App">
@@ -54,6 +56,12 @@ const ComponentsRoutes = (props) => (
     />
     <Route exact path="/movies" 
       render={(propz) => <Movies {...propz} data={props.initialData} />}
+    />
+    <Route exact path="/admin" 
+      render={(propz) => <AdminHome {...propz} data={props.initialData} />}
+    />
+    <Route exact path="/upload-test" 
+      render={(propz) => <FileUpload {...propz} data={props.initialData} />}
     />
   </div>
 )

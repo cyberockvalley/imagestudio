@@ -3,7 +3,8 @@ const Paths = [
     "/videos", "/videos/music", "/videos/commercial", 
     "/portfolio", "/portfolio/stories", 
     "/portfolio/stories/:title",
-    "/packages", "/packages/:title", "/movies"
+    "/packages", "/packages/:title", "/movies", "/upload-test",
+    "/admin/"
 ]
 
 export default Paths

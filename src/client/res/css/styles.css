@@ -6,6 +6,8 @@ a > img, a > div, a:hover > img, a:hover > div {color: transparent;}
 .action {
     cursor: pointer;
 }
+.flex-center-both {justify-content: center; align-items: center;}
+.flex-align-center {align-items: center;}
 .w-margin-auto {margin-left: auto !important; margin-right: auto !important;}
 .h-margin-auto {margin-top: auto !important; margin-bottom: auto !important;}
 .flex-row {
@@ -900,7 +902,7 @@ a:link, a:visited, a:active {
 }
 .get-in-touch > * {
 	color: #ca8510;
-	font-family: OleoScriptSwash, Helvetica, sans-serif;
+	font-family: Trochut, Helvetica, sans-serif;
 	font-size: 50px;
 }
 .get-in-touch *:nth-child(2) {

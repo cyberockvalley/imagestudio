@@ -2,10 +2,20 @@ import React from "react";
 import Header from "./Header";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
+import { Helmet } from "react-helmet";
 
 class Contact extends React.Component {
   render() {
     return (
+    <>
+      <Helmet>
+        <title>Hello Contact</title>
+          <meta name="msapplication-TileColor" content="Contact #00aba9" />
+          <meta name="msapplication-TileImage" content="/Contact mstile-144x144.png" />
+          <link rel="dns-prefetch" href="Contact https://res.cloudinary.com" />
+          <link rel="preconnect" href="Contact https://static.codepen.io" />
+          <link rel="dns-prefetch" href="Contact https://static.codepen.io" />
+      </Helmet>
       <div>
         <Header />
         <NavBar />
@@ -156,6 +166,7 @@ class Contact extends React.Component {
         </section>
         <Footer />
       </div>
+     </> 
     );
   }
 }

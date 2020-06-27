@@ -86,6 +86,14 @@ const clientConfig = {
   output: {
     path: path.resolve(__dirname, 'dist/client'),
     filename: '[name]'
+  },
+  node: {
+    net: 'empty',
+    tls: 'empty',
+    dns: 'empty',
+    fs: 'empty',
+    child_process: 'empty'
+    
   }
 }
 

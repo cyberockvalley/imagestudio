@@ -6,6 +6,8 @@ import ReactDOMServer from 'react-dom/server'
 import { StaticRouter as Router } from 'react-router-dom'
 import ComponentsRoutes from '../client/ComponentsRoutes'
 import Paths from './utils/Paths'
+import { Helmet } from 'react-helmet'
+import Axios from 'axios'
 
 var express = require("express")
 var path = require("path")
@@ -38,8 +40,10 @@ var api = new ParseServer({
     appId: process.env.appId,
     restAPIKey: process.env.restAPIKey,
     javascriptKey: process.env.javascriptKey,
-    serverURL: `${process.env.serverUrl}/api/v1`,
+    serverURL: `${process.env.serverUrl}/parse`,
     masterKey: process.env.masterKey,
+    
+    allowClientClassCreation: false,
 
     sessionLength: 86400,
     // Enable email verification
@@ -53,7 +57,7 @@ var api = new ParseServer({
     // The public URL of your app.
     // This will appear in the link that is used to verify email addresses and reset passwords.
     // Set the mount path as it is in serverURL
-    publicServerURL: `${process.env.serverUrl}/api/v1`,
+    publicServerURL: `${process.env.serverUrl}/parse`,
     // Your apps name. This will appear in the subject and body of the emails that are sent.
     appName: 'Story Stretch',
     // The email adapter
@@ -94,16 +98,18 @@ var api = new ParseServer({
     }*/
 });
 
-// make the Parse Server available at /api/v1
-app.use("/api/v1", api)
+// make the Parse Server available at /parse
+app.use("/parse", api)
 
 var dashboard = new ParseDashboard(
   {
     apps: [
       {
-        serverURL: `${process.env.serverUrl}/api/v1`,
+        serverURL: `${process.env.serverUrl}/parse`,
         appId: process.env.appId,
-        masterKey: process.env.readOnlyMasterKey,
+        restAPIKey: process.env.restAPIKey,
+        javascriptKey: process.env.javascriptKey,
+        masterKey: process.env.masterKey,
         appName: process.env.appName,
         iconName: "MyAppIcon.png",
         primaryBackgroundColor: "#FFA500",
@@ -114,15 +120,19 @@ var dashboard = new ParseDashboard(
     users: [
       {
         user: process.env.masterUsername,
-        pass: process.env.masterPassword
+        pass: process.env.masterPassword,
+        masterKey: process.env.masterKey,
+        "apps": [{
+          "appId": process.env.appId,
+        }]
       }
     ]
   },
   { allowInsecureHTTP: true }
 );
 
-// make the Parse Dashboard available at /api/dashboard
-app.use("/api/dashboard", dashboard);
+// make the Parse Dashboard available at /parse/dashboard
+app.use("/dashboard", dashboard);
 
 app.get(Paths, (req, res) => {
   var meta = {
@@ -136,15 +146,60 @@ app.get(Paths, (req, res) => {
   }
 
   var body = ReactDOMServer.renderToString(
-    <Router location={req.url} context={{}}>
+    <Router location={req.url}>
       <ComponentsRoutes initialData={initialData}/>
     </Router>
   )
 
   res.set("Content-Type", "text/html")
-  res.status(200).send(view(meta, initialData, body))
+  
+  const helmet = Helmet.renderStatic();
+  res.status(200).send(view(helmet, initialData, body))
 })
 
+app.get("/api/instagram/:username", async (req, res) => {
+    if(req.params.username) {
+      var insta = await Axios.get(`https://instagram.com/${req.params.username}/?__a=1`, {
+        headers: {
+          'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
+          'Host': 'graph.instagram.com',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
+          'Accept': '*/*',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Origin': 'https://www.instagram.com',
+          'DNT': '1'
+        }
+      })
+      try {
+        var profilePicUrl = insta.data.graphql.user.profile_pic_url
+        var photos = []
+        var media = insta.data.graphql.user.edge_owner_to_timeline_media.edges
+        var i = 0
+        while(i < 6 && media.length > i) {
+          photos[i] = media[i].node.display_url
+        }
+        res.json({
+          profile_pic_url: profilePicUrl,
+          photos: photos
+        })
+
+      } catch(e) {
+        res.json({
+         error: JSON.stringify(e),
+         d: insta.data
+        })
+      }
+
+    } else {
+      res.json({
+       error: "No username supplied",
+       d2: insta.data
+      })
+
+    }
+})
 
 app.use("*", (req, res) => {
   res.set("Content-Type", "text/html")

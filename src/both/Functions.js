@@ -1,3 +1,60 @@
 export const isNullOrEmpty = value => {
     return !value || value.length == 0
 }
+
+export const isClient = () => {
+    return (typeof window !== 'undefined')
+}
+
+/**
+ * 
+ * @param  {...any} args the object to return and the value to return if the object is null
+ * note that the 
+ * ---first argument must be an object, 
+ * ---the arguments between the first and the last are the keys that points to the object to be rerturned,
+ * one level at a time(from the higest(left-most) to the lowest (right-most) level)
+ * ---The last argument is the value returned if the object the middle arguments points to is not defined
+ * e.g: 
+ * x = {levelOne: {levelTwo: "Thanks! You found me :)"}}
+ * y = {levelOne: {levelTwo: null}}
+ * z = {levelOne: null}
+ * empty = {}
+ * 
+ * //returns "Thanks! You found me :)"
+ * lastValueOrThis(x, "levelOne", "levelTwo", "We can't find you :(. Please make some noise" )
+ * 
+ * //returns "We can't find you :(. Please make some noise"
+ * lastValueOrThis(y, "levelOne", "levelTwo", "We can't find you :(. Please make some noise" )
+ * 
+ * //returns "We can't find you :(. Please make some noise"
+ * lastValueOrThis(z, "levelOne", "levelTwo", "We can't find you :(. Please make some noise" )
+ * 
+ * //returns "We can't find you :(. Please make some noise"
+ * lastValueOrThis(empty, "levelOne", "levelTwo", "We can't find you :(. Please make some noise" )
+ */
+export const lastValueOrThis = (...args) => {
+    var nullValue = args[args.length - 1]
+
+    var parentObject = args[0]
+
+    for(var i = 1; i < args.length - 1; i++) {
+        if(!parentObject || !parentObject[args[i]]) {
+            parentObject = null
+            break
+        } else {
+            parentObject = parentObject[args[i]]
+        }
+
+    }
+    console.log("lastValueOrThis", "final", args[args.length - 2], parentObject || nullValue)
+    return parentObject || nullValue
+}
+/**
+ * user={this.state.user}
+          userRole={this.state.userRole}
+          edit={this.state.edit}
+          text_elements={this.state.text_elements}
+          backup_texts={this.backUp.texts}
+          handleTextChange={this.handleTextChange}
+          refSetter={this.setEditorRef}
+ */

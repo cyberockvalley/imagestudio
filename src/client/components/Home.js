@@ -5,25 +5,126 @@ import HomeFooterIntro from "./HomeFooterIntro";
 import HeaderVideoBanner from "./HeaderVideoBanner";
 import NavBar from "./NavBar";
 
-class Home extends React.Component {
+import TextEditable from "./editables/TextEditable";
+
+import { Helmet } from 'react-helmet'
+import Page from "./Page";
+import Axios from "axios";
+import { WEBSITE_HOME_ADDRESS } from "../../both/Parse";
+import EditableStateContext from "./editables/EditableStateContext";
+import { lastValueOrThis } from "../../both/Functions";
+import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
+
+class Home extends Page {
+  static contextType = EditableStateContext
+  constructor(props) {
+    super(props)
+    
+  }
+
+  componentDidMount() {
+    this.getPage("home")
+
+    
+  }
+
+  getInstagramProfilePhoto = () => {
+    var instagramUsername = lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA)
+    if(this.state.instagramData) {
+      return this.state.instagramData.profilePhoto;
+
+    } else if(instagramUsername && instagramUsername.data.length > 0 && !this.isLoadingInstagramData) {
+      //this.setInstagramData(instagramUsername.data)
+
+    }
+    return ""
+  }
+
+  getInstagramPhotos = () => {
+    var instagramUsername = lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA)
+    if(this.state.instagramData) {
+      return this.state.instagramData.photos;
+
+    } else if(instagramUsername && instagramUsername.data.length > 0 && !this.isLoadingInstagramData) {
+      //this.setInstagramData(instagramUsername.data)
+
+    }
+    return []
+
+  }
+
+  setInstagramData = username => {
+    this.isLoadingInstagramData = true
+    Axios.get(`${WEBSITE_HOME_ADDRESS}api/instagram/${username}/?__a=1`)
+    .then(res => {
+      console.log("setInstagramData", res.data)
+      this.isGettingInstagramData = false
+    })
+    .catch(e => {
+      console.log("setInstagramData", "error", e)
+      this.isGettingInstagramData = false
+    })
+  }
+
   render() {
-    return (
-      <div>
-        <Header />
-        <HeaderVideoBanner />
+    
+    return super.render(
+      <>
+        <Helmet>
+          <title>Hello Home</title>
+          <meta name="description" content="The document head might not be the most glamorous part of a website, but what goes into it is arguably just as important to the success of your website as" />
+        
+          <meta name="robots" content="index, follow" />
+          <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+          <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+          
+          <link rel="canonical" href="https://css-tricks.com/its-all-in-the-head-managing-the-document-head-of-a-react-powered-site-with-react-helmet/" />
+          
+          <meta property="og:locale" content="en_US" />
+          <meta property="og:type" content="article" />
+          <meta property="og:title" content="It&#039;s All In the Head: Managing the Document Head of a React Powered Site With React Helmet | CSS-Tricks" />
+          <meta property="og:description" content="The document head might not be the most glamorous part of a website, but what goes into it is arguably just as important to the success of your website as" />
+          <meta property="og:url" content="https://css-tricks.com/its-all-in-the-head-managing-the-document-head-of-a-react-powered-site-with-react-helmet/" />
+          <meta property="og:site_name" content="CSS-Tricks" />
+          <meta property="article:publisher" content="https://www.facebook.com/CSSTricks" />
+          <meta property="article:published_time" content="2019-10-30T15:10:50+00:00" />
+          <meta property="article:modified_time" content="2019-12-23T17:11:19+00:00" />
+          <meta property="article:author" content="Image Studio" />
+          <meta property="article:section" content="Photography" />
+          <meta property="article:tag" content="sharp" />
+          <meta property="article:tag" content="nice" />
+
+          <meta name="twitter:card" content="summary" />
+          <meta name="twitter:image" content="https://i1.wp.com/css-tricks.com/wp-content/uploads/2019/10/react-helmet.png?ssl=1" />
+          <meta name="twitter:creator" content="@CSS" />
+          <meta name="twitter:site" content="@CSS" />
+        </Helmet>
+      <>
+        <Header 
+          edit={this.state.edit}
+          user={this.state.user}
+          userRole={this.state.userRole}
+          onEditOrSaveButtonClicked={this.handleEditOrSaveButtonClick}
+          onCancelEdit={this.handleCancelEdit}
+          textEditableProps={this.state.textElementsProps}
+          />
+        <HeaderVideoBanner 
+            videoEditableProps={this.state.videoElementsProps}
+            textEditableProps={this.state.textElementsProps}/>
         <NavBar />
         <div className="flo-block__container">
           <div className="flo-image-block-1 flo-image-block-1--244">
             <div className="flo-image-block-1__top-wrap">
               <h2 className="flo-image-block-1__title col-md-6">
-                Art of being a wedding photographer
+                <TextEditable 
+                  name={"site_info_second_title"}
+                  {...this.state.textElementsProps} />
               </h2>
               <div className="flo-image-block-1__text-content col-md-6">
                 <p>
-                  Still Miracle London Photography Studio is famous throughout
-                  the UK and far beyond its borders for its unique approach
-                  which blends together creativity, romance, natural
-                  storytelling and reportage style.
+                  <TextEditable 
+                    name={"site_info_second_description"}
+                    {...this.state.textElementsProps} />
                 </p>
               </div>
             </div>
@@ -41,14 +142,20 @@ class Home extends React.Component {
                     animationName: "slideInUp"
                   }}
                 >
-                  <div className="title__inner">My instagram</div>
+                  <div className="title__inner">
+                    <TextEditable 
+                      name={"site_info_instagram_header_text"}
+                      {...this.state.textElementsProps} is_input_text/>
+                  </div>
                 </div>
                 <a
-                  href="https://www.instagram.com/wedlifer/"
+                  href={`https://www.instagram.com/${lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA).data}`}
                   className="social_link wow slideInUp  animated"
                   style={{
                     visibility: "visible",
-                    animationName: "slideInUp"
+                    animationName: "slideInUp",
+                    display: "block",
+                    marginBottom: "40px"
                   }}
                 >
                   <i className="fa fa-instagram" />
@@ -60,12 +167,6 @@ class Home extends React.Component {
                     paddingBottom: "20px",
                     width: "100%"
                   }}
-                  data-feedid="sbi_17841403582625027#6"
-                  data-res="auto"
-                  data-cols={3}
-                  data-num={6}
-                  data-shortcode-atts="{}"
-                  data-sbi-index={1}
                 >
                   <div
                     className="sb_instagram_header "
@@ -75,18 +176,21 @@ class Home extends React.Component {
                     }}
                   >
                     <a
-                      href="https://www.instagram.com/wedlifer"
+                      href={`https://www.instagram.com/${lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA).data}`}
                       target="_blank"
                       rel="noopener"
-                      title="@wedlifer"
+                      title={`@${lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA).data}`}
                       className="sbi_header_link"
                     >
                       <div className="sbi_header_text sbi_no_bio">
-                        <h3>wedlifer</h3>
+                        <h3>
+                        <TextEditable 
+                          name={"site_info_instagram_username"}
+                          {...this.state.textElementsProps} is_input_text/>
+                        </h3>
                       </div>
                       <div
                         className="sbi_header_img"
-                        data-avatar-url="http://wedlifer.com/wp-content/uploads/sb-instagram-feed-images/wedlifer.jpg"
                       >
                         <div className="sbi_header_img_hover">
                           <svg
@@ -106,24 +210,39 @@ class Home extends React.Component {
                           </svg>
                         </div>
                         <img
-                          src="images/wedlifer.jpg"
-                          alt
+                          src={this.getInstagramProfilePhoto()}
+                          alt=""
                           width={50}
                           height={50}
                         />
                       </div>
                     </a>
                   </div>
-                  <div className="instagram-images"></div>
+                  <div className="instagram-images">
+                    {
+                      this.getInstagramPhotos().map((index, photo) => {
+                        <img key={index} src={photo} />
+                      })
+                    }
+                  </div>
                   <div id="sbi_load" />
                 </div>
               </div>
             </div>
           </div>
         </section>
-        <HomeFooterIntro />
-        <Footer />
-      </div>
+        <HomeFooterIntro
+          edit={this.state.edit}
+          user={this.state.user}
+          userRole={this.state.userRole}
+          textEditableProps={this.state.textElementsProps} />
+        <Footer
+          edit={this.state.edit}
+          user={this.state.user}
+          userRole={this.state.userRole}
+          textEditableProps={this.state.textElementsProps} />
+      </>
+      </>
     );
   }
 }
