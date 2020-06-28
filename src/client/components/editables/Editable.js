@@ -5,7 +5,9 @@ export const EMPTY_TEXT_ELEMENT_DATA = {data: "", tags: ""}
 class Editable extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {}
     }
+    state = {}
 
     isFile = false
 
@@ -41,6 +43,7 @@ class Editable extends React.Component {
                 this.ElementIndex = i;
                 this.Element = thisElement
                 this.ElementBackUp = this.props.elements_backup[i]
+                
                 this.props.stateHandler(this.componentKey, {
                     data: thisElement.get("data"),
                     tags: thisElement.get("tags")

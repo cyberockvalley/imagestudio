@@ -32,13 +32,10 @@ class VideoEditable extends FileEditable {
     }
 
     componentDidMount() {
+        super.componentDidMount()
         this.props.refSetter(this)
         this.ElementClass = ParseClasses.VideoElement
         this.FileDataClass = ParseClasses.VideoData
-    }
-
-    handleEditClick = e => {
-        e.preventDefault()
     }
 
     cancelEdit = () => {
@@ -58,7 +55,7 @@ class VideoEditable extends FileEditable {
             element.set("key", this.componentKey)
             element.set("tags", this.state.tags)
             element.set("editor", this.props.user)
-            var ACL = this.guessACL()
+            var ACL = this.guessedACL
             element.setACL(ACL)
             return element
         }
@@ -67,7 +64,7 @@ class VideoEditable extends FileEditable {
     createFileData(file) {
         var fileData = new ParseClasses.VideoData()
         fileData.set("file", file)
-        fileData.setACL(ACL)
+        fileData.setACL(this.guessedACL)
         return fileData
     }
 
@@ -78,10 +75,23 @@ class VideoEditable extends FileEditable {
     render() {
         this.init()
         console.log("VideoEditable", this.state)
-        return(
-            <div style={this.getStyle()}>
+        return (
+            <FileChangerView
+                spinnerWidth={this.props.spinnerWidth}
+                spinnerHeight={this.props.spinnerHeight}
+                spinnerThickness={this.props.spinnerThickness}
+                spinnerCircleColor={this.props.spinnerCircleColor}
+                spinnerRunnerColor={this.props.spinnerRunnerColor}
+                id={this.componentKey}
+                active={this.props.edit}
+                type="video"
+                loading={this.state.loading}
+                error={this.state.error}
+                onFile={this.handleFile}
+                style={this.getStyle()}>
+
                 <div style={styles.overlay}></div>
-                <video style={this.props.edit && this.haveWritePermission()? videoHide : styles.video} playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+                <video key={this.state.fileShades && this.state.fileShades.length > 0? this.state.fileShades[0].src : 0} style={this.props.edit && this.haveWritePermission()? videoHide : styles.video} playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
                     {
                         this.state.fileShades.map((videoData, index) => {
                             return(<source key={index} src={videoData.src} type={videoData.mime} />)
@@ -90,12 +100,12 @@ class VideoEditable extends FileEditable {
                 </video>
                 
                 {
-                   this.props.title || this.props.description || this.props.centerElement?
+                this.props.title || this.props.description || this.props.centerElement?
                     <div class="container h-100 w-100" style={styles.container}>
                         <div class="d-flex h-100 w-100 text-center align-items-center">
                             {
-                                 this.props.showInfo && this.props.textEditableProps?
-                                 <div class="w-100 text-white">
+                                this.props.showInfo && this.props.textEditableProps?
+                                <div class="w-100 text-white">
                                     {
                                         this.props.title?
                                         <h1 class="display-3">
@@ -118,7 +128,7 @@ class VideoEditable extends FileEditable {
                                 :<></>
                             }
                             {
-                                this.props.centerElement?
+                                this.props.centerElement && !this.props.edit?
                                 <div style={{
                                     position: "absolute", 
                                     width: "100%", 
@@ -127,7 +137,7 @@ class VideoEditable extends FileEditable {
                                     flexDirection: "row",
                                     justifyContent: "center",
                                     alignItems: "center",
-                                    zIndex: 5
+                                    zIndex: 5000
                                 }}>
                                     {this.props.centerElement}
                                 </div>
@@ -137,18 +147,7 @@ class VideoEditable extends FileEditable {
                     </div>
                     :<></>
                 }
-                {   //the file change element
-                    this.props.edit && this.haveWritePermission()?
-                    <FileChangerView 
-                        type="video"
-                        message={this.getMessage()}
-                        error={this.state.errorMessage}
-                        success={this.state.successMessage}
-                        loading={this.state.loadingMessage}
-                        onFile={this.handleFile} />
-                    :<></>
-                }
-            </div>
+            </FileChangerView>
         )
     }
 }

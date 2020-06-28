@@ -44,6 +44,8 @@ var api = new ParseServer({
     masterKey: process.env.masterKey,
     
     allowClientClassCreation: false,
+    maxUploadSize: "25mb",
+    
 
     sessionLength: 86400,
     // Enable email verification

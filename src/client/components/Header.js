@@ -65,7 +65,7 @@ class Header extends React.Component {
                   zIndex: 50, 
                   width:"20px", 
                   height: "20px", 
-                  background: "#df7777", 
+                  background: "#ff3333", 
                   borderRadius: "10px", 
                   textAlign: "center", fontSize: "12px",
                   }}>

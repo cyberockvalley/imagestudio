@@ -49,12 +49,6 @@ export const lastValueOrThis = (...args) => {
     console.log("lastValueOrThis", "final", args[args.length - 2], parentObject || nullValue)
     return parentObject || nullValue
 }
-/**
- * user={this.state.user}
-          userRole={this.state.userRole}
-          edit={this.state.edit}
-          text_elements={this.state.text_elements}
-          backup_texts={this.backUp.texts}
-          handleTextChange={this.handleTextChange}
-          refSetter={this.setEditorRef}
- */
+export const truncText = (str, n) => {
+    return (str.length > n) ? str.substr(0, n-1) + '&hellip;' : str;
+}

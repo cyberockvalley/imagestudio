@@ -2,7 +2,7 @@ import React from "react"
 import { handleParseError, ParseClasses } from "../../../both/Parse"
 import Editable, { TEXT_ELEMENTS_STATE_KEY_PREFIX } from "./Editable"
 
-class TextEditable extends Editable {
+class ListEditable extends Editable {
     constructor(props) {
         super(props)
 
@@ -94,7 +94,10 @@ class TextEditable extends Editable {
         super.componentDidMount()
         this.setState({data: "", tags: ""})
         this.props.refSetter(this)
-        this.ElementClass = ParseClasses.TextElement
+        if(this.props.privateRef) {
+            this.props.privateRef(this)
+        }
+        this.ElementClass = ParseClasses.ListElement
     }
 
     handleEditClick = e => {
@@ -107,12 +110,9 @@ class TextEditable extends Editable {
             <>
                 {
                     this.props.edit && this.haveWritePermission()?
-                        !this.props.is_input_text?
-                            <textarea id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} onClick={this.handleEditClick} placeholder={`${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()}>
-                                {this.getText()}
-                            </textarea>
-                            :
-                            <input id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} type="text" value={this.getText()} onClick={this.handleEditClick} placeholder={`${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()} />
+                        <textarea id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} onClick={this.handleEditClick} placeholder={`${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()}>
+                            {this.getText()}
+                        </textarea>
                         :
                         <>{this.getText()}</>
                 }
@@ -121,4 +121,4 @@ class TextEditable extends Editable {
     }
 }
 
-export default TextEditable
+export default ListEditable

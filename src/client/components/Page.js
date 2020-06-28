@@ -244,11 +244,16 @@ class Page extends React.Component {
     }
     
 
-    handleTextChange = (index, value) => {
+    handleTextChange = (index, value, tags) => {
         if(index > -1) {
             var props = this.state.textElementsProps
             var elements = props.elements
-            elements[index].set("data", value)
+            if(value) {
+                elements[index].set("data", value)
+            }
+            if(tags && tags.length > 0) {
+                elements[index].set("tags", tags)
+            }
             props.elements = elements
             this.setState({textElementsProps: props})
         }
@@ -258,11 +263,16 @@ class Page extends React.Component {
 
     }
 
-    handleVideoChange = (index, fileData) => {
+    handleVideoChange = (index, fileData, tags) => {
         if(index > -1) {
             var props = this.state.videoElementsProps
             var elements = props.elements
-            elements[index].set("data", fileData)
+            if(fileData) {
+                elements[index].relation("data").add(fileData)
+            }
+            if(tags && tags.length > 0) {
+                elements[index].set("tags", tags)
+            }
             props.elements = elements
             this.setState({videoElementsProps: props})
         }
@@ -284,7 +294,7 @@ class Page extends React.Component {
         pageQuery.first()
         .then(page => {
             this.setState({page: page})
-            console.log("State", this.state)
+            console.log("PageState", this.state, JSON.stringify(this.state.page))
 
             //get and set the elements
             page.relation("text_elements").query().find()

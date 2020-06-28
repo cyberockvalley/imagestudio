@@ -12,8 +12,10 @@ import Page from "./Page";
 import Axios from "axios";
 import { WEBSITE_HOME_ADDRESS } from "../../both/Parse";
 import EditableStateContext from "./editables/EditableStateContext";
-import { lastValueOrThis } from "../../both/Functions";
+import { lastValueOrThis, truncText } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
+import { truncate } from "lodash";
+import { HTML_DESCRIPTION_LENGTH, BASE_URL } from "../../both/Constants";
 
 class Home extends Page {
   static contextType = EditableStateContext
@@ -66,24 +68,32 @@ class Home extends Page {
     })
   }
 
+  homeMansoryRef = homeMansory => {
+    this.homeMansory = homeMansory
+  }
+
+  buildHomeMansoryItem = item => {
+    
+  }
+
   render() {
     
     return super.render(
       <>
         <Helmet>
-          <title>Hello Home</title>
-          <meta name="description" content="The document head might not be the most glamorous part of a website, but what goes into it is arguably just as important to the success of your website as" />
+          <title>{lastValueOrThis(this.state.page, {get: () => {return ""}}).get("title")}</title>
+          <meta name="description" content={truncText(lastValueOrThis(this.state.page, {get: () => {return ""}}).get("description"), HTML_DESCRIPTION_LENGTH)} />
         
           <meta name="robots" content="index, follow" />
           <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
           <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
           
-          <link rel="canonical" href="https://css-tricks.com/its-all-in-the-head-managing-the-document-head-of-a-react-powered-site-with-react-helmet/" />
+          <link rel="canonical" href={BASE_URL} />
           
           <meta property="og:locale" content="en_US" />
           <meta property="og:type" content="article" />
-          <meta property="og:title" content="It&#039;s All In the Head: Managing the Document Head of a React Powered Site With React Helmet | CSS-Tricks" />
-          <meta property="og:description" content="The document head might not be the most glamorous part of a website, but what goes into it is arguably just as important to the success of your website as" />
+          <meta property="og:title" content={lastValueOrThis(this.state.page, {get: () => {return ""}}).get("title")} />
+          <meta property="og:description" content={truncText(lastValueOrThis(this.state.page, {get: () => {return ""}}).get("description"), HTML_DESCRIPTION_LENGTH)} />
           <meta property="og:url" content="https://css-tricks.com/its-all-in-the-head-managing-the-document-head-of-a-react-powered-site-with-react-helmet/" />
           <meta property="og:site_name" content="CSS-Tricks" />
           <meta property="article:publisher" content="https://www.facebook.com/CSSTricks" />
@@ -130,7 +140,23 @@ class Home extends Page {
             </div>
           </div>
         </div>
-        <section className="mansory mansory-col-2 mansory-col-sm-3 mansory-gap-10"></section>
+        <ListEditable 
+              class="mansory mansory-col-2 mansory-col-sm-3 mansory-gap-10"
+              name={"site_content_home_mansory"}
+              {...this.state.listElementsProps}
+              rowsPerPage={15}
+              privateRef={this.homeMansoryRef}
+              onItem={this.buildHomeMansoryItem}
+              itemDraggable={true}
+              item_tag_options={[
+                {
+                  title: "Select width",
+                  description: "Your option determines how much space This image takes on a row. 12 takes a whole row, 6 takes half...",
+                  key: "width",
+                  values: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+                }
+              ]}
+        />
         <section className="home-instagram" id="home-instagram">
           <div className="home-instagram__inner">
             <div className="section-inner">

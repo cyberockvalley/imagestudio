@@ -17,6 +17,7 @@ export default (helmet, initialData, body) => {
             
             <link rel="stylesheet" href="/client/res/css/styles.css">
             <link rel="stylesheet" href="/client/res/css/mansory.css">
+            <link rel="stylesheet" href="/client/res/css/animations.css">
             ${helmet.title.toString()}
             ${helmet.meta.toString()}
             ${helmet.link.toString()}
@@ -26,13 +27,6 @@ export default (helmet, initialData, body) => {
             <script>
                 windows.__initialData__ = ${JSON.stringify(initialData)}
             </script>
-            <style type="text/css">
-            .json-key     { color: brown; }
-            .json-string  { color: olive; }
-            .json-number  { color: navy; }
-            .json-boolean { color: teal; }
-            .json-null    { color: dimgray; }
-            </style>
         </head>
         <body style="width:100%;margin:0;padding:0;overflow-x:hidden">
             <div id="root">

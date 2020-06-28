@@ -1,4 +1,5 @@
 import React from 'react'
+import LoadingSpinner from '../animations/LoadingSpinner'
 
 const $ = require('jquery')
 
@@ -15,12 +16,12 @@ class FileChangerView extends React.Component {
         }
     }
 
+    rootClass = this.props.id
+
     state = {
         draggedOver: false,
         supportDragOver: true
     }
-
-    rootClass = ("id-" + Math.random()).replace(".","")
 
 
     getAccept() {
@@ -54,6 +55,7 @@ class FileChangerView extends React.Component {
         this.setState({accept: this.getAccept()})
         //this.setState({supportDragOver: 'FileReader' in window})
         var that = this
+        console.log("ROOT_CLASS", this.rootClass)
         $("."+this.rootClass).on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -72,56 +74,74 @@ class FileChangerView extends React.Component {
     styles = {
         root: {
             width: "100%", 
-            height: "100%", 
-            position: "absolute", 
-            zIndex: 100,
+            height: "100%",  
             color: this.props.color? this.props.color : "#242424",
-            fontWeight: "bold",
-            top: "20px"
-        },
-        message: {
-            color: this.props.message_color? this.props.message_color : "#242424"
         },
         error: {
-            color: this.props.error_color? this.props.error_color : "#242424"
-        },
-        success: {
-            color: this.props.success_color? this.props.success_color : "#242424"
+            color: this.props.error_color? this.props.error_color : "#ff3333"
         }
+    }
+
+    getRootStyle = () => {
+        var styles = this.styles.root
+        if(this.props.style) {
+            styles = {
+                ...styles.root,
+                ...this.props.style
+            }
+
+        }
+        if(this.props.active) styles.paddingTop = 20
+        return styles
     }
 
     render() {
         return(
-            <div class={this.rootClass} style={this.styles.root} onDragEnter={this.handleDragEnter}>
+            <div class={this.rootClass} style={this.getRootStyle()} onDragEnter={this.handleDragEnter}>
                 <div style={!this.state.draggedOver? styles.fileStyle1 : dragStyles.fileStyle1}>
                     <div style={!this.state.draggedOver? styles.fileStyle2 : dragStyles.fileStyle2}>
                         <div style={!this.state.draggedOver? styles.fileStyle3 : dragStyles.fileStyle3}>
                             {
-                                this.props.message?
-                                <div style={this.styles.message}>{this.props.message}</div>
-                                :<></>
+                                this.props.children?
+                                this.props.children : <></>
                             }
                             {
-                                this.props.success?
-                                <div style={this.styles.success}>{this.props.success}</div>
-                                :<></>
-                            }
-                            {
-                                this.props.error?
-                                <div style={this.styles.error}>{this.props.error}</div>
-                                :<></>
-                            }
-                            <div>
-                                <label style={styles.button}>
+                                this.props.active?
+                                <div style={{
+                                    zIndex: 2000,
+                                    width: "100%", position: "absolute", top: "80%",
+                                    display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"
+                                    }}>
                                     {
-                                        this.state.accept?
-                                        <input onChange={this.handleChange} name="file" type="file" style={{display: "none"}} accept={this.state.accept} />
-                                        :
-                                        <input onChange={this.handleChange} name="file" type="file" style={{display: "none"}} />
+                                        this.props.error?
+                                        <div style={this.styles.error}><i class="fa fa-warning"></i> {this.props.error}</div>
+                                        :<></>
                                     }
-                                    <span style={styles.buttonText}>Choose File <span style={styles.buttonInnerText}>(or drag and drop it)</span></span>
-                                </label>
-                            </div>
+                                    <div>
+                                        <label style={styles.button}>
+                                            {
+                                                this.state.accept?
+                                                <input onChange={this.handleChange} name="file" type="file" style={{display: "none"}} accept={this.state.accept} />
+                                                :
+                                                <input onChange={this.handleChange} name="file" type="file" style={{display: "none"}} />
+                                            }
+                                            <span style={styles.buttonText}>Choose File <span style={styles.buttonInnerText}>(or drag and drop it)</span></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                :<></>
+                            }
+                            {
+                                this.props.loading?
+                                <div style={styles.loadingContainer}>
+                                    <LoadingSpinner 
+                                        width={this.props.spinnerWidth}
+                                        height={this.props.spinnerHeight}
+                                        thickness={this.props.spinnerThickness}
+                                        circleColor={this.props.spinnerCircleColor}
+                                        runnerColor={this.props.spinnerRunnerColor} />
+                                </div>:<></>
+                            }
                         </div>
                     </div>
                 </div>
@@ -131,6 +151,21 @@ class FileChangerView extends React.Component {
 }
 
 const styles = {
+    loadingContainer: {
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 2500
+    },
+    loading: {
+        width: "7%",
+        height: "7%",
+        borderRadius: "7%",
+        background: "#f33"
+    },
     fileStyle1: {
         width: "90%", height: "90%", padding: "3px", margin: "auto"
     },

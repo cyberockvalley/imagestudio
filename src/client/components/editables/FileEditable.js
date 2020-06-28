@@ -1,6 +1,5 @@
-import React from 'react'
 import Editable from './Editable';
-import ParseClient from '../../../both/Parse';
+import ParseClient, { handleParseError } from '../../../both/Parse';
 
 const IMAGE_MIMES = {
     gif: "image/gif",
@@ -72,53 +71,55 @@ class FileEditable extends Editable {
         this.state = {
             dataList: [],
             fileShades: [],
-            successMessage: this.successMessage,
-            errorMessage: this.errorMessage
+            error: null
         }
     }
-
-    newMesage = this.props.emptyUploadMessage? this.props.newUploadMessage : "Please upload a file"
-    editMessage = this.props.changeUploadMessage? this.props.changeUploadMessage : "Want to change this file?"
-    successMessage = this.props.successMessage? this.props.successMessage : "Upload successfull"
-    errorMessage = this.props.errorMessage? this.props.errorMessage : "An error occurred while uploading your video :("
+    errorMessage = this.props.errorMessage? this.props.errorMessage : "An error occurred while uploading :("
 
     componentDidMount() {
-        this.isFile = true
+        super.componentDidMount()
+        this.setState({data: null, tags: ""})
     }
 
     init() {
         super.init()
-        this.initFile()
+        this.updateFile()
     }
 
-    initFile() {
-        if(this.Element && this.state.fileShades.length == 0) {
+    updateFile() {
+        if(this.Element && this.state.fileShades.length == 0 && !this.state.fileRequested) {
+            this.setState({fileRequested: true})
             //get the file relation
             this.Element.relation("data").query().find()
             .then(list => {
-                var fileShades = []
-                var dataList = []
-                for(var i = 0; i < list.length; i++) {
-                    var fileData = list[i]
-                    var url = fileData.get('file').url()
-                    fileShades.push({
-                        src: url,
-                        mime: this.getFileDataMime(url),
-                        width: fileData.get("width"),
-                        height: fileData.get("height")
-                    })
-                    dataList.push(fileData)
-                }
-                if(fileShades.length > 0) {
-                    this.setState({
-                        fileShades: fileShades,
-                        dataList: dataList
-                    })
-                }
+                this.processData(list)
 
             })
             .catch(e => {
                 handleParseError(e)
+                this.setState({fileRequested: false})
+            })
+        }
+    }
+
+    processData = list => {
+        var fileShades = []
+        var dataList = []
+        for(var i = 0; i < list.length; i++) {
+            var fileData = list[i]
+            var url = fileData.get('file').url()
+            fileShades.push({
+                src: url,
+                mime: this.getFileDataMime(url),
+                width: fileData.get("width"),
+                height: fileData.get("height")
+            })
+            dataList.push(fileData)
+        }
+        if(fileShades.length > 0) {
+            this.setState({
+                fileShades: fileShades,
+                dataList: dataList
             })
         }
     }
@@ -135,41 +136,68 @@ class FileEditable extends Editable {
         if(this.detailsHasChanged()) {
             var element = this.getOrCreateEditable()
             var parseFile = this.state.data
+            console.log("FileEditable", 0, element)
 
-            parseFile.save()
-            .then(fileResponse => {
-                var fileData = this.createFileData(fileResponse)
+            if(this.dataHasChanged()) {
+                this.setState({errorMessage: ""})
+                this.setState({loading: true})
 
-                fileData.save()
-                .then(fileDataResponse => {
-                    if(this.state.dataList.length > 0) {
-                        element.relation("data").remove(this.state.dataList)
-                    }
-                    element.relation("data").add(fileDataResponse)
-                    if(this.Element) {
-                        element.save()
-        
-                    } else {
-                        this.props.addHandler(element, this.getRelationName())
-                    }
+                parseFile.save()
+                .then(fileResponse => {
+                    var fileData = this.createFileData(fileResponse)
+
+                    fileData.save()
+                    .then(fileDataResponse => {
+                        console.log("FileEditable", 1, fileData, fileDataResponse)
+                        if(this.state.dataList.length > 0) {
+                            console.log("FileEditable", 2, this.state.dataList)
+                            element.relation("data").remove(this.state.dataList)
+                        }
+                        this.processData([fileData])
+                        this.setState({loading: false})
+                        if(this.Element) {
+                            this.props.changeHandler(this.ElementIndex, fileDataResponse)
+                            element.save()
+            
+                        } else {
+                            element.relation("data").add(fileDataResponse)
+                            this.props.addHandler(element, this.getRelationName())
+                        }
+                    })
+                    .catch(e => {
+                        this.setState({error: this.errorMessage})
+                        handleParseError(e)
+                    })
+                    
                 })
                 .catch(e => {
+                    this.setState({error: this.errorMessage})
                     handleParseError(e)
                 })
-                
-            })
-            .catch(e => {
-                handleParseError(e)
-            })
+
+            } else {
+                if(this.Element) {
+                    this.props.changeHandler(this.ElementIndex, null, this.state.tags)
+                    element.save()
+    
+                }
+            }
+            
         }
     }
+    
 
     handleFile = file => {
+        if(!this.state.initialData) {
+            this.setState({
+                initialData: this.Element? this.Element.get("data") : "",
+                initialTags: this.Element? this.Element.get("tags") : ""
+            })
+        }
         var parseFile = new ParseClient.File("file", file)
 
         this.setState({data: parseFile})
         console.log("handleFile", this.state, JSON.stringify(this.state))
-        //return this.props.changeHandler(this.ElementIndex, fileData)
 
     }
 
@@ -191,9 +219,20 @@ class FileEditable extends Editable {
         return "noFile"
     }
 
-    detailsHasChanged () {
+    detailsHasChangedImplementation () {
         //https://gist.github.com/ajardin/ac96e9b440ae4ab6b162
         return false
+    }
+    detailsHasChanged() {
+        console.log("detailsHasChanged", this.dataHasChanged() || this.tagsHaveChanged())
+        return this.dataHasChanged() || this.tagsHaveChanged()
+    }
+
+    dataHasChanged() {
+        return this.state.data && JSON.stringify(this.state.data).length > 0 && JSON.stringify(this.state.data) != JSON.stringify(this.state.initialData)
+    }
+    tagsHaveChanged() {
+        return this.state.tags.length > 0 && this.state.tags != this.state.initialTags
     }
 
 }
