@@ -153,24 +153,6 @@ class Page extends React.Component {
         if(!this.editors.includes(editor)) this.editors.push(editor)
     }
 
-    getElementRelationName = element => {
-        console.log("getElementRelationName", element.className)
-        switch(element.className) {
-            case "TextElement":
-                return "text_elements"
-            case "ImageElement":
-                return "image_elements"
-            case "VideoElement":
-                return "video_elements"
-            case "IframeElement":
-                return "iframe_elements"
-            case "ListElement":
-                return "list_elements"
-            default:
-                return null
-        }
-    }
-
     getElementGroup = element => {
         console.log("getElementGroup", element.className)
         switch(element.className) {
@@ -213,27 +195,34 @@ class Page extends React.Component {
         }
     }
 
-    addElement = (element) => {
+    addElement = (element, relationName) => {
         console.log("addHandler", element, JSON.stringify(element))
         var props = this.getElementGroup(element)
         console.log("addHandler", "props", props)
         if(props == null) return
-        props.elements.push(element)
-        this.updateElementGroup(element, props)
-        console.log("addHandler", "update")
-        
+        if(["TextElement", "IframeElement"].includes(element.className)) {
+            props.elements.push(element)
+            this.updateElementGroup(element, props)
+            console.log("addElement", "update")
+        }
         element.save()
-        .then(res => {
-            console.log("addElement", "saveNew", element.get("key"), res)
+        .then(elementRes => {
+            if(!["TextElement", "IframeElement"].includes(element.className)) {
+                console.log("addElement", "saveNew", elementRes.get("key"), JSON.stringify(elementRes))
+                props.elements.push(elementRes)
+                this.updateElementGroup(elementRes, props)
+                console.log("addElement", "update")
+            }
             var page = this.state.page
-            page.relation(this.getElementRelationName(element)).add(res)
+
+            page.relation(relationName).add(elementRes)
             page.save()
-            .then(res => {
-                console.log("addElement", "savePage", element.get("key"), res)
+            .then(pageRes => {
+                console.log("addElement", "savePage", pageRes.get("key"), pageRes)
 
             })
             .catch(e => {
-                console.log("addElement", "savePageError", element.get("key"), e)
+                console.log("addElement", "savePageError", page.get("key"), e)
                 handleParseError(e)
     
             })

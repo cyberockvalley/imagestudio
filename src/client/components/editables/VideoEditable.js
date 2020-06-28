@@ -9,17 +9,7 @@ class VideoEditable extends FileEditable {
         super(props)
 
         this.handleEditClick = this.handleEditClick.bind(this)
-
-        this.state = {
-            successMessage: this.successMessage,
-            errorMessage: this.errorMessage
-        }
     }
-
-    newMesage = this.props.emptyUploadMessage? this.props.newUploadMessage : "Please upload a video"
-    editMessage = this.props.changeUploadMessage? this.props.changeUploadMessage : "Want to change this video?"
-    successMessage = this.props.successMessage? this.props.successMessage : "Upload successfull"
-    errorMessage = this.props.errorMessage? this.props.errorMessage : "An error occurred while uploading your video :("
 
     getMessage = () => {
         return this.Element? this.newMesage : this.editMessage
@@ -59,26 +49,43 @@ class VideoEditable extends FileEditable {
         })
     }
 
-    //https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4
-    getVideo = () => {
-        if(this.Element && this.haveReadPermission()) {
-            return this.Element.get("data").map(index, videoData => {
-                <source src={this.getGetFileDataSRC(videoData)} type={this.getGetFileDataMime(videoData)} />
-            })
+    getOrCreateEditable(){
+        if(this.Element) {
+            return this.Element
 
         } else {
-            return this.state.data? <img src={this.getGetFileDataSRC(this.state.data)} /> : <></>
+            var element = new ParseClasses.VideoElement()
+            element.set("key", this.componentKey)
+            element.set("tags", this.state.tags)
+            element.set("editor", this.props.user)
+            var ACL = this.guessACL()
+            element.setACL(ACL)
+            return element
         }
+    }
+
+    createFileData(file) {
+        var fileData = new ParseClasses.VideoData()
+        fileData.set("file", file)
+        fileData.setACL(ACL)
+        return fileData
+    }
+
+    getRelationName() {
+        return "video_elements"
     }
 
     render() {
         this.init()
+        console.log("VideoEditable", this.state)
         return(
             <div style={this.getStyle()}>
                 <div style={styles.overlay}></div>
                 <video style={this.props.edit && this.haveWritePermission()? videoHide : styles.video} playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
                     {
-                        this.getVideo()
+                        this.state.fileShades.map((videoData, index) => {
+                            return(<source key={index} src={videoData.src} type={videoData.mime} />)
+                        })
                     }
                 </video>
                 

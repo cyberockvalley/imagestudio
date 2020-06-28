@@ -7,6 +7,12 @@ class TextEditable extends Editable {
         super(props)
 
         this.handleEditClick = this.handleEditClick.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+    }
+
+    state = {
+        data: "",
+        tags: ""
     }
     
     text_area_style = {
@@ -32,7 +38,6 @@ class TextEditable extends Editable {
             ...this.props.style
         } : style
     }
-
     
     getText = () => {
         //console.log("getText", this.props.userRole, this.props.user, this.Element? this.Element.get("ACL") : "")
@@ -40,9 +45,40 @@ class TextEditable extends Editable {
         this.Element.get("data") : this.state.data
     }
 
+    cancelEdit = () => {
+        console.log("cancelEdit", this.componentKey, this.state)
+        this.setState({
+            data: "",
+            tags: ""
+        })
+    }
+
+    save() {
+        if(this.detailsHasChanged()) {
+            if(this.Element) {
+                this.Element.save()
+
+            } else {
+                var element = new ParseClasses.TextElement()
+                element.set("key", this.componentKey)
+                element.set("data", this.state.data)
+                element.set("tags", this.state.tags)
+                element.set("editor", this.props.user)
+                var ACL = this.guessACL()
+                element.setACL(ACL)
+                this.props.addHandler(element, "text_elements")
+            }
+        }
+    }
+
+    detailsHasChanged() {
+        return (this.state.data.length > 0 && (!this.Element || this.Element.get("data") != this.state.data)) 
+        || (this.state.tags.length > 0 && (!this.Element || this.Element.get("tags") != this.state.tags))
+    }
+
     handleChange = e => {
-        //this.Element.set("text", e.target.value)
         this.setState({data: e.target.value})
+        console.log("handleChange", this.state)
         return this.props.changeHandler(this.ElementIndex, e.target.value)
     }
 

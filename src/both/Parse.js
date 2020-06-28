@@ -8,7 +8,7 @@ if(!isClient()) {
 
 ParseClient.initialize('123456A', '123456J')
 
-ParseClient.serverURL = "http://192.168.43.58:1337/parse"
+ParseClient.serverURL = "http://dev.domain.com:1337/parse"
 
 export const WEBSITE_HOME_ADDRESS = "http://dev.domain.com:1337/"
 
@@ -29,7 +29,6 @@ export const ParseClasses = {Product: ParseClient.Object.extend("Product"),
 
     ImageData: ParseClient.Object.extend("ImageData"),
     VideoData: ParseClient.Object.extend("VideoData"),
-    IframeData: ParseClient.Object.extend("IframeData"),
 
     ListItem: ParseClient.Object.extend("ListItemElement"),
 }

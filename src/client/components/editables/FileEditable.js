@@ -68,30 +68,113 @@ const mimeFromUrl = url => {
 class FileEditable extends Editable {
     constructor(props) {
         super(props)
+
+        this.state = {
+            dataList: [],
+            fileShades: [],
+            successMessage: this.successMessage,
+            errorMessage: this.errorMessage
+        }
     }
+
+    newMesage = this.props.emptyUploadMessage? this.props.newUploadMessage : "Please upload a file"
+    editMessage = this.props.changeUploadMessage? this.props.changeUploadMessage : "Want to change this file?"
+    successMessage = this.props.successMessage? this.props.successMessage : "Upload successfull"
+    errorMessage = this.props.errorMessage? this.props.errorMessage : "An error occurred while uploading your video :("
 
     componentDidMount() {
         this.isFile = true
     }
 
+    init() {
+        super.init()
+        this.initFile()
+    }
+
+    initFile() {
+        if(this.Element && this.state.fileShades.length == 0) {
+            //get the file relation
+            this.Element.relation("data").query().find()
+            .then(list => {
+                var fileShades = []
+                var dataList = []
+                for(var i = 0; i < list.length; i++) {
+                    var fileData = list[i]
+                    var url = fileData.get('file').url()
+                    fileShades.push({
+                        src: url,
+                        mime: this.getFileDataMime(url),
+                        width: fileData.get("width"),
+                        height: fileData.get("height")
+                    })
+                    dataList.push(fileData)
+                }
+                if(fileShades.length > 0) {
+                    this.setState({
+                        fileShades: fileShades,
+                        dataList: dataList
+                    })
+                }
+
+            })
+            .catch(e => {
+                handleParseError(e)
+            })
+        }
+    }
+
+    cancelEdit = () => {
+        console.log("cancelEdit", this.componentKey, this.state)
+        this.setState({
+            data: null,
+            tags: ""
+        })
+    }
+
+    save() {
+        if(this.detailsHasChanged()) {
+            var element = this.getOrCreateEditable()
+            var parseFile = this.state.data
+
+            parseFile.save()
+            .then(fileResponse => {
+                var fileData = this.createFileData(fileResponse)
+
+                fileData.save()
+                .then(fileDataResponse => {
+                    if(this.state.dataList.length > 0) {
+                        element.relation("data").remove(this.state.dataList)
+                    }
+                    element.relation("data").add(fileDataResponse)
+                    if(this.Element) {
+                        element.save()
+        
+                    } else {
+                        this.props.addHandler(element, this.getRelationName())
+                    }
+                })
+                .catch(e => {
+                    handleParseError(e)
+                })
+                
+            })
+            .catch(e => {
+                handleParseError(e)
+            })
+        }
+    }
+
     handleFile = file => {
         var parseFile = new ParseClient.File("file", file)
 
-        this.setState({dataFile: parseFile})
+        this.setState({data: parseFile})
         console.log("handleFile", this.state, JSON.stringify(this.state))
         //return this.props.changeHandler(this.ElementIndex, fileData)
 
     }
 
-    getGetFileDataSRC = fileData => {
-        return fileData.get("url")? 
-            fileData.get("url") : fileData.get("file")? 
-                this.fileHasUrl(fileData.get("file"))? fileData.get("file").url() : parseFileToDataUrl(fileData.get("file"))
-                : ""
-    }
-
-    getGetFileDataMime = fileData => {
-        return mimeFromUrl(this.getGetFileDataSRC(fileData))
+    getFileDataMime = fileData => {
+        return mimeFromUrl(fileData)
     }
 
     fileHasUrl = parseFile => {
@@ -106,6 +189,11 @@ class FileEditable extends Editable {
 
     parseFileToDataUrl = parseFile => {
         return "noFile"
+    }
+
+    detailsHasChanged () {
+        //https://gist.github.com/ajardin/ac96e9b440ae4ab6b162
+        return false
     }
 
 }
