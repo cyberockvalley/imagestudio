@@ -92,8 +92,8 @@ class TextEditable extends Editable {
 
     componentDidMount() {
         super.componentDidMount()
+        if(this.props.refSetter) this.props.refSetter(this)
         this.setState({data: "", tags: ""})
-        this.props.refSetter(this)
         this.ElementClass = ParseClasses.TextElement
     }
 

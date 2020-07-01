@@ -3,7 +3,7 @@ import React from "react";
 class ItemWeddingStory extends React.Component {
   render() {
     return (
-      <div className="col-sm-6 col-md-4 story-container">
+      <div key={this.props.key} className="col-sm-6 col-md-4 story-container">
         <div
           style={{
             width: "100%",
@@ -17,7 +17,7 @@ class ItemWeddingStory extends React.Component {
                   width: "100%",
                   minHeight: "100%"
                 }}
-                src="${image}"
+                src={``}
               />
               <div className="fade-box fade-in-down">
                 <h2 className="story-title">Matrimonio Ale & Alex</h2>

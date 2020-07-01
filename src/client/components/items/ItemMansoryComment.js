@@ -1,9 +1,9 @@
 import React from "react";
 
-class ItemMansoryComment extends React.Component {
+class ItemmasonryComment extends React.Component {
   render() {
     return (
-      <div className="mansory-comment">
+      <div className="masonry-comment">
         <img src="${image}" className="d-nones" />
         <div>
           <div className="name">Curly P.</div>
@@ -27,4 +27,4 @@ class ItemMansoryComment extends React.Component {
   }
 }
 
-export default ItemMansoryComment;
+export default ItemmasonryComment;

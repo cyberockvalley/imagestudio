@@ -1,6 +1,7 @@
 import React from "react"
 import { handleParseError, ParseClasses } from "../../../both/Parse"
 import Editable, { TEXT_ELEMENTS_STATE_KEY_PREFIX } from "./Editable"
+import { textToLink } from "../../../both/Functions"
 
 class ListEditable extends Editable {
     constructor(props) {
@@ -33,12 +34,6 @@ class ListEditable extends Editable {
             ...this.props.style
         } : style
     }
-    
-    getText = () => {
-        //console.log("getText", this.props.userRole, this.props.user, this.Element? this.Element.get("ACL") : "")
-        return this.Element && this.haveReadPermission()?
-        this.Element.get("data") : this.state.data
-    }
 
     cancelEdit = () => {
         console.log("cancelEdit", this.componentKey, this.state)
@@ -48,7 +43,7 @@ class ListEditable extends Editable {
         })
     }
 
-    save() {
+    save() {/*
         if(this.detailsHasChanged()) {
             if(this.Element) {
                 this.Element.save()
@@ -64,7 +59,7 @@ class ListEditable extends Editable {
                 this.props.addHandler(element, "text_elements")
             }
 
-        }
+        }*/
     }
 
     detailsHasChanged() {
@@ -92,11 +87,48 @@ class ListEditable extends Editable {
 
     componentDidMount() {
         super.componentDidMount()
-        this.setState({data: "", tags: ""})
-        this.props.refSetter(this)
+        if(this.props.refSetter) this.props.refSetter(this)
         if(this.props.privateRef) {
             this.props.privateRef(this)
         }
+        this.setState({data: "", tags: "", items: [
+            {
+                page: {
+                    local_key: "1"
+                },
+                pageLink: `/photos/${textToLink("How to love")}/1`
+            },
+            {
+                page: {
+                    local_key: "1"
+                },
+                pageLink: `/photos/${textToLink("How to love")}/1`
+            },
+            {
+                page: {
+                    local_key: "1"
+                },
+                pageLink: `/photos/${textToLink("How to love")}/1`
+            },
+            {
+                page: {
+                    local_key: "1"
+                },
+                pageLink: `/photos/${textToLink("How to love")}/1`
+            },
+            {
+                page: {
+                    local_key: "1"
+                },
+                pageLink: `/photos/${textToLink("How to love")}/1`
+            },
+            {
+                page: {
+                    local_key: "1"
+                },
+                pageLink: `/photos/${textToLink("How to love")}/1`
+            }
+        ]})
         this.ElementClass = ParseClasses.ListElement
     }
 
@@ -104,20 +136,105 @@ class ListEditable extends Editable {
         e.preventDefault()
     }
 
+    //pagination methods exposed through the privateRef props START
+    next = () => {
+
+    }
+
+    prev = () => {
+        
+    }
+
+    hasNext = () => {
+
+    }
+
+    hasPrev = () => {
+
+    }
+
+    fetchedCount = () => {
+
+    }
+
+    totalResult = () => {
+
+    }
+    //pagination methods exposed through the privateRef props END
+
+    addNew = () => {
+        var items = this.state.items
+        items.push(null)
+        this.setState({items: items})
+    }
     render() {
         this.init()
+        //console.log("ListEditable", this.haveReadPermission(), this.state)
         return(
             <>
                 {
                     this.props.edit && this.haveWritePermission()?
-                        <textarea id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} onClick={this.handleEditClick} placeholder={`${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()}>
-                            {this.getText()}
-                        </textarea>
+                    <div style={styles.listHeaderContainer}>
+                        <h2 style={styles.listHeader} onClick={this.props.onEditOrSaveButtonClicked}>
+                            {
+                                `List of ${this.props.readableName || this.props.itemReadableName || this.keyToText()}`
+                            }
+                        </h2>
+                    </div>
+                    :<></>
+                }
+                <section class={this.props.className? this.props.className : ""}>
+                    {
+                        this.state.items && this.haveReadPermission()?
+                        this.state.items.map((item, index) => {
+                            return this.props.onItem(item, index)
+                        })
                         :
-                        <>{this.getText()}</>
+                        <></>
+                    }
+                </section>
+                {
+                    this.props.edit && this.haveWritePermission()?
+                    <div style={styles.addButtonContainer}>
+                        <button style={styles.addButton} onClick={this.addNew}>
+                            <span>
+                                <i className="fa fa-2x fa-plus"></i> Add New {
+                                this.props.itemReadableName || this.keyToText()
+                                }
+                            </span>
+                        </button>
+                    </div>
+                    :<></>
                 }
             </>
         )
+    }
+}
+
+const styles = {
+    addButtonContainer: {
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center"
+    },
+    addButton: {
+        background: "#282828",
+        borderColor: "#282828",
+        borderRadius: "70px",
+        color: "#fff",
+        padding: "8px 16px",
+        fontSize: "18px",
+        margin: "15px",
+        cursor: "pointer",
+    },
+    listHeaderContainer: {
+        background: "#282828",
+        width: "100%",
+        padding: "15px"
+    },
+    listHeader: {
+        color: "#fff",
     }
 }
 

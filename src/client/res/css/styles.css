@@ -2248,7 +2248,7 @@ button.load-more:hover {
 	color: #fff;
 	outline: 0;
 }
-.mansory-comment {
+.masonry-comment {
 	width: 100% !important;
 	height: auto !important;
 	display: flex;
@@ -2259,23 +2259,23 @@ button.load-more:hover {
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 	background: #fff;
 }
-.mansory-comment > * {
+.masonry-comment > * {
 	width: 100% !important;
 	height: auto !important;
 	border: none !important;
 	margin: 0px 0px 10px !important;
 }
-.mansory-comment > div {
+.masonry-comment > div {
 	padding: 10px;
 }
-.mansory-comment > div > * {
+.masonry-comment > div > * {
 	margin-bottom: 5px;
 }
-.mansory-comment > div > .name {
+.masonry-comment > div > .name {
 	font-weight: bold;
 	font-size: 16px;
 }
-.mansory-comment > div > .date {
+.masonry-comment > div > .date {
 	color: #a3a3a3;
 	font-size: 11px;
 }

@@ -286,10 +286,15 @@ class Page extends React.Component {
         
     }
 
-    getPage = key => {
+    getPage = (key, options) => {
         var pageQuery = getParseQuery(ParseClasses.Page)
         console.log("currentUser", this.state.userRole, this.state.user)
-        pageQuery.equalTo("key", key)
+        if(options && options.isLocal) {
+            pageQuery.equalTo("local_key", key)
+
+        } else {
+            pageQuery.equalTo("key", key)
+        }
 
         pageQuery.first()
         .then(page => {

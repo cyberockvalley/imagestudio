@@ -37,17 +37,19 @@ class Editable extends React.Component {
     }
 
     init() {
-        for(var i = 0; i < this.props.elements.length; i++) {
-            var thisElement = this.props.elements[i]
-            if(thisElement.get("key") == this.componentKey) {
-                this.ElementIndex = i;
-                this.Element = thisElement
-                this.ElementBackUp = this.props.elements_backup[i]
-                
-                this.props.stateHandler(this.componentKey, {
-                    data: thisElement.get("data"),
-                    tags: thisElement.get("tags")
-                })
+        if(this.props.elements) {
+            for(var i = 0; i < this.props.elements.length; i++) {
+                var thisElement = this.props.elements[i]
+                if(thisElement.get("key") == this.componentKey) {
+                    this.ElementIndex = i;
+                    this.Element = thisElement
+                    this.ElementBackUp = this.props.elements_backup[i]
+                    
+                    this.props.stateHandler(this.componentKey, {
+                        data: thisElement.get("data"),
+                        tags: thisElement.get("tags")
+                    })
+                }
             }
         }
     }
@@ -101,8 +103,8 @@ class Editable extends React.Component {
                 } else {
                     //give no one read or write access
                     ACL = new ParseClient.ACL()
-                    ACL = ACL.setPublicReadAccess(false)
-                    ACL = ACL.setPublicWriteAccess(false)
+                    //ACL = ACL.setPublicReadAccess(false)
+                    //ACL = ACL.setPublicWriteAccess(false)
                 }
             }
             return ACL

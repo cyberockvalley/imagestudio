@@ -33,7 +33,9 @@ class HeaderVideoBanner extends React.Component {
           {...this.props.videoEditableProps}
           textEditableProps={this.props.textEditableProps}
           title="site_info_header_video_title"
+          title_height={100}
           description="site_info_header_video_description" 
+          description_height={56}
           showInfo={true}
           spinnerWidth={100}
           spinnerHeight={100}

@@ -16,6 +16,8 @@ import { lastValueOrThis, truncText } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
 import { truncate } from "lodash";
 import { HTML_DESCRIPTION_LENGTH, BASE_URL } from "../../both/Constants";
+import ListEditable from "./editables/ListEditable";
+import ItemWeddingPhoto from "./items/ItemWeddingPhoto";
 
 class Home extends Page {
   static contextType = EditableStateContext
@@ -68,12 +70,16 @@ class Home extends Page {
     })
   }
 
-  homeMansoryRef = homeMansory => {
-    this.homeMansory = homeMansory
+  homemasonryRef = homemasonry => {
+    this.homemasonry = homemasonry
   }
 
-  buildHomeMansoryItem = item => {
-    
+  buildHomemasonryItem = (item, index) => {
+    return (
+      <ItemWeddingPhoto 
+        key={this.props.index}
+        item={item.page} />
+    )
   }
 
   render() {
@@ -141,12 +147,14 @@ class Home extends Page {
           </div>
         </div>
         <ListEditable 
-              class="mansory mansory-col-2 mansory-col-sm-3 mansory-gap-10"
-              name={"site_content_home_mansory"}
+              className="masonry masonry-col-2 masonry-col-sm-3 masonry-gap-10"
+              name={"site_content_home_masonry"}
+              readableName="Wedding photos"
+              itemReadableName="Wedding photo"
               {...this.state.listElementsProps}
               rowsPerPage={15}
-              privateRef={this.homeMansoryRef}
-              onItem={this.buildHomeMansoryItem}
+              privateRef={this.homemasonryRef}
+              onItem={this.buildHomemasonryItem}
               itemDraggable={true}
               item_tag_options={[
                 {

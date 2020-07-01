@@ -355,7 +355,7 @@ class SingleProduct extends React.Component {
               <button className="btn load-more">Write a review</button>
             </div>
           </div>
-          <div className="mansory mansory-col-2 mansory-col-sm-3 mansory-col-md-4 mansory-gap-10" />
+          <div className="masonry masonry-col-2 masonry-col-sm-3 masonry-col-md-4 masonry-gap-10" />
         </section>
         <div className="flex-row flex-justify-around">
           <button className="btn load-more">Show more reviews</button>

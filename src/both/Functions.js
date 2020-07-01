@@ -46,9 +46,13 @@ export const lastValueOrThis = (...args) => {
         }
 
     }
-    console.log("lastValueOrThis", "final", args[args.length - 2], parentObject || nullValue)
+    //console.log("lastValueOrThis", "final", args[args.length - 2], parentObject || nullValue)
     return parentObject || nullValue
 }
 export const truncText = (str, n) => {
     return (str.length > n) ? str.substr(0, n-1) + '&hellip;' : str;
+}
+
+export const textToLink = text => {
+    return text.replaceAll(" ", "-")
 }

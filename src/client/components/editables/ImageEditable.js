@@ -4,7 +4,7 @@ import TextEditable from './TextEditable';
 import FileChangerView from './FileChangerView';
 import FileEditable from './FileEditable';
 
-class VideoEditable extends FileEditable {
+class ImageEditable extends FileEditable {
     constructor(props) {
         super(props)
 
@@ -17,7 +17,8 @@ class VideoEditable extends FileEditable {
     
     style = {
         width: this.props.width? this.props.width : "100%",
-        height: this.props.height? this.props.height : "100%"
+        height: this.props.height? this.props.height : "100%",
+        position: "relative"
     }
 
     getStyle = () => {
@@ -34,8 +35,8 @@ class VideoEditable extends FileEditable {
     componentDidMount() {
         super.componentDidMount()
         if(this.props.refSetter) this.props.refSetter(this)
-        this.ElementClass = ParseClasses.VideoElement
-        this.FileDataClass = ParseClasses.VideoData
+        this.ElementClass = ParseClasses.ImageElement
+        this.FileDataClass = ParseClasses.ImageData
     }
 
     cancelEdit = () => {
@@ -51,7 +52,7 @@ class VideoEditable extends FileEditable {
             return this.Element
 
         } else {
-            var element = new ParseClasses.VideoElement()
+            var element = new ParseClasses.ImageElement()
             element.set("key", this.componentKey)
             element.set("tags", this.state.tags)
             element.set("editor", this.props.user)
@@ -62,54 +63,54 @@ class VideoEditable extends FileEditable {
     }
 
     createFileData(file) {
-        var fileData = new ParseClasses.VideoData()
+        var fileData = new ParseClasses.ImageData()
         fileData.set("file", file)
         fileData.setACL(this.guessedACL)
         return fileData
     }
 
     getRelationName() {
-        return "video_elements"
+        return "image_elements"
     }
 
     render() {
         this.init()
-        console.log("VideoEditable", this.state)
+        console.log("ImageEditable", this.state)
         return (
             <FileChangerView
                 key={this.props.key}
+                id={this.componentKey}
                 spinnerWidth={this.props.spinnerWidth}
                 spinnerHeight={this.props.spinnerHeight}
                 spinnerThickness={this.props.spinnerThickness}
                 spinnerCircleColor={this.props.spinnerCircleColor}
                 spinnerRunnerColor={this.props.spinnerRunnerColor}
-                id={this.componentKey}
                 active={this.props.edit}
-                type="video"
+                type="image"
                 loading={this.state.loading}
                 error={this.state.error}
                 onFile={this.handleFile}
                 style={this.getStyle()}>
 
                 <div style={styles.overlay}></div>
-                <video key={this.state.fileShades && this.state.fileShades.length > 0? this.state.fileShades[0].src : 0} style={this.props.edit && this.haveWritePermission()? videoHide : styles.video} playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+                <picture key={this.state.fileShades && this.state.fileShades.length > 0? this.state.fileShades[0].src : 0} style={this.props.edit && this.haveWritePermission()? imageHide : styles.image} playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
                     {
-                        this.state.fileShades.map((videoData, index) => {
-                            return(<source key={index} src={videoData.src} type={videoData.mime} />)
+                        this.state.fileShades.map((imageData, index) => {
+                            return(<img key={index} src={imageData.src} type={imageData.mime} />)
                         })
                     }
-                </video>
+                </picture>
                 
                 {
                 this.props.title || this.props.description || this.props.centerElement?
-                    <div class="container h-100 w-100" style={styles.container}>
-                        <div class="d-flex h-100 w-100 text-center align-items-center">
+                    <div className="container h-100 w-100" style={styles.container}>
+                        <div className="d-flex h-100 w-100 text-center align-items-center">
                             {
                                 this.props.showInfo && this.props.textEditableProps?
-                                <div class="w-100 text-white">
+                                <div className="w-100 text-white">
                                     {
                                         this.props.title?
-                                        <h1 class="display-3">
+                                        <h1 className="display-3">
                                             <TextEditable 
                                                 name={this.props.title}
                                                 {...this.props.textEditableProps} height={this.props.title_height || 40} is_input_text/>
@@ -118,7 +119,7 @@ class VideoEditable extends FileEditable {
                                     }
                                     {
                                         this.props.description?
-                                        <p class="lead mb-0">
+                                        <p className="lead mb-0">
                                             <TextEditable 
                                                 name={this.props.description}
                                                 {...this.props.textEditableProps} height={this.props.description_height || 40} is_input_text/>
@@ -168,7 +169,7 @@ const styles = {
         opacity: "0.5",
         zIndex: 1,
     },
-    video: {
+    image: {
         position: "absolute",
         top: "50%",
         left: "50%",
@@ -185,9 +186,9 @@ const styles = {
       
 }
 
-const videoHide = {
-    ...styles.video,
+const imageHide = {
+    ...styles.image,
     display: "none"
 }
 
-export default VideoEditable
+export default ImageEditable

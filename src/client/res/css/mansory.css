@@ -1,369 +1,370 @@
-.mansory {
+.masonry {
   width: 95%;
   margin: 25px auto;
   /* Prevent vertical gaps */
   line-height: 0;
 }
 
-.mansory > *::after {
-  display: table !important;
-  content: " " !important;
+.masonry > * {
+  break-inside: avoid; /* IE 10+ */ 
+  page-break-inside: avoid; /* Firefox */
+  -webkit-column-break-inside: avoid; /* Chrome, Safari, Opera */
 }
 
-.mansory-col-1 {
+.masonry-col-1 {
   -webkit-column-count: 1;
   -moz-column-count: 1;
   column-count: 1;
 }
-.mansory-col-2 {
+.masonry-col-2 {
   -webkit-column-count: 2;
   -moz-column-count: 2;
   column-count: 2;
 }
-.mansory-col-3 {
+.masonry-col-3 {
   -webkit-column-count: 3;
   -moz-column-count: 3;
   column-count: 3;
 }
-.mansory-col-4 {
+.masonry-col-4 {
   -webkit-column-count: 4;
   -moz-column-count: 4;
   column-count: 4;
 }
-.mansory-col-5 {
+.masonry-col-5 {
   -webkit-column-count: 5;
   -moz-column-count: 5;
   column-count: 5;
 }
-.mansory-gap-15 {
+.masonry-gap-15 {
   -webkit-column-gap: 15px;
   -moz-column-gap: 15px;
   column-gap: 15px;
 
 }
-.mansory-gap-15 > * {
+.masonry-gap-15 > * {
 	margin-bottom: 15px;
 }
 
-.mansory-gap-10 {
+.masonry-gap-10 {
   -webkit-column-gap: 10px;
   -moz-column-gap: 10px;
   column-gap: 10px;
 
 }
-.mansory-gap-10 > * {
+.masonry-gap-10 > * {
 	margin-bottom: 10px;
 }
 
-.mansory-gap-5 {
+.masonry-gap-5 {
   -webkit-column-gap: 5px;
   -moz-column-gap: 5px;
   column-gap: 5px;
 
 }
-.mansory-gap-5 > * {
+.masonry-gap-5 > * {
 	margin-bottom: 5px;
 }
 
-.mansory-gap-3 {
+.masonry-gap-3 {
   -webkit-column-gap: 3px;
   -moz-column-gap: 3px;
   column-gap: 3px;
 
 }
-.mansory-gap-3 > * {
+.masonry-gap-3 > * {
 	margin-bottom: 3px;
 }
 
-.mansory-gap-2 {
+.masonry-gap-2 {
   -webkit-column-gap: 2px;
   -moz-column-gap: 2px;
   column-gap: 2px;
 
 }
-.mansory-gap-2 > * {
+.masonry-gap-2 > * {
 	margin-bottom: 2px;
 }
 
-.mansory-gap-1 {
+.masonry-gap-1 {
   -webkit-column-gap: 1px;
   -moz-column-gap: 1px;
   column-gap: 1px;
 
 }
-.mansory-gap-1 > * {
+.masonry-gap-1 > * {
 	margin-bottom: 1px;
 }
 
-.mansory-gap-point-5 {
+.masonry-gap-point-5 {
   -webkit-column-gap: .5px;
   -moz-column-gap: .5px;
   column-gap: .5px;
 
 }
-.mansory-gap-point-5 > * {
+.masonry-gap-point-5 > * {
 	margin-bottom: 5px;
 }
 
 @media screen and (min-width: 576px) {
-  .mansory-col-sm-1 {
+  .masonry-col-sm-1 {
       -webkit-column-count: 1 !important;
       -moz-column-count:    1 !important;
       column-count:         1 !important;
   }
-  .mansory-col-sm-2 {
+  .masonry-col-sm-2 {
       -webkit-column-count: 2 !important;
       -moz-column-count:    2 !important;
       column-count:         2 !important;
   }
-  .mansory-col-sm-3 {
+  .masonry-col-sm-3 {
       -webkit-column-count: 3 !important;
       -moz-column-count:    3 !important;
       column-count:         3 !important;
   }
-  .mansory-col-sm-4 {
+  .masonry-col-sm-4 {
       -webkit-column-count: 4 !important;
       -moz-column-count:    4 !important;
       column-count:         4 !important;
   }
-  .mansory-col-sm-5 {
+  .masonry-col-sm-5 {
       -webkit-column-count: 5 !important;
       -moz-column-count:    5 !important;
       column-count:         5 !important;
   }
-  .mansory-gap-sm-15 {
+  .masonry-gap-sm-15 {
       -webkit-column-gap:   15px !important;
       -moz-column-gap:      15px !important;
       column-gap:           15px !important;
   }
-.mansory-gap-sm-15 > * {
+.masonry-gap-sm-15 > * {
 	margin-bottom: 15px !important;
 }
 
-  .mansory-gap-sm-10 {
+  .masonry-gap-sm-10 {
       -webkit-column-gap:   10px !important;
       -moz-column-gap:      10px !important;
       column-gap:           10px !important;
   }
-.mansory-gap-sm-10 > * {
+.masonry-gap-sm-10 > * {
 	margin-bottom: 10px !important;
 }
 
-  .mansory-gap-sm-5 {
+  .masonry-gap-sm-5 {
       -webkit-column-gap:   5px !important;
       -moz-column-gap:      5px !important;
       column-gap:           5px !important;
   }
-.mansory-gap-sm-5 > * {
+.masonry-gap-sm-5 > * {
 	margin-bottom: 5px !important;
 }
 
-  .mansory-gap-sm-3 {
+  .masonry-gap-sm-3 {
       -webkit-column-gap:   3px !important;
       -moz-column-gap:      3px !important;
       column-gap:           3px !important;
   }
-.mansory-gap-sm-3 > * {
+.masonry-gap-sm-3 > * {
 	margin-bottom: 3px !important;
 }
 
-  .mansory-gap-sm-2 {
+  .masonry-gap-sm-2 {
       -webkit-column-gap:   2px !important;
       -moz-column-gap:      2px !important;
       column-gap:           2px !important;
   }
-.mansory-gap-sm-2 > * {
+.masonry-gap-sm-2 > * {
 	margin-bottom: 2px !important;
 }
 
-  .mansory-gap-sm-1 {
+  .masonry-gap-sm-1 {
       -webkit-column-gap:   1px !important;
       -moz-column-gap:      1px !important;
       column-gap:           1px !important;
   }
-.mansory-gap-sm-1 > * {
+.masonry-gap-sm-1 > * {
 	margin-bottom: 1px !important;
 }
 
-  .mansory-gap-sm-point-5 {
+  .masonry-gap-sm-point-5 {
       -webkit-column-gap:   .5px !important;
       -moz-column-gap:      .5px !important;
       column-gap:           .5px !important;
   }
 }
 @media screen and (min-width: 767px) {
-  .mansory-col-md-1 {
+  .masonry-col-md-1 {
       -webkit-column-count: 1 !important;
       -moz-column-count:    1 !important;
       column-count:         1 !important;
   }
-  .mansory-col-md-2 {
+  .masonry-col-md-2 {
       -webkit-column-count: 2 !important;
       -moz-column-count:    2 !important;
       column-count:         2 !important;
   }
-  .mansory-col-md-3 {
+  .masonry-col-md-3 {
       -webkit-column-count: 3 !important;
       -moz-column-count:    3 !important;
       column-count:         3 !important;
   }
-  .mansory-col-md-4 {
+  .masonry-col-md-4 {
       -webkit-column-count: 4 !important;
       -moz-column-count:    4 !important;
       column-count:         4 !important;
   }
-  .mansory-col-md-5 {
+  .masonry-col-md-5 {
       -webkit-column-count: 5 !important;
       -moz-column-count:    5 !important;
       column-count:         5 !important;
   }
-  .mansory-gap-md-15 {
+  .masonry-gap-md-15 {
       -webkit-column-gap:   15px !important;
       -moz-column-gap:      15px !important;
       column-gap:           15px !important;
   }
-.mansory-gap-md-15 > * {
+.masonry-gap-md-15 > * {
 	margin-bottom: 15px !important;
 }
 
-  .mansory-gap-md-10 {
+  .masonry-gap-md-10 {
       -webkit-column-gap:   10px !important;
       -moz-column-gap:      10px !important;
       column-gap:           10px !important;
   }
-.mansory-gap-md-10 > * {
+.masonry-gap-md-10 > * {
 	margin-bottom: 10px !important;
 }
 
-  .mansory-gap-md-5 {
+  .masonry-gap-md-5 {
       -webkit-column-gap:   5px !important;
       -moz-column-gap:      5px !important;
       column-gap:           5px !important;
   }
-.mansory-gap-md-5 > * {
+.masonry-gap-md-5 > * {
 	margin-bottom: 5px !important;
 }
 
-  .mansory-gap-md-3 {
+  .masonry-gap-md-3 {
       -webkit-column-gap:   3px !important;
       -moz-column-gap:      3px !important;
       column-gap:           3px !important;
   }
-.mansory-gap-md-3 > * {
+.masonry-gap-md-3 > * {
 	margin-bottom: 3px !important;
 }
 
-  .mansory-gap-md-2 {
+  .masonry-gap-md-2 {
       -webkit-column-gap:   2px !important;
       -moz-column-gap:      2px !important;
       column-gap:           2px !important;
   }
-.mansory-gap-md-2 > * {
+.masonry-gap-md-2 > * {
 	margin-bottom: 2px !important;
 }
 
-  .mansory-gap-md-1 {
+  .masonry-gap-md-1 {
       -webkit-column-gap:   1px !important;
       -moz-column-gap:      1px !important;
       column-gap:           1px !important;
   }
-.mansory-gap-md-1 > * {
+.masonry-gap-md-1 > * {
 	margin-bottom: 1px !important;
 }
 
-  .mansory-gap-md-point-5 {
+  .masonry-gap-md-point-5 {
       -webkit-column-gap:   .5px !important;
       -moz-column-gap:      .5px !important;
       column-gap:           .5px !important;
   }
 }
 @media screen and (min-width: 992px) {
-  .mansory-col-lg-1 {
+  .masonry-col-lg-1 {
       -webkit-column-count: 1 !important;
       -moz-column-count:    1 !important;
       column-count:         1 !important;
   }
-  .mansory-col-lg-2 {
+  .masonry-col-lg-2 {
       -webkit-column-count: 2 !important;
       -moz-column-count:    2 !important;
       column-count:         2 !important;
   }
-  .mansory-col-lg-3 {
+  .masonry-col-lg-3 {
       -webkit-column-count: 3 !important;
       -moz-column-count:    3 !important;
       column-count:         3 !important;
   }
-  .mansory-col-lg-4 {
+  .masonry-col-lg-4 {
       -webkit-column-count: 4 !important;
       -moz-column-count:    4 !important;
       column-count:         4 !important;
   }
-  .mansory-col-lg-5 {
+  .masonry-col-lg-5 {
       -webkit-column-count: 5 !important;
       -moz-column-count:    5 !important;
       column-count:         5 !important;
   }
-  .mansory-gap-lg-15 {
+  .masonry-gap-lg-15 {
       -webkit-column-gap:   15px !important;
       -moz-column-gap:      15px !important;
       column-gap:           15px !important;
   }
-.mansory-gap-lg-15 > * {
+.masonry-gap-lg-15 > * {
 	margin-bottom: 15px !important;
 }
 
-  .mansory-gap-lg-10 {
+  .masonry-gap-lg-10 {
       -webkit-column-gap:   10px !important;
       -moz-column-gap:      10px !important;
       column-gap:           10px !important;
   }
-.mansory-gap-lg-10 > * {
+.masonry-gap-lg-10 > * {
 	margin-bottom: 10px !important;
 }
 
-  .mansory-gap-lg-5 {
+  .masonry-gap-lg-5 {
       -webkit-column-gap:   5px !important;
       -moz-column-gap:      5px !important;
       column-gap:           5px !important;
   }
-.mansory-gap-lg-5 > * {
+.masonry-gap-lg-5 > * {
 	margin-bottom: 5px !important;
 }
 
-  .mansory-gap-lg-3 {
+  .masonry-gap-lg-3 {
       -webkit-column-gap:   3px !important;
       -moz-column-gap:      3px !important;
       column-gap:           3px !important;
   }
-.mansory-gap-lg-3 > * {
+.masonry-gap-lg-3 > * {
 	margin-bottom: 3px !important;
 }
 
-  .mansory-gap-lg-2 {
+  .masonry-gap-lg-2 {
       -webkit-column-gap:   2px !important;
       -moz-column-gap:      2px !important;
       column-gap:           2px !important;
   }
-.mansory-gap-lg-2 > * {
+.masonry-gap-lg-2 > * {
 	margin-bottom: 2px !important;
 }
 
-  .mansory-gap-lg-1 {
+  .masonry-gap-lg-1 {
       -webkit-column-gap:   1px !important;
       -moz-column-gap:      1px !important;
       column-gap:           1px !important;
   }
-.mansory-gap-lg-1 > * {
+.masonry-gap-lg-1 > * {
 	margin-bottom: 1px !important;
 }
 
-  .mansory-gap-lg-point-5 {
+  .masonry-gap-lg-point-5 {
       -webkit-column-gap:   .5px !important;
       -moz-column-gap:      .5px !important;
       column-gap:           .5px !important;
   }
 }
-.mansory img {
+.masonry img {
   /* Just in case there are inline attributes */
   width: 100% !important;
   height: auto !important;
