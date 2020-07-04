@@ -10,7 +10,6 @@ import TextEditable from "./editables/TextEditable";
 import { Helmet } from 'react-helmet'
 import Page from "./Page";
 import Axios from "axios";
-import { WEBSITE_HOME_ADDRESS } from "../../both/Parse";
 import EditableStateContext from "./editables/EditableStateContext";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
@@ -45,29 +44,8 @@ class Home extends Page {
   }
 
   getInstagramPhotos = () => {
-    var instagramUsername = lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA)
-    if(this.state.instagramData) {
-      return this.state.instagramData.photos;
-
-    } else if(instagramUsername && instagramUsername.data.length > 0 && !this.isLoadingInstagramData) {
-      //this.setInstagramData(instagramUsername.data)
-
-    }
     return []
 
-  }
-
-  setInstagramData = username => {
-    this.isLoadingInstagramData = true
-    Axios.get(`${WEBSITE_HOME_ADDRESS}api/instagram/${username}/?__a=1`)
-    .then(res => {
-      console.log("setInstagramData", res.data)
-      this.isGettingInstagramData = false
-    })
-    .catch(e => {
-      console.log("setInstagramData", "error", e)
-      this.isGettingInstagramData = false
-    })
   }
 
   homemasonryRef = homemasonry => {

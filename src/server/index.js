@@ -8,6 +8,7 @@ import ComponentsRoutes from '../client/ComponentsRoutes'
 import Paths from './utils/Paths'
 import { Helmet } from 'react-helmet'
 import Axios from 'axios'
+import { BASE_URL, API_PORT, API_ROOT_DIR } from '../both/Constants'
 
 var express = require("express")
 var path = require("path")
@@ -40,7 +41,7 @@ var api = new ParseServer({
     appId: process.env.appId,
     restAPIKey: process.env.restAPIKey,
     javascriptKey: process.env.javascriptKey,
-    serverURL: `${process.env.serverUrl}/parse`,
+    serverURL: `${BASE_URL}:${API_PORT}/${API_ROOT_DIR}`,
     masterKey: process.env.masterKey,
     
     allowClientClassCreation: false,
@@ -59,7 +60,7 @@ var api = new ParseServer({
     // The public URL of your app.
     // This will appear in the link that is used to verify email addresses and reset passwords.
     // Set the mount path as it is in serverURL
-    publicServerURL: `${process.env.serverUrl}/parse`,
+    publicServerURL: `${BASE_URL}:${API_PORT}/${API_ROOT_DIR}`,
     // Your apps name. This will appear in the subject and body of the emails that are sent.
     appName: 'Story Stretch',
     // The email adapter
@@ -101,13 +102,13 @@ var api = new ParseServer({
 });
 
 // make the Parse Server available at /parse
-app.use("/parse", api)
+app.use(`/${API_ROOT_DIR}`, api)
 
 var dashboard = new ParseDashboard(
   {
     apps: [
       {
-        serverURL: `${process.env.serverUrl}/parse`,
+        serverURL: `${BASE_URL}:${API_PORT}/${API_ROOT_DIR}`,
         appId: process.env.appId,
         restAPIKey: process.env.restAPIKey,
         javascriptKey: process.env.javascriptKey,
