@@ -210,6 +210,6 @@ app.use("*", (req, res) => {
 })
 
 
-app.listen(process.env.PORT, () => {
+app.listen(API_PORT, () => {
   console.log('parse-server-example running on port 1337.');
 })
