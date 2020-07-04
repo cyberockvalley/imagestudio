@@ -1,7 +1,6 @@
 import React from "react"
 import { handleParseError, ParseClasses } from "../../../both/Parse"
 import Editable, { TEXT_ELEMENTS_STATE_KEY_PREFIX } from "./Editable"
-import { textToLink } from "../../../both/Functions"
 
 class ListEditable extends Editable {
     constructor(props) {
@@ -91,44 +90,7 @@ class ListEditable extends Editable {
         if(this.props.privateRef) {
             this.props.privateRef(this)
         }
-        this.setState({data: "", tags: "", items: [
-            {
-                page: {
-                    local_key: "1"
-                },
-                pageLink: `/photos/${textToLink("How to love")}/1`
-            },
-            {
-                page: {
-                    local_key: "1"
-                },
-                pageLink: `/photos/${textToLink("How to love")}/1`
-            },
-            {
-                page: {
-                    local_key: "1"
-                },
-                pageLink: `/photos/${textToLink("How to love")}/1`
-            },
-            {
-                page: {
-                    local_key: "1"
-                },
-                pageLink: `/photos/${textToLink("How to love")}/1`
-            },
-            {
-                page: {
-                    local_key: "1"
-                },
-                pageLink: `/photos/${textToLink("How to love")}/1`
-            },
-            {
-                page: {
-                    local_key: "1"
-                },
-                pageLink: `/photos/${textToLink("How to love")}/1`
-            }
-        ]})
+        this.setState({data: "", tags: "", items: []})
         this.ElementClass = ParseClasses.ListElement
     }
 
@@ -167,8 +129,51 @@ class ListEditable extends Editable {
         items.push(null)
         this.setState({items: items})
     }
+
+    getPages() {
+        if(this.Element && this.state.items.length == 0 && !this.state.pagesRequested) {
+            this.setState({pagesRequested: true})
+            var pageQuery = getParseQuery(ParseClasses.Page)
+            pageQuery.equalTo("key", this.componentKey)
+            if(this.props.ascend_position) {
+                pageQuery.ascending("position_as_an_item")
+
+            } else if(this.props.descend_position) {
+                pageQuery.descending("position_as_an_item")
+                
+            }
+            
+            if(this.props.ascend_create) {
+                pageQuery.ascending("createdAt")
+                
+            } else if(this.props.descend_create) {
+                pageQuery.descending("createdAt")
+                
+            }
+
+            if(this.props.ascend_update) {
+                pageQuery.ascending("createdAt")
+                
+            } else if(this.props.descend_update) {
+                pageQuery.descending("createdAt")
+                
+            }
+
+            return pageQuery.find()
+            .then(list => {
+                this.setState({items: list})
+
+            })
+            .catch(e => {
+                handleParseError(e)
+                this.setState({pagesRequested: false})
+            })
+        }
+    }
+
     render() {
         this.init()
+        this.getPages()
         //console.log("ListEditable", this.haveReadPermission(), this.state)
         return(
             <>

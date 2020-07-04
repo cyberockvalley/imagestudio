@@ -1,9 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
+import { lastValueOrThis } from "../../both/Functions";
+import TextEditable from "./editables/TextEditable";
 
 class FooterContactUs extends React.Component {
   render() {
     return (
-      <div className="contact-us">
+      <div className="contact-us" style={{marginTop: 150}}>
         <div className="col-md-6">
           <div
             style={{
@@ -11,16 +15,28 @@ class FooterContactUs extends React.Component {
             }}
           />
           <div className="contact-info">
-            <a href="mailto:info@imagestudio.com">
-              <span>info@imagestudio.com </span>
+            <a href={"mailto:" + (lastValueOrThis(this.context, "site_info_email", EMPTY_TEXT_ELEMENT_DATA).data)}>
+              <span>
+                <TextEditable 
+                      name={"site_info_email"}
+                      {...this.props.textEditableProps} is_input_text /> 
+              </span>
               <i className="fa fa-2x fa-at" />
             </a>
-            <a href="https://instagram.com">
-              <span>@imagestudio </span>
+            <a target="_blank" href={"https://instagram.com/" + (lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA).data)}>@
+              <span>
+                <TextEditable 
+                      name={"site_info_instagram_username"}
+                      {...this.props.textEditableProps} is_input_text /> 
+              </span>
               <i className="fa fa-2x fa-instagram" />
             </a>
-            <a href="tel:+39 644 232 2234">
-              <span>+39 644 232 2234 </span>
+            <a href={"tel:" + (lastValueOrThis(this.context, "site_info_phone_number", EMPTY_TEXT_ELEMENT_DATA).data)}>
+              <span>
+                <TextEditable 
+                      name={"site_info_phone_number"}
+                      {...this.props.textEditableProps} is_input_text /> 
+              </span>
               <i className="fa fa-2x fa-phone" />
             </a>
           </div>
@@ -43,11 +59,12 @@ class FooterContactUs extends React.Component {
                 margin: "auto 0px"
               }}
             >
-              Choosing your wedding photography and videography crew shouldn’t
-              be taken lightly. We understand how important this step is to you
-              and we are here to answer any questions you might have.{" "}
+            <TextEditable 
+                  name={"site_info_text_above_footer_contact_button"}
+                  {...this.props.textEditableProps} />
             </div>
-            <a
+            <Link 
+              to="/contact"
               className="call-to-action"
               style={{
                 display: "inline-block",
@@ -55,8 +72,10 @@ class FooterContactUs extends React.Component {
                 marginTop: "70px"
               }}
             >
-              Contact
-            </a>
+              <TextEditable 
+                  name={"site_info_footer_contact_button_text"}
+                  {...this.props.textEditableProps} is_input_text />
+            </Link>
           </div>
         </div>
       </div>

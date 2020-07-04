@@ -1,6 +1,35 @@
 import React from "react";
+import ImageEditable from "./editables/ImageEditable";
+import { useLocation, useRouteMatch } from "react-router-dom";
 
 class HeaderImageBanner extends React.Component {
+  constructor(props) {
+    super(props)
+
+  }
+  
+
+  getBannerName() {
+    var name = ""
+    if(this.props.path.startsWith("/portfolio/stories")) {
+      name = "site_info_wedding_stories_header_image"
+
+    } else if(this.props.path.startsWith("/portfolio")) {
+      name = "site_info_wedding_photos_header_image"
+
+    } else if(this.props.path.startsWith("/videos/music")) {
+      name = "site_info_music_video_header_image"
+      
+    } else if(this.props.path.startsWith("/videos/commercial")) {
+      name = "site_info_commercial_video_header_image"
+      
+    } else if(this.props.path.startsWith("/videos")) {
+      name = "site_info_wedding_video_header_image"
+      
+    }
+    return name
+  }
+
   render() {
     return (
       <section
@@ -9,20 +38,23 @@ class HeaderImageBanner extends React.Component {
           overflow: "hidden"
         }}
       >
-        <div
-          id="introImageDesktop"
-          className="d-none d-lg-block"
+        <ImageEditable
+          id="introVideoMobile"
           style={{
-            backgroundImage: "url(/imagestudio/images/1920x1280.png)",
-            height: "88vh",
+            position: "relative",
+            backgroundPosition: "center center",
+            backgroundRepeat: "no-repeat",
+            height: "100vh",
             width: "100%",
-            backgroundSize: "cover",
-            backgroundPosition: "center"
+            backgroundColor: "#000",
+            overflow: "hidden"
           }}
-        ></div>
-        <div id="introImageMobile" className="d-block d-lg-none">
-          <img src="/imagestudio/images/768x432.png" alt />
-        </div>
+          name={this.getBannerName()}
+          {...this.props.imageEditableProps}
+          spinnerWidth={100}
+          spinnerHeight={100}
+          spinnerThickness={7}
+          spinnerRunnerColor="#f33" />
       </section>
     );
   }

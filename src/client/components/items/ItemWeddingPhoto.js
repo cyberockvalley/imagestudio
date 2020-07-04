@@ -19,14 +19,23 @@ class ItemWeddingPhoto extends Item {
 
   heights = [300, 305, 350, 500, 550, 650, 600, 700]
 
+  pageOptions = {
+    no_text: true, 
+    no_video: true, 
+    no_iframe: true, 
+    no_list: true,
+    image_key: ["photo"]
+  }
+
   render() {
-    return super.render(
+    return super.render(this.pageOptions, 
       <div>
         <a href={""}>
           <ImageEditable 
             key={this.props.key}
-            name={"nsn"}
-            {...this.state.imageElementsProps}
+            edit={lastValueOrThis(this.context, "edit", false)}
+            name={"photo"}
+            {...this.context.imageElementsProps}
             spinnerWidth={50}
             spinnerHeight={50}
             spinnerThickness={7}

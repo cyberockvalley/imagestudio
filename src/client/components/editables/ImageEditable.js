@@ -79,6 +79,7 @@ class ImageEditable extends FileEditable {
         return (
             <FileChangerView
                 key={this.props.key}
+                className={this.props.className ? this.props.className : ""}
                 id={this.componentKey}
                 spinnerWidth={this.props.spinnerWidth}
                 spinnerHeight={this.props.spinnerHeight}
@@ -92,7 +93,10 @@ class ImageEditable extends FileEditable {
                 onFile={this.handleFile}
                 style={this.getStyle()}>
 
-                <div style={styles.overlay}></div>
+                {
+                    this.props.add_overlay?
+                    <div style={styles.overlay}></div> : <></>
+                }
                 <picture key={this.state.fileShades && this.state.fileShades.length > 0? this.state.fileShades[0].src : 0} style={this.props.edit && this.haveWritePermission()? imageHide : styles.image} playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
                     {
                         this.state.fileShades.map((imageData, index) => {

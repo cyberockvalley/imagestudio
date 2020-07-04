@@ -78,6 +78,7 @@ class VideoEditable extends FileEditable {
         return (
             <FileChangerView
                 key={this.props.key}
+                className={this.props.className ? this.props.className : ""}
                 spinnerWidth={this.props.spinnerWidth}
                 spinnerHeight={this.props.spinnerHeight}
                 spinnerThickness={this.props.spinnerThickness}
@@ -91,7 +92,10 @@ class VideoEditable extends FileEditable {
                 onFile={this.handleFile}
                 style={this.getStyle()}>
 
-                <div style={styles.overlay}></div>
+                {
+                    this.props.add_overlay?
+                    <div style={styles.overlay}></div> : <></>
+                }
                 <video key={this.state.fileShades && this.state.fileShades.length > 0? this.state.fileShades[0].src : 0} style={this.props.edit && this.haveWritePermission()? videoHide : styles.video} playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
                     {
                         this.state.fileShades.map((videoData, index) => {

@@ -36,7 +36,6 @@ class HeaderVideoBanner extends React.Component {
           title_height={100}
           description="site_info_header_video_description" 
           description_height={56}
-          showInfo={true}
           spinnerWidth={100}
           spinnerHeight={100}
           spinnerThickness={7}
@@ -45,7 +44,9 @@ class HeaderVideoBanner extends React.Component {
             <FilmRollerAnimation 
               top_text="Image"
               bottom_text="Studio" />
-          }/>
+          } 
+          showInfo
+          add_overlay/>
       </section>
     );
   }

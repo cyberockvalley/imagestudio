@@ -27,7 +27,7 @@ class Home extends Page {
   }
 
   componentDidMount() {
-    this.getPage("home")
+    this.loadPage("home")
 
     
   }
@@ -78,7 +78,7 @@ class Home extends Page {
     return (
       <ItemWeddingPhoto 
         key={this.props.index}
-        item={item.page} />
+        page={item.page} />
     )
   }
 
@@ -126,7 +126,7 @@ class Home extends Page {
           />
         <HeaderVideoBanner 
             videoEditableProps={this.state.videoElementsProps}
-            textEditableProps={this.state.textElementsProps}/>
+            textEditableProps={this.state.textElementsProps} />
         <NavBar />
         <div className="flo-block__container">
           <div className="flo-image-block-1 flo-image-block-1--244">

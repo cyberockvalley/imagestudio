@@ -20,20 +20,14 @@ class Item extends Page {
     console.log("Items", this.context)
   }
 
-  init = () => {
-    if(this.props.pageLocalKey && 
-        (!this.state.page || 
-          (!isNullOrEmpty(this.state.page.local_key) && this.state.page.local_key != this.props.pageLocalKey)
-        )
-      ) {
-      this.getPage(this.props.pageLocalKey, {
-        isLocal
-      })
+  init = (pageOptions) => {
+    if(!this.state.page && this.props.page) {
+        this.loadPage(this.props.page, pageOptions)
     }
   }
 
-  render(child) {
-    this.init()
+  render(pageOptions, child) {
+    this.init(pageOptions)
     return (
       <>
         {child}

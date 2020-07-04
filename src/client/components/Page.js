@@ -1,6 +1,7 @@
 import React from 'react'
 import ParseClient, { ParseClasses, getParseQuery, handleParseError, getParseRole } from '../../both/Parse'
 import EditableStateContext from './editables/EditableStateContext'
+import { isObject } from 'lodash'
 
 class Page extends React.Component {
     constructor(props) {
@@ -287,86 +288,162 @@ class Page extends React.Component {
     }
 
     getPage = (key, options) => {
-        var pageQuery = getParseQuery(ParseClasses.Page)
-        console.log("currentUser", this.state.userRole, this.state.user)
-        if(options && options.isLocal) {
-            pageQuery.equalTo("local_key", key)
-
+        if(this.state.page) {
+            console.log("getPage", key, this.state.page)
+            return new Promise((resolve, reject) => {
+                resolve(null)
+            })
         } else {
-            pageQuery.equalTo("key", key)
+            var pageQuery = getParseQuery(ParseClasses.Page)
+            if(options && options.isLocal) {
+                pageQuery.equalTo("local_key", key)
+
+            } else {
+                pageQuery.equalTo("key", key)
+            }
+            return pageQuery.first()
         }
+    }
 
-        pageQuery.first()
+    loadPage = (key, options) => {
+        if(isObject(key)) {
+            this.setState({page: key})
+        }
+        this.getPage(key, options)
         .then(page => {
-            this.setState({page: page})
-            console.log("PageState", this.state, JSON.stringify(this.state.page))
+            if(page) {
+                this.setState({page: page})
+            }
 
-            //get and set the elements
-            page.relation("text_elements").query().find()
-            .then(list => {
-                var props = this.state.textElementsProps
-                props.elements = list
-                this.setState({textElementsProps: props})
+            //get and set the text elements
+            if(!options || !options.no_text || !options.text_limit || options.text_limit > 0) {
+                this.loadTexts(options)
+            }
 
-            })
-            .catch(e => {
-                handleParseError(e)
-            })
+            //get and set the image elements
+            if(!options || !options.no_image || !options.image_limit || options.image_limit > 0) {
+                this.loadImages(options)
+            }
 
-            //get and set the image_elements
-            page.relation("image_elements").query().find()
-            .then(list => {
-                var props = this.state.imageElementsProps
-                props.elements = list
-                this.setState({imageElementsProps: props})
+            //get and set the video elements
+            if(!options || !options.no_video || !options.video_limit || options.video_limit > 0) {
+                this.loadVideos(options)
+            }
 
-            })
-            .catch(e => {
-                handleParseError(e)
-            })
+            //get and set the iframe elements
+            if(!options || !options.no_iframe || !options.iframe_limit || options.iframe_limit > 0) {
+                this.loadIframes(options)
+            }
 
-            //get and set the video_elements
-            page.relation("video_elements").query().find()
-            .then(list => {
-                var props = this.state.videoElementsProps
-                props.elements = list
-                this.setState({videoElementsProps: props})
+            //get and set the list elements
+            if(!options || !options.no_list || !options.list_limit || options.list_limit > 0) {
+                this.loadLists(options)
+            }
+            
+        })
+        .catch(e => {
+            handleParseError(e)
+        })
+    }
 
-            })
-            .catch(e => {
-                handleParseError(e)
-            })
-
-            //get and set the iframe_elements
-            page.relation("iframe_elements").query().find()
-            .then(list => {
-                var props = this.state.iframeElementsProps
-                props.elements = list
-                this.setState({iframeElementsProps: props})
-
-            })
-            .catch(e => {
-                handleParseError(e)
-            })
-
-            //get and set the list_elements
-            page.relation("list_elements").query().find()
-            .then(list => {
-                var props = this.state.listElementsProps
-                props.elements = list
-                this.setState({listElementsProps: props})
-
-            })
-            .catch(e => {
-                handleParseError(e)
-            })
-
+    loadTexts = (options) => {
+        var query = this.state.page.relation("text_elements").query()
+        if(options && options.text_keys) {
+            query.containedIn("key", options.text_keys)
+        }
+        if(options && options.text_limit) {
+            query.limit(options.text_limit)
+        }
+        query.find()
+        .then(list => {
+            var props = this.state.textElementsProps
+            props.elements = list
+            this.setState({textElementsProps: props})
 
         })
         .catch(e => {
             handleParseError(e)
         })
+    }
 
+    loadImages = (options) => {
+        var query = this.state.page.relation("image_elements").query()
+        if(options && options.image_keys) {
+            query.containedIn("key", options.image_keys)
+        }
+        if(options && options.image_limit) {
+            query.limit(options.image_limit)
+        }
+        query.find()
+        .then(list => {
+            var props = this.state.imageElementsProps
+            props.elements = list
+            this.setState({imageElementsProps: props})
+
+        })
+        .catch(e => {
+            handleParseError(e)
+        })
+    }
+
+    loadVideos = (options) => {
+        var query = this.state.page.relation("video_elements").query()
+        if(options && options.video_keys) {
+            query.containedIn("key", options.video_keys)
+        }
+        if(options && options.video_limit) {
+            query.limit(options.video_limit)
+        }
+        query.find()
+        .then(list => {
+            var props = this.state.videoElementsProps
+            props.elements = list
+            this.setState({videoElementsProps: props})
+
+        })
+        .catch(e => {
+            handleParseError(e)
+        })
+    }
+
+    loadIframes = (options) => {
+        var query = this.state.page.relation("iframe_elements").query()
+        if(options && options.iframe_keys) {
+            query.containedIn("key", options.iframe_keys)
+        }
+        if(options && options.iframe_limit) {
+            query.limit(options.iframe_limit)
+        }
+        query.find()
+        .then(list => {
+            var props = this.state.iframeElementsProps
+            props.elements = list
+            this.setState({iframeElementsProps: props})
+
+        })
+        .catch(e => {
+            handleParseError(e)
+        })
+    }
+
+    loadLists = (options) => {
+        var query = this.state.page.relation("list_elements").query()
+        if(options && options.list_keys) {
+            query.containedIn("key", options.list_keys)
+        }
+        if(options && options.list_limit) {
+            query.limit(options.list_limit)
+        }
+        query.find()
+        .then(list => {
+            var props = this.state.listElementsProps
+            props.elements = list
+            this.setState({listElementsProps: props})
+
+        })
+        .catch(e => {
+            handleParseError(e)
+        })
     }
 
     handleEditOrSaveButtonClick = () => {
@@ -482,6 +559,7 @@ class Page extends React.Component {
 
     render(child) {
         return (<EditableStateContext.Provider value={{
+            edit: this.state.edit,
             ...this.state.elementsAttributes,
             textElementsProps: {
                 ...this.state.textElementsProps

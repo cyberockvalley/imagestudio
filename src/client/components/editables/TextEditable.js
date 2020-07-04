@@ -36,8 +36,11 @@ class TextEditable extends Editable {
     
     getText = () => {
         //console.log("getText", this.props.userRole, this.props.user, this.Element? this.Element.get("ACL") : "")
-        return this.Element && this.haveReadPermission()?
-        this.Element.get("data") : this.state.data
+        var text = this.Element && this.haveReadPermission()? this.Element.get("data") : this.state.data;
+        if(text && !this.props.edit && this.props.enable_line_break) {
+            text = text.replaceAll("\n", "<br />")
+        }
+        return text
     }
 
     cancelEdit = () => {
@@ -113,6 +116,9 @@ class TextEditable extends Editable {
                             </textarea>
                             :
                             <input id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} type="text" value={this.getText()} onClick={this.handleEditClick} placeholder={`${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()} />
+                        :
+                        this.props.is_html?
+                        <span dangerouslySetInnerHTML={{__html: this.getText()}}></span>
                         :
                         <>{this.getText()}</>
                 }

@@ -18,6 +18,8 @@ class FileChangerView extends React.Component {
 
     rootClass = this.props.id
 
+    elementClass = this.props.className? " " + this.props.className : ""
+
     state = {
         draggedOver: false,
         supportDragOver: true
@@ -97,7 +99,7 @@ class FileChangerView extends React.Component {
 
     render() {
         return(
-            <div class={this.rootClass} style={this.getRootStyle()} onDragEnter={this.handleDragEnter}>
+            <div class={this.rootClass + this.elementClass} style={this.getRootStyle()} onDragEnter={this.handleDragEnter}>
                 <div style={!this.state.draggedOver? styles.fileStyle1 : dragStyles.fileStyle1}>
                     <div style={!this.state.draggedOver? styles.fileStyle2 : dragStyles.fileStyle2}>
                         <div style={!this.state.draggedOver? styles.fileStyle3 : dragStyles.fileStyle3}>
