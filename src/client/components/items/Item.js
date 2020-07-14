@@ -12,22 +12,22 @@ class Item extends Page {
     
   }
 
-  state = {
-    name: ("aaa" + Math.random()).replace(".", "")
-  }
-
   componentDidMount() {
-    console.log("Items", this.context)
+    this.props.refGetter(this)
+    this.init(this.state.pageOptions)
   }
 
   init = (pageOptions) => {
-    if(!this.state.page && this.props.page) {
-        this.loadPage(this.props.page, pageOptions)
+    if((this.state.page && this.state.page.id) || (this.props.page && this.props.page.id)) {
+      console.log("WeTheBest")
+      this.loadPage(this.state.page || this.props.page, pageOptions)
+
+    } else if(this.props.page && !this.state.page) {
+      this.setState({page: this.props.page})
     }
   }
 
-  render(pageOptions, child) {
-    this.init(pageOptions)
+  render(child) {
     return (
       <>
         {child}

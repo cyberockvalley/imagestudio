@@ -30,6 +30,36 @@ app.use(logger("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
+/*
+var cors = require('cors')
+var allowedOrigins = [
+  'http://dev.domain.com:1337',
+  'https://imagestudio.com',
+  'https://instagram.com',
+  'https://www.instagram.com'
+]
+app.use(cors({
+  origin: function(origin, callback){    
+    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true)
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }    return callback(null, true);
+  }
+}));
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Origin', 'https://www.instagram.com');
+  res.header('Access-Control-Allow-Origin', 'https://instagram.com');
+  res.header('Access-Control-Allow-Methods', 'GET,POST');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept')
+  next();
+})
+*/
 //app.use(cookieParser())
 //app.use(API_ROOT + "stripe", Stripe)
 //app.use(express.static("public", { maxAge: 31557600000 }))
@@ -41,7 +71,7 @@ var api = new ParseServer({
     appId: process.env.appId,
     restAPIKey: process.env.restAPIKey,
     javascriptKey: process.env.javascriptKey,
-    serverURL: `${BASE_URL}:${API_PORT}/${API_ROOT_DIR}`,
+    serverURL: `${BASE_URL + API_ROOT_DIR}`,
     masterKey: process.env.masterKey,
     
     allowClientClassCreation: false,
@@ -60,7 +90,7 @@ var api = new ParseServer({
     // The public URL of your app.
     // This will appear in the link that is used to verify email addresses and reset passwords.
     // Set the mount path as it is in serverURL
-    publicServerURL: `${BASE_URL}:${API_PORT}/${API_ROOT_DIR}`,
+    publicServerURL: `${BASE_URL + API_ROOT_DIR}`,
     // Your apps name. This will appear in the subject and body of the emails that are sent.
     appName: 'Story Stretch',
     // The email adapter
@@ -108,7 +138,7 @@ var dashboard = new ParseDashboard(
   {
     apps: [
       {
-        serverURL: `${BASE_URL}:${API_PORT}/${API_ROOT_DIR}`,
+        serverURL: `${BASE_URL + API_ROOT_DIR}`,
         appId: process.env.appId,
         restAPIKey: process.env.restAPIKey,
         javascriptKey: process.env.javascriptKey,
@@ -158,50 +188,6 @@ app.get(Paths, (req, res) => {
   
   const helmet = Helmet.renderStatic();
   res.status(200).send(view(helmet, initialData, body))
-})
-
-app.get("/api/instagram/:username", async (req, res) => {
-    if(req.params.username) {
-      var insta = await Axios.get(`https://instagram.com/${req.params.username}/?__a=1`, {
-        headers: {
-          'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
-          'Host': 'graph.instagram.com',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
-          'Accept': '*/*',
-          'Accept-Language': 'en-US,en;q=0.5',
-          'Accept-Encoding': 'gzip, deflate, br',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Origin': 'https://www.instagram.com',
-          'DNT': '1'
-        }
-      })
-      try {
-        var profilePicUrl = insta.data.graphql.user.profile_pic_url
-        var photos = []
-        var media = insta.data.graphql.user.edge_owner_to_timeline_media.edges
-        var i = 0
-        while(i < 6 && media.length > i) {
-          photos[i] = media[i].node.display_url
-        }
-        res.json({
-          profile_pic_url: profilePicUrl,
-          photos: photos
-        })
-
-      } catch(e) {
-        res.json({
-         error: JSON.stringify(e),
-         d: insta.data
-        })
-      }
-
-    } else {
-      res.json({
-       error: "No username supplied",
-       d2: insta.data
-      })
-
-    }
 })
 
 app.use("*", (req, res) => {

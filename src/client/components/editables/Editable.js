@@ -1,5 +1,6 @@
 import React from 'react'
 import ParseClient, { ParseClasses, handleParseError } from '../../../both/Parse'
+import { ACL } from 'parse'
 
 export const EMPTY_TEXT_ELEMENT_DATA = {data: "", tags: ""}
 class Editable extends React.Component {
@@ -38,6 +39,7 @@ class Editable extends React.Component {
 
     init() {
         if(this.props.elements) {
+            console.log("handleChange", "push", 4, JSON.stringify(this.props.elements))
             for(var i = 0; i < this.props.elements.length; i++) {
                 var thisElement = this.props.elements[i]
                 if(thisElement.get("key") == this.componentKey) {
@@ -54,10 +56,13 @@ class Editable extends React.Component {
         }
     }
 
-    
+    notAnObject = () => {
+        return this.props.isString || this.props.isArray
+    }
+
     //haveReadPermission(this.props.user, this.props.userRole, this.Element.get("ACL"))
-    haveWritePermission = () => {
-        var ACL = this.Element? this.Element.get("ACL") : this.guessedACL
+    haveWritePermission = () => {return true
+        var ACL = !this.Element || !this.notAnObject()? this.guessedACL : this.Element.get("ACL")
         return !ACL || (
             ACL.getPublicWriteAccess() || 
             ACL.getWriteAccess(this.props.user) || 
@@ -67,7 +72,7 @@ class Editable extends React.Component {
     
     //haveWritePermission(this.props.user, this.props.userRole, this.Element? this.Element.get("ACL") : this.guessedACL)
     haveReadPermission = () => {
-        var ACL = this.Element? this.Element.get("ACL") : this.guessedACL
+        var ACL = !this.Element || !this.notAnObject()? this.guessedACL : this.Element.get("ACL")
         return !ACL || (
             ACL.getPublicReadAccess() || 
             ACL.getReadAccess(this.props.user) || 
@@ -79,17 +84,27 @@ class Editable extends React.Component {
         this.guessedACL = this.guessACL()
     }
 
+    getRoleAcl = role => {
+        var ACL = new ParseClient.ACL()
+        ACL.setPublicReadAccess(true)
+        ACL.setRoleWriteAccess(role, true)
+        return ACL
+    }
+
     guessACL = () => {
         if(this.componentKey) {
             var ACL;
             for(var i = 0; i < this.ROLES_ELEMENTS_KEY_START.length; i++) {
-                for(var j = 0; j < this.ROLES_ELEMENTS_KEY_START[i].start.length; j++) {
-                    //this means the element is very likely to be restricted to this role only
-                    if(this.componentKey.startsWith(this.ROLES_ELEMENTS_KEY_START[i].start[i])) {
-                        ACL = new ParseClient.ACL()
-                        ACL.setPublicReadAccess(true)
-                        ACL.setRoleWriteAccess(this.ROLES_ELEMENTS_KEY_START[i].role, true)
-                        break
+                if(this.props.role && this.props.role == this.ROLES_ELEMENTS_KEY_START[i].role) {
+                    ACL = this.getRoleAcl(this.ROLES_ELEMENTS_KEY_START[i].role)
+
+                } else {
+                    for(var j = 0; j < this.ROLES_ELEMENTS_KEY_START[i].start.length; j++) {
+                        //this means the element is very likely to be restricted to this role only
+                        if(this.componentKey.startsWith(this.ROLES_ELEMENTS_KEY_START[i].start[i])) {
+                            ACL = this.getRoleAcl(this.ROLES_ELEMENTS_KEY_START[i].role)
+                            break
+                        }
                     }
                 }
                 if(ACL) break
@@ -98,7 +113,7 @@ class Editable extends React.Component {
                 if(ParseClient.User.current()) {
                     //give the public read access and the user both read and write access
                     ACL = new ParseClient.ACL(ParseClient.User.current())
-                    ACL = ACL.setPublicWriteAccess(false)
+                    ACL.setPublicReadAccess(true)
 
                 } else {
                     //give no one read or write access

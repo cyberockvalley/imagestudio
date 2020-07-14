@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import Home from './components/Home'
 import Contact from './components/Contact'
 import Blog from './components/Blog'
@@ -17,7 +17,7 @@ import FileUpload from './components/admin/FileUpload'
 import AdminHome from './components/admin/AdminHome'
 
 const ComponentsRoutes = (props) => (
-  <div className="App">
+  <Switch className="App">
     <Route exact path="/" 
       render={(propz) => <Home {...propz} data={props.initialData} />}
     />
@@ -42,17 +42,11 @@ const ComponentsRoutes = (props) => (
     <Route exact path="/portfolio" 
       render={(propz) => <WeddingPhotos {...propz} data={props.initialData} />}
     />
-    <Route exact path="/portfolio/stories" 
+    <Route exact path="/photo" 
       render={(propz) => <WeddingStories {...propz} data={props.initialData} />}
     />
-    <Route exact path="/portfolio/stories/:title" 
-      render={(propz) => <SingleWeddingStory {...propz} data={props.initialData} />}
-    />
-    <Route exact path="/packages" 
+    <Route exact path="/shop" 
       render={(propz) => <Shop {...propz} data={props.initialData} />}
-    />
-    <Route exact path="/packages/:title" 
-      render={(propz) => <SingleProduct {...propz} data={props.initialData} />}
     />
     <Route exact path="/movies" 
       render={(propz) => <Movies {...propz} data={props.initialData} />}
@@ -63,7 +57,13 @@ const ComponentsRoutes = (props) => (
     <Route exact path="/upload-test" 
       render={(propz) => <FileUpload {...propz} data={props.initialData} />}
     />
-  </div>
+    <Route exact path="/:title" 
+      render={(propz) => <SingleWeddingStory {...propz} data={props.initialData} />}
+    />
+    <Route exact path="/product/:title" 
+      render={(propz) => <SingleProduct {...propz} data={props.initialData} />}
+    />
+  </Switch>
 )
 
 export default ComponentsRoutes

@@ -51,22 +51,49 @@ class TextEditable extends Editable {
         })
     }
 
-    save() {
-        if(this.detailsHasChanged()) {
-            if(this.Element) {
-                this.Element.save()
-                
-            } else {
-                var element = new ParseClasses.TextElement()
-                element.set("key", this.componentKey)
-                element.set("data", this.state.data)
-                element.set("tags", this.state.tags)
-                element.set("editor", this.props.user)
-                var ACL = this.guessACL()
-                element.setACL(ACL)
-                this.props.addHandler(element, "text_elements")
+    createElement = () => {
+        if(this.notAnObject()) {
+            return {
+                className: "TextElement",
+                get: attribute => {
+                    if(attribute == "key") return this.componentKey
+                    if(attribute == "data") return this.state.data
+                    if(attribute == "tags") return ""
+                },
+                set: (attribute, value) => {
+                    if(attribute == "data") this.Element.set(this.componentKey, value)
+                }
             }
 
+        } else {
+            var element = new ParseClasses.TextElement()
+            element.set("key", this.componentKey)
+            element.set("data", this.state.data)
+            element.set("tags", this.state.tags)
+            element.set("editor", this.props.user)
+            var ACL = this.guessACL()
+            element.setACL(ACL)
+            return element
+        }
+    }
+    save() {
+        if(this.detailsHasChanged()) {
+            if(this.notAnObject()) {
+                if(!this.Element) this.Element = this.createElement()
+                this.props.addHandler(this.Element, this.componentKey, true, true)
+
+            } else {
+                if(this.Element) {
+                    this.Element.save()
+                    
+                } else {
+                    var element = this.createElement()
+                    
+                    this.props.addHandler(element, "text_elements")
+                }
+    
+            }
+            
         }
     }
 
@@ -111,11 +138,13 @@ class TextEditable extends Editable {
                 {
                     this.props.edit && this.haveWritePermission()?
                         !this.props.is_input_text?
-                            <textarea id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} onClick={this.handleEditClick} placeholder={`${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()}>
+                            <textarea id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} onClick={this.handleEditClick} 
+                            placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()}>
                                 {this.getText()}
                             </textarea>
                             :
-                            <input id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} type="text" value={this.getText()} onClick={this.handleEditClick} placeholder={`${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()} />
+                            <input id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} type="text" value={this.getText()} onClick={this.handleEditClick} 
+                            placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()} />
                         :
                         this.props.is_html?
                         <span dangerouslySetInnerHTML={{__html: this.getText()}}></span>

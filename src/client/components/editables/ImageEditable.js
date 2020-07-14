@@ -80,7 +80,7 @@ class ImageEditable extends FileEditable {
             <FileChangerView
                 key={this.props.key}
                 className={this.props.className ? this.props.className : ""}
-                id={this.componentKey}
+                id={this.props.id || this.componentKey}
                 spinnerWidth={this.props.spinnerWidth}
                 spinnerHeight={this.props.spinnerHeight}
                 spinnerThickness={this.props.spinnerThickness}
@@ -97,7 +97,9 @@ class ImageEditable extends FileEditable {
                     this.props.add_overlay?
                     <div style={styles.overlay}></div> : <></>
                 }
-                <picture key={this.state.fileShades && this.state.fileShades.length > 0? this.state.fileShades[0].src : 0} style={this.props.edit && this.haveWritePermission()? imageHide : styles.image} playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+                <picture
+                 key={this.state.fileShades && this.state.fileShades.length > 0? this.state.fileShades[0].src : 0} 
+                 style={!this.haveReadPermission()? imageHide : styles.image}>
                     {
                         this.state.fileShades.map((imageData, index) => {
                             return(<img key={index} src={imageData.src} type={imageData.mime} />)
@@ -174,18 +176,9 @@ const styles = {
         zIndex: 1,
     },
     image: {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        minWidth: "100%",
-        minHeight: "100%",
-        width: "auto",
+        width: "100%",
         height: "auto",
-        zIndex: "0",
-        msTransform: "translateX(-50%) translateY(-50%)",
-        mozTransform: "translateX(-50%) translateY(-50%)",
-        webkitTransform: "translateX(-50%) translateY(-50%)",
-        transform: "translateX(-50%) translateY(-50%)",
+        zIndex: "0"
     }
       
 }

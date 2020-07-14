@@ -14,15 +14,19 @@ import EditableStateContext from "./editables/EditableStateContext";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
 import { truncate } from "lodash";
-import { HTML_DESCRIPTION_LENGTH, BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
 import ListEditable from "./editables/ListEditable";
 import ItemWeddingPhoto from "./items/ItemWeddingPhoto";
+import InstaGrid from "./widgets/InstaGrid";
+import ImageEditable from "./editables/ImageEditable";
+
+
+const jQuery = require('jquery')
 
 class Home extends Page {
   static contextType = EditableStateContext
   constructor(props) {
     super(props)
-    
   }
 
   componentDidMount() {
@@ -31,37 +35,22 @@ class Home extends Page {
     
   }
 
-  getInstagramProfilePhoto = () => {
-    var instagramUsername = lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA)
-    if(this.state.instagramData) {
-      return this.state.instagramData.profilePhoto;
-
-    } else if(instagramUsername && instagramUsername.data.length > 0 && !this.isLoadingInstagramData) {
-      //this.setInstagramData(instagramUsername.data)
-
-    }
-    return ""
+  weddingPhotosRef = weddingPhotosList => {
+    this.weddingPhotosList = weddingPhotosList
   }
 
-  getInstagramPhotos = () => {
-    return []
-
-  }
-
-  homemasonryRef = homemasonry => {
-    this.homemasonry = homemasonry
-  }
-
-  buildHomemasonryItem = (item, index) => {
+  buildWeddingPhotosItem = (item, index, onBuildItemName, refGetter) => {
     return (
       <ItemWeddingPhoto 
-        key={this.props.index}
-        page={item.page} />
+        key={index}
+        index={index}
+        page={item}
+        onBuildItemName={onBuildItemName}
+        refGetter={refGetter} />
     )
   }
 
   render() {
-    
     return super.render(
       <>
         <Helmet>
@@ -72,7 +61,7 @@ class Home extends Page {
           <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
           <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
           
-          <link rel="canonical" href={BASE_URL} />
+          <link rel="canonical" href={SEO_BASE_URL} />
           
           <meta property="og:locale" content="en_US" />
           <meta property="og:type" content="article" />
@@ -125,14 +114,19 @@ class Home extends Page {
           </div>
         </div>
         <ListEditable 
+              noPagination={true}
+              requestPageMetasOnNewItem={false}
               className="masonry masonry-col-2 masonry-col-sm-3 masonry-gap-10"
               name={"site_content_home_masonry"}
+              onBuildItemName={(index, name) => {
+                return `site_content_wedding_photo_${index}${name}`
+              }}
               readableName="Wedding photos"
               itemReadableName="Wedding photo"
               {...this.state.listElementsProps}
-              rowsPerPage={15}
-              privateRef={this.homemasonryRef}
-              onItem={this.buildHomemasonryItem}
+              rowsPerPage={30}
+              privateRef={this.weddingPhotosRef}
+              onItem={this.buildWeddingPhotosItem}
               itemDraggable={true}
               item_tag_options={[
                 {
@@ -161,7 +155,7 @@ class Home extends Page {
                   </div>
                 </div>
                 <a
-                  href={`https://www.instagram.com/${lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA).data}`}
+                  href={`https://instagram.com/${lastValueOrThis(this.state.elementsAttributes.site_info_instagram_username, EMPTY_TEXT_ELEMENT_DATA).data}`}
                   className="social_link wow slideInUp  animated"
                   style={{
                     visibility: "visible",
@@ -188,10 +182,10 @@ class Home extends Page {
                     }}
                   >
                     <a
-                      href={`https://www.instagram.com/${lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA).data}`}
-                      target="_blank"
+                      href={this.state.edit? "javascript:void(0)" : `https://instagram.com/${lastValueOrThis(this.state.elementsAttributes.site_info_instagram_username, EMPTY_TEXT_ELEMENT_DATA).data}`}
+                      target={this.state.edit? "" : "_blank"}
                       rel="noopener"
-                      title={`@${lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA).data}`}
+                      title={`@${lastValueOrThis(this.state.elementsAttributes.site_info_instagram_username, EMPTY_TEXT_ELEMENT_DATA).data}`}
                       className="sbi_header_link"
                     >
                       <div className="sbi_header_text sbi_no_bio">
@@ -204,7 +198,7 @@ class Home extends Page {
                       <div
                         className="sbi_header_img"
                       >
-                        <div className="sbi_header_img_hover">
+                        <div className={"sbi_header_img_hover " + (this.state.edit? "d-none" : "")}>
                           <svg
                             className="sbi_new_logo fa-instagram fa-w-14"
                             aria-hidden="true"
@@ -221,23 +215,15 @@ class Home extends Page {
                             />
                           </svg>
                         </div>
-                        <img
-                          src={this.getInstagramProfilePhoto()}
-                          alt=""
-                          width={50}
-                          height={50}
-                        />
+                        <ImageEditable
+                          name="site_info_instagram_profile_photo" 
+                          alt="ImageStudio.com Webmaster"
+                          style={{width: 50, height: 50}}
+                          {...this.state.imageElementsProps} />
                       </div>
                     </a>
                   </div>
-                  <div className="instagram-images">
-                    {
-                      this.getInstagramPhotos().map((index, photo) => {
-                        <img key={index} src={photo} />
-                      })
-                    }
-                  </div>
-                  <div id="sbi_load" />
+                  <InstaGrid account="jlo" numberOfItems={6} />
                 </div>
               </div>
             </div>

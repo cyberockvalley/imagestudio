@@ -13,6 +13,7 @@ class Page extends React.Component {
             edit: false,
             user: ParseClient.User.current(),
             userRole: getParseRole(),
+            totalSavables: 0,
 
             elementsAttributes: {
 
@@ -79,75 +80,7 @@ class Page extends React.Component {
         }
     }
 
-    state = {
-        edit: false,
-        user: ParseClient.User.current(),
-        userRole: getParseRole(),
-
-        elementsAttributes: {
-
-        },
-        textElementsProps: {
-            user: ParseClient.User.current(),
-            userRole: getParseRole(),
-            edit: false,
-            elements: [],
-            elements_backup: [],
-            changeHandler: this.handleTextChange,
-            addHandler: this.addElement,
-            stateHandler: this.handleEditableState,
-            refSetter: this.setEditorRef
-        },
-
-        imageElementsProps: {
-            user: ParseClient.User.current(),
-            userRole: getParseRole(),
-            edit: false,
-            elements: [],
-            elements_backup: [],
-            changeHandler: this.handleImageChange,
-            addHandler: this.addElement,
-            stateHandler: this.handleEditableState,
-            refSetter: this.setEditorRef
-        },
-
-        videoElementsProps: {
-            user: ParseClient.User.current(),
-            userRole: getParseRole(),
-            edit: false,
-            elements: [],
-            elements_backup: [],
-            changeHandler: this.handleVideoChange,
-            addHandler: this.addElement,
-            stateHandler: this.handleEditableState,
-            refSetter: this.setEditorRef
-        },
-
-        iframeElementsProps: {
-            user: ParseClient.User.current(),
-            userRole: getParseRole(),
-            edit: false,
-            elements: [],
-            elements_backup: [],
-            changeHandler: this.handleIframeChange,
-            addHandler: this.addElement,
-            stateHandler: this.handleEditableState,
-            refSetter: this.setEditorRef
-        },
-
-        listElementsProps: {
-            user: ParseClient.User.current(),
-            userRole: getParseRole(),
-            edit: false,
-            elements: [],
-            elements_backup: [],
-            changeHandler: this.handleListChange,
-            addHandler: this.addElement,
-            stateHandler: this.handleEditableState,
-            refSetter: this.setEditorRef
-        }
-    }
-
+    
     editors = []
 
     setEditorRef = editor => {
@@ -196,8 +129,8 @@ class Page extends React.Component {
         }
     }
 
-    addElement = (element, relationName) => {
-        console.log("addHandler", element, JSON.stringify(element))
+    addElement = (element, field, notRelation, notAnObject) => {
+        console.log("addHandler", element, this.state.page.key)
         var props = this.getElementGroup(element)
         console.log("addHandler", "props", props)
         if(props == null) return
@@ -206,35 +139,67 @@ class Page extends React.Component {
             this.updateElementGroup(element, props)
             console.log("addElement", "update")
         }
-        element.save()
-        .then(elementRes => {
-            if(!["TextElement", "IframeElement"].includes(element.className)) {
-                console.log("addElement", "saveNew", elementRes.get("key"), JSON.stringify(elementRes))
-                props.elements.push(elementRes)
-                this.updateElementGroup(elementRes, props)
-                console.log("addElement", "update")
-            }
+        
+        if(notRelation) {
+            console.log("addElement", field, notAnObject? element.get("data") : JSON.stringify(element))
             var page = this.state.page
+            page.set(field, notAnObject? element.get("data") : element)
+            //update savables counter
+            this.setState({totalSavables: this.state.totalSavables - 1})
+            console.log("addElement", field, notAnObject? element.get("data") : JSON.stringify(element), this.state.totalSavables)
 
-            page.relation(relationName).add(elementRes)
-            page.save()
-            .then(pageRes => {
-                console.log("addElement", "savePage", pageRes.get("key"), pageRes)
+            //to avoid sending multiple update request to server on same page,
+            // it is important to check if the last element has been updated on the page.
+            //If not checked, for every element updated, the server will receive a update request 
+            // for the page. This is obviously. We should wait until the last element has been updated
+            // on the page before sending the page itself for update
+            if(this.state.totalSavables == 0) {
+                page.save()
+                .then(pageRes => {
+                    console.log("addElement", "savePage", pageRes.get("key"), pageRes)
+
+                })
+                .catch(e => {
+                    console.log("addElement", "savePageError", page.get("key"), e)
+                    handleParseError(e)
+        
+                })
+            }
+
+        } else {
+            element.save()
+            .then(elementRes => {
+                if(!["TextElement", "IframeElement"].includes(element.className)) {
+                    console.log("addElement", "saveNew", elementRes.get("key"), JSON.stringify(elementRes))
+                    props.elements.push(elementRes)
+                    this.updateElementGroup(elementRes, props)
+                    console.log("addElement", "update")
+                }
+                var page = this.state.page
+                page.relation(field).add(elementRes)
+                //update savables counter
+                this.setState({totalSavables: this.state.totalSavables - 1})
+
+                if(this.state.totalSavables == 0) {
+                    page.save()
+                    .then(pageRes => {
+                        console.log("addElement", "savePage", pageRes.get("key"), pageRes)
+
+                    })
+                    .catch(e => {
+                        console.log("addElement", "savePageError", page.get("key"), e)
+                        handleParseError(e)
+            
+                    })
+                }
 
             })
             .catch(e => {
-                console.log("addElement", "savePageError", page.get("key"), e)
+                console.log("addElement", "saveNewError", element.get("key"), e)
                 handleParseError(e)
-    
+
             })
-
-        })
-        .catch(e => {
-            console.log("addElement", "saveNewError", element.get("key"), e)
-            handleParseError(e)
-
-        })
-
+        }
     }
 
     handleEditableState = (key, criticalData) => {
@@ -249,6 +214,8 @@ class Page extends React.Component {
         if(index > -1) {
             var props = this.state.textElementsProps
             var elements = props.elements
+            console.log("handleChange", "push", 3, JSON.stringify(this.state.textElementsProps))
+            console.log("handleChange", "AAA", elements[index], index, elements, value)
             if(value) {
                 elements[index].set("data", value)
             }
@@ -295,6 +262,7 @@ class Page extends React.Component {
             })
         } else {
             var pageQuery = getParseQuery(ParseClasses.Page)
+            pageQuery.include("featured_image")
             if(options && options.isLocal) {
                 pageQuery.equalTo("local_key", key)
 
@@ -313,6 +281,42 @@ class Page extends React.Component {
         .then(page => {
             if(page) {
                 this.setState({page: page})
+            }
+            
+            //expose title to edit
+            var textElementsProps = this.state.textElementsProps
+            textElementsProps.elements.push({
+                className: "TextElement",
+                get: attribute => {
+                    if(attribute == "key") return "title"
+                    if(attribute == "data") return this.state.page.get("title")
+                    if(attribute == "tags") return ""
+                },
+                set: (attribute, value) => {
+                    if(attribute == "data") this.state.page.set("title", value)
+                }
+            })
+            console.log("handleChange", "push", 1, JSON.stringify(textElementsProps))
+            //expose description to edit
+            textElementsProps.elements.push({
+                className: "TextElement",
+                get: attribute => {
+                    if(attribute == "key") return "description"
+                    if(attribute == "data") return this.state.page.get("description")
+                    if(attribute == "tags") return ""
+                },
+                set: (attribute, value) => {
+                    if(attribute == "data") this.state.page.set("title", value)
+                }
+            })
+            this.setState({textElementsProps: textElementsProps})
+            console.log("handleChange", "push", 2, JSON.stringify(this.state.textElementsProps))
+
+            //expose featured_image to edit
+            if(this.state.page.get("featured_image")) {
+                var imageElementsProps = this.state.imageElementsProps
+                imageElementsProps.elements.push(page.get("featured_image"))
+                this.setState({imageElementsProps: imageElementsProps})
             }
 
             //get and set the text elements
@@ -357,7 +361,7 @@ class Page extends React.Component {
         query.find()
         .then(list => {
             var props = this.state.textElementsProps
-            props.elements = list
+            props.elements.push(list)
             this.setState({textElementsProps: props})
 
         })
@@ -366,19 +370,21 @@ class Page extends React.Component {
         })
     }
 
-    loadImages = (options) => {
+    loadImages = (options) => {console.log("ListItem", "loadImages")
         var query = this.state.page.relation("image_elements").query()
         if(options && options.image_keys) {
+            console.log("ListItem", "loadImages", "image_keys", options.image_keys)
             query.containedIn("key", options.image_keys)
         }
         if(options && options.image_limit) {
             query.limit(options.image_limit)
         }
         query.find()
-        .then(list => {
+        .then(list => {console.log("ListItem", "loadImages", "find", list)
             var props = this.state.imageElementsProps
-            props.elements = list
+            props.elements.push(list)
             this.setState({imageElementsProps: props})
+            console.log("ListItem", "loadImages", "find", this.state.imageElementsProps)
 
         })
         .catch(e => {
@@ -397,7 +403,7 @@ class Page extends React.Component {
         query.find()
         .then(list => {
             var props = this.state.videoElementsProps
-            props.elements = list
+            props.elements.push(list)
             this.setState({videoElementsProps: props})
 
         })
@@ -417,7 +423,7 @@ class Page extends React.Component {
         query.find()
         .then(list => {
             var props = this.state.iframeElementsProps
-            props.elements = list
+            props.elements.push(list)
             this.setState({iframeElementsProps: props})
 
         })
@@ -425,7 +431,7 @@ class Page extends React.Component {
             handleParseError(e)
         })
     }
-
+/*
     loadLists = (options) => {
         var query = this.state.page.relation("list_elements").query()
         if(options && options.list_keys) {
@@ -437,7 +443,7 @@ class Page extends React.Component {
         query.find()
         .then(list => {
             var props = this.state.listElementsProps
-            props.elements = list
+            props.elements = props.elements.push(list)
             this.setState({listElementsProps: props})
 
         })
@@ -445,14 +451,34 @@ class Page extends React.Component {
             handleParseError(e)
         })
     }
-
+*/
     handleEditOrSaveButtonClick = () => {
-        if(!this.state.edit) {
-            this.saveBackUp()
-            this.switchEditOn(true)
-
-        } else {
+        if(this.state.edit || (this.context && this.context.edit)) {
             this.switchEditOn(false)
+            var savables = 0
+            var savablesIds = []
+            this.editors.forEach(element => {
+                if(element.props.isString || element.props.isPointer) {
+                    console.log("addElementH", 0, element.componentKey, savablesIds)
+                }
+                //to avoid elments with the same key, which will and should definetly contain the same
+                // value from updating the same field with the same value on the database multiple times, 
+                // a check is necessary to distinctively update the elements
+                if(!savablesIds.includes(element.componentKey)) {
+                    if(element.props.isString || element.props.isPointer) {
+                        console.log("addElementH", 2, element.componentKey, savablesIds)
+                    }
+                    savablesIds.push(element.componentKey)
+                    if(element.detailsHasChanged()) {
+                        console.log("addElementH", 3, element.componentKey, savablesIds)
+                        savables++
+                    } else {
+                        
+                        console.log("addElementH", 4, element.componentKey, savablesIds)
+                    }
+                }
+            });
+            this.setState({totalSavables: savables})
             var saveIds = []
             this.editors.forEach(element => {
                 //to avoid elments with the same key, which will and should definetly contain the same
@@ -463,6 +489,10 @@ class Page extends React.Component {
                     element.save()
                 }
             });
+
+        } else {
+            this.saveBackUp()
+            this.switchEditOn(true)
         }
     }
 

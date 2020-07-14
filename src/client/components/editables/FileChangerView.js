@@ -169,16 +169,13 @@ const styles = {
         background: "#f33"
     },
     fileStyle1: {
-        width: "90%", height: "90%", padding: "3px", margin: "auto"
+        width: "100%", height: "100%"
     },
     fileStyle2: {
-        width: "100%", height: "100%", padding: "3px"
+        width: "100%", height: "100%"
     },
     fileStyle3: {
-        width: "100%", height: "100%", padding: "3px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "end", alignItems: "center"
+        width: "100%", height: "100%"
     },
     button: {
         padding: 15,
@@ -201,17 +198,20 @@ const styles = {
 }
 const dragStyles = {
     fileStyle1: {
-        ...styles.fileStyle1,
+        width: "90%", height: "90%", padding: "3px", margin: "auto",
         border: "1px dashed red"
     },
     fileStyle2: {
-        ...styles.fileStyle2,
+        width: "100%", height: "100%", padding: "3px",
         border: "1px dashed green"
     },
     fileStyle3: {
-        ...styles.fileStyle3,
-        border: "1px dashed blue"
-    }
+        width: "100%", height: "100%", padding: "3px",
+        border: "1px dashed blue",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "end", alignItems: "center"
+    },
 }
 
 export default FileChangerView

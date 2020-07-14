@@ -7,11 +7,17 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
+import ListEditable from "./editables/ListEditable";
+import EditableStateContext from "./editables/EditableStateContext";
+import ItemWeddingPhoto from "./items/ItemWeddingPhoto";
 
 class WeddingPhotos extends Page {
+  static contextType = EditableStateContext
   constructor(props){
     super(props)
+    
+    this.handleWeddingPhotosLoadMore = this.handleWeddingPhotosLoadMore.bind(this)
   }
 
   componentDidMount() {
@@ -22,8 +28,41 @@ class WeddingPhotos extends Page {
     
   }
 
-  render() {
+  weddingPhotosRef = weddingPhotosList => {
+    this.weddingPhotosList = weddingPhotosList
+    
+  }
+
+  handleWeddingPhotosLoadMore = e => {
+    if(this.weddingPhotosList && !this.state.weddingPhotosLoading) {
+      this.setState({weddingPhotosLoading: true})
+      this.weddingPhotosList.more(info => {
+        //onLoaded
+        this.setState({
+          weddingPhotosLoading: false,
+          weddingPhotosHasNext: info.has_next,
+          weddingPhotosHasPrev: info.has_prev
+        })
+      }, error => {
+        //onFailed
+        this.setState({weddingPhotosLoading: false})
+      })
+    }
+  }
+
+  buildWeddingPhotosItem = (item, index, onBuildItemName, refGetter) => {
     return (
+      <ItemWeddingPhoto 
+        key={index}
+        index={index}
+        page={item}
+        onBuildItemName={onBuildItemName}
+        refGetter={refGetter} />
+    )
+  }
+
+  render() {
+    return super.render(
       <>
         <Helmet>
           <title>{lastValueOrThis(this.state.page, {get: () => {return ""}}).get("title")}</title>
@@ -33,7 +72,7 @@ class WeddingPhotos extends Page {
           <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
           <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
           
-          <link rel="canonical" href={BASE_URL + "/portfolio"} />
+          <link rel="canonical" href={SEO_BASE_URL + "/portfolio"} />
           
           <meta property="og:locale" content="en_US" />
           <meta property="og:type" content="article" />
@@ -66,9 +105,39 @@ class WeddingPhotos extends Page {
             path={this.props.location.pathname}
             imageEditableProps={this.state.imageElementsProps} />
           <NavBar />
-          <section className="masonry masonry-col-2 masonry-col-sm-3 masonry-gap-10"></section>
+          <ListEditable 
+              requestPageMetasOnNewItem={false}
+              className="masonry masonry-col-2 masonry-col-sm-3 masonry-gap-10"
+              name={"site_content_home_masonry"}
+              onBuildItemName={(index, name) => {
+                return `site_content_wedding_photo_${index}${name}`
+              }}
+              readableName="Wedding photos"
+              itemReadableName="Wedding photo"
+              {...this.state.listElementsProps}
+              rowsPerPage={5}
+              privateRef={this.weddingPhotosRef}
+              onItem={this.buildWeddingPhotosItem}
+              itemDraggable={true}
+              item_tag_options={[
+                {
+                  title: "Select width",
+                  description: "Your option determines how much space This image takes on a row. 12 takes a whole row, 6 takes half...",
+                  key: "width",
+                  values: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+                }
+              ]}
+              onItemsLoaded = {
+                info => {
+                this.setState({
+                  weddingPhotosHasNext: info.has_next
+                })}
+              }
+          />
           <div className="load-more">
-            <button className="load-more">Load More</button>
+            <button onClick={this.handleWeddingPhotosLoadMore} className={"load-more " + (this.state.weddingPhotosLoading? "loading " : "") + (this.state.weddingPhotosHasNext? "" : "d-none")}>
+              <span>Load More</span>
+            </button>
           </div>
           <FooterContactUs
             edit={this.state.edit}

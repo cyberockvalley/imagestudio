@@ -6,7 +6,7 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
 import ImageEditable from "./editables/ImageEditable";
@@ -35,7 +35,7 @@ class Contact extends Page {
           <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
           <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
           
-          <link rel="canonical" href={BASE_URL + "/portfolio"} />
+          <link rel="canonical" href={SEO_BASE_URL + "contact"} />
           
           <meta property="og:locale" content="en_US" />
           <meta property="og:type" content="article" />

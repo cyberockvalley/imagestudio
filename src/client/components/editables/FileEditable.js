@@ -91,11 +91,11 @@ class FileEditable extends Editable {
             this.setState({fileRequested: true})
             //get the file relation
             this.Element.relation("data").query().find()
-            .then(list => {
+            .then(list => {console.log("loadImages", "FileEditables", "updateFile", "list", list, JSON.stringify(this.Element))
                 this.processData(list)
 
             })
-            .catch(e => {
+            .catch(e => {console.log("loadImages", "FileEditables", "updateFile", "error", e)
                 handleParseError(e)
                 this.setState({fileRequested: false})
             })
@@ -108,6 +108,7 @@ class FileEditable extends Editable {
         for(var i = 0; i < list.length; i++) {
             var fileData = list[i]
             var url = fileData.get('file').url()
+            console.log("loadImages", "FileEditables", "processData", "listUrl", url)
             fileShades.push({
                 src: url,
                 mime: this.getFileDataMime(url),
@@ -161,7 +162,12 @@ class FileEditable extends Editable {
             
                         } else {
                             element.relation("data").add(fileDataResponse)
-                            this.props.addHandler(element, this.getRelationName())
+                            if(this.props.isPointer) {
+                                this.props.addHandler(element, this.componentKey, true)
+
+                            } else {
+                                this.props.addHandler(element, this.getRelationName())
+                            }
                         }
                     })
                     .catch(e => {

@@ -7,11 +7,17 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
+import ListEditable from "./editables/ListEditable";
+import EditableStateContext from "./editables/EditableStateContext";
+import ItemWeddingStory from "./items/ItemWeddingStory";
 
 class WeddingStories extends Page {
+  static contextType = EditableStateContext
   constructor(props){
     super(props)
+    
+    this.handleWeddingStoriesLoadMore = this.handleWeddingStoriesLoadMore.bind(this)
   }
 
   componentDidMount() {
@@ -22,8 +28,41 @@ class WeddingStories extends Page {
     
   }
 
-  render() {
+  weddingStoriesRef = weddingStoriesList => {
+    this.weddingStoriesList = weddingStoriesList
+    
+  }
+
+  handleWeddingStoriesLoadMore = e => {
+    if(this.weddingStoriesList && !this.state.weddingStoriesLoading) {
+      this.setState({weddingStoriesLoading: true})
+      this.weddingStoriesList.more(info => {
+        //onLoaded
+        this.setState({
+          weddingStoriesLoading: false,
+          weddingStoriesHasNext: info.has_next,
+          weddingStoriesHasPrev: info.has_prev
+        })
+      }, error => {
+        //onFailed
+        this.setState({weddingStoriesLoading: false})
+      })
+    }
+  }
+
+  buildWeddingStoriesItem = (item, index, onBuildItemName, refGetter) => {
     return (
+      <ItemWeddingStory 
+        key={index}
+        index={index}
+        page={item}
+        onBuildItemName={onBuildItemName}
+        refGetter={refGetter} />
+    )
+  }
+
+  render() {
+    return super.render(
       <>
         <Helmet>
           <title>{lastValueOrThis(this.state.page, {get: () => {return ""}}).get("title")}</title>
@@ -33,7 +72,7 @@ class WeddingStories extends Page {
           <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
           <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
           
-          <link rel="canonical" href={BASE_URL + "/portfolio"} />
+          <link rel="canonical" href={SEO_BASE_URL + "/portfolio"} />
           
           <meta property="og:locale" content="en_US" />
           <meta property="og:type" content="article" />
@@ -62,24 +101,54 @@ class WeddingStories extends Page {
             onEditOrSaveButtonClicked={this.handleEditOrSaveButtonClick}
             onCancelEdit={this.handleCancelEdit}
             textEditableProps={this.state.textElementsProps} />
-          <HeaderImageBanner  
-              path={this.props.location.pathname}
-              imageEditableProps={this.state.imageElementsProps} />
+          <HeaderImageBanner 
+            path={this.props.location.pathname}
+            imageEditableProps={this.state.imageElementsProps} />
           <NavBar />
-          <section className="stories"></section>
+          <ListEditable 
+              requestPageMetasOnNewItem={false}
+              className="stories"
+              name={"site_content_wedding_stories"}
+              onBuildItemName={(index, name) => {
+                return `site_content_wedding_story_${index}${name}`
+              }}
+              readableName="Wedding stories"
+              itemReadableName="Wedding story"
+              {...this.state.listElementsProps}
+              rowsPerPage={5}
+              privateRef={this.weddingStoriesRef}
+              onItem={this.buildWeddingStoriesItem}
+              itemDraggable={true}
+              item_tag_options={[
+                {
+                  title: "Select width",
+                  description: "Your option determines how much space This image takes on a row. 12 takes a whole row, 6 takes half...",
+                  key: "width",
+                  values: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+                }
+              ]}
+              onItemsLoaded = {
+                info => {
+                this.setState({
+                  weddingStoriesHasNext: info.has_next
+                })}
+              }
+          />
           <div className="load-more">
-            <button className="load-more">Load More</button>
+            <button onClick={this.handleWeddingStoriesLoadMore} className={"load-more " + (this.state.weddingStoriesLoading? "loading " : "") + (this.state.weddingStoriesHasNext? "" : "d-none")}>
+              <span>Load More</span>
+            </button>
           </div>
-            <FooterContactUs
-              edit={this.state.edit}
-              user={this.state.user}
-              userRole={this.state.userRole}
-              textEditableProps={this.state.textElementsProps} />
-            <Footer
-              edit={this.state.edit}
-              user={this.state.user}
-              userRole={this.state.userRole}
-              textEditableProps={this.state.textElementsProps} />
+          <FooterContactUs
+            edit={this.state.edit}
+            user={this.state.user}
+            userRole={this.state.userRole}
+            textEditableProps={this.state.textElementsProps} />
+          <Footer
+            edit={this.state.edit}
+            user={this.state.user}
+            userRole={this.state.userRole}
+            textEditableProps={this.state.textElementsProps} />
         </>
       </>
     );

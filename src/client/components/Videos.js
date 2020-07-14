@@ -7,7 +7,7 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH } from "../../both/Constants";
 
 class Videos extends Page {
   constructor(props){

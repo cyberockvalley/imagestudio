@@ -9,7 +9,7 @@ if(!isClient()) {
 
 ParseClient.initialize('123456A', '123456J')
 
-ParseClient.serverURL = `${BASE_URL}:${API_PORT}/${API_ROOT_DIR}`
+ParseClient.serverURL = `${BASE_URL + API_ROOT_DIR}`
 
 //ParseClient.enableEncryptedUser()
 //ParseClient.secret =  'Test secrect Key'

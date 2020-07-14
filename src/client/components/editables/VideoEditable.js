@@ -33,6 +33,8 @@ class VideoEditable extends FileEditable {
 
     componentDidMount() {
         super.componentDidMount()
+        //https://www.youtube.com/embed/qHVahh3dwK4
+        //https://www.youtube.com/get_video_info?video_id=qHVahh3dwK4
         if(this.props.refSetter) this.props.refSetter(this)
         this.ElementClass = ParseClasses.VideoElement
         this.FileDataClass = ParseClasses.VideoData
@@ -96,7 +98,8 @@ class VideoEditable extends FileEditable {
                     this.props.add_overlay?
                     <div style={styles.overlay}></div> : <></>
                 }
-                <video key={this.state.fileShades && this.state.fileShades.length > 0? this.state.fileShades[0].src : 0} style={this.props.edit && this.haveWritePermission()? videoHide : styles.video} playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+                <video key={this.state.fileShades && this.state.fileShades.length > 0? this.state.fileShades[0].src : 0} 
+                style={!this.haveReadPermission()? videoHide : styles.video} playsInline="playsinline" autoPlay="autoplay" muted="muted" loop="loop">
                     {
                         this.state.fileShades.map((videoData, index) => {
                             return(<source key={index} src={videoData.src} type={videoData.mime} />)

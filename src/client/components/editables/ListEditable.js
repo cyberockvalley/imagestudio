@@ -1,13 +1,29 @@
 import React from "react"
-import { handleParseError, ParseClasses } from "../../../both/Parse"
+import { handleParseError, ParseClasses, getParseQuery } from "../../../both/Parse"
 import Editable, { TEXT_ELEMENTS_STATE_KEY_PREFIX } from "./Editable"
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Pagination from "./Pagination";
+
+const PAGINATION = {
+    default: -1,
+    more: 0,
+    next: 1,
+    prev: 2
+}
+const ROWS_PER_PAGE = 15
 class ListEditable extends Editable {
     constructor(props) {
         super(props)
-
+        this.pagination = new Pagination(this.props.rowsPerPage || ROWS_PER_PAGE)
         this.handleEditClick = this.handleEditClick.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        
+        this.state = {...this.state, data: "", tags: "", items: []}
     }
     
     text_area_style = {
@@ -40,25 +56,48 @@ class ListEditable extends Editable {
             data: "",
             tags: ""
         })
+        var items = this.state.items
+        var itemsPerm = []
+        items.forEach(element => {
+            if(element.page.id) {
+                itemsPerm.push(element)
+            }
+        });
+        if(items.length > itemsPerm.length) {
+            this.setState({items: itemsPerm})
+        }
     }
 
-    save() {/*
-        if(this.detailsHasChanged()) {
-            if(this.Element) {
-                this.Element.save()
-                
-            } else {
-                var element = new ParseClasses.TextElement()
-                element.set("key", this.componentKey)
-                element.set("data", this.state.data)
-                element.set("tags", this.state.tags)
-                element.set("editor", this.props.user)
-                var ACL = this.guessACL()
-                element.setACL(ACL)
-                this.props.addHandler(element, "text_elements")
-            }
+    addNew = (meta) => {
+        var items = this.state.items
+        var page = new ParseClasses.Page()
+        page.set("key", this.componentKey)
+        page.set("local_key", this.props.onBuildItemName(items.length, ""))
+        page.set("title", meta && meta.title? meta.title : "")
+        page.set("description", meta && meta.description? meta.description : "")
+        page.set("slug", meta && meta.description? meta.description : "")
+        page.set("editor", this.props.user)
+        var ACL = this.guessACL()
+        page.setACL(ACL)
 
-        }*/
+        items.push(page)
+        console.log("addNew")
+        this.setState({items: items})
+    }
+
+    handleAddClick = () => {
+        if(!this.props.requestPageMetasOnNewItem) {
+            this.addNew()
+
+        } else {
+
+        }
+    }
+
+    save() {
+        this.pageRefs.forEach(page => {
+            page.handleEditOrSaveButtonClick()
+        });
     }
 
     detailsHasChanged() {
@@ -92,6 +131,8 @@ class ListEditable extends Editable {
         }
         this.setState({data: "", tags: "", items: []})
         this.ElementClass = ParseClasses.ListElement
+        
+        this.getPages(PAGINATION.default, this.props.onItemsLoaded, this.props.onItemsLoadError)
     }
 
     handleEditClick = e => {
@@ -99,20 +140,23 @@ class ListEditable extends Editable {
     }
 
     //pagination methods exposed through the privateRef props START
-    next = () => {
-
+    more = (onLoaded, onFailed) => {
+        this.getPages(PAGINATION.more, onLoaded, onFailed)
+    }
+    next = (onLoaded, onFailed) => {
+        this.getPages(PAGINATION.next, onLoaded, onFailed)
     }
 
-    prev = () => {
-        
+    prev = (onLoaded, onFailed) => {
+        this.getPages(PAGINATION.prev, onLoaded, onFailed)
     }
 
     hasNext = () => {
-
+        return this.pagination.hasNext()
     }
 
     hasPrev = () => {
-
+        return this.pagination.hasPrev()
     }
 
     fetchedCount = () => {
@@ -124,14 +168,8 @@ class ListEditable extends Editable {
     }
     //pagination methods exposed through the privateRef props END
 
-    addNew = () => {
-        var items = this.state.items
-        items.push(null)
-        this.setState({items: items})
-    }
-
-    getPages() {
-        if(this.Element && this.state.items.length == 0 && !this.state.pagesRequested) {
+    getPages(paginationType, onLoaded, onFailed) {
+        if(!this.state.pagesRequested) {
             this.setState({pagesRequested: true})
             var pageQuery = getParseQuery(ParseClasses.Page)
             pageQuery.equalTo("key", this.componentKey)
@@ -152,29 +190,59 @@ class ListEditable extends Editable {
             }
 
             if(this.props.ascend_update) {
-                pageQuery.ascending("createdAt")
+                pageQuery.ascending("updatedAt")
                 
             } else if(this.props.descend_update) {
-                pageQuery.descending("createdAt")
+                pageQuery.descending("updatedAt")
                 
             }
 
-            return pageQuery.find()
-            .then(list => {
-                this.setState({items: list})
+            if(this.props.noPagination) {
+                pageQuery.limit(this.props.rowsPerPage || ROWS_PER_PAGE)
 
+            } else {
+                switch (paginationType) {
+                    case PAGINATION.prev:
+                        pageQuery.limit(this.pagination.getPrevLimit())
+                        pageQuery.skip(this.pagination.getPrevSkip(this.state.items.length))
+                        break;
+                    default:
+                        pageQuery.limit(this.pagination.getNextLimit())
+                        pageQuery.skip(this.pagination.getNextSkip(this.state.items.length))
+                        break;
+                }
+            }
+            
+            pageQuery.find()
+            .then(list => {
+                if(!this.props.noPagination) {
+                    list = this.pagination.update(list)
+                }
+                if(list.length > 0) {
+                    this.setState({items: paginationType == PAGINATION.more? this.state.items.concat(list) : list})
+
+                }
+                console.log("PAGINATION", "itemsCount", this.state.items.length)
+                if(onLoaded) onLoaded({has_prev: this.hasPrev(), has_next: this.hasNext()})
+                this.setState({pagesRequested: false})
             })
             .catch(e => {
                 handleParseError(e)
+                if(onFailed) onFailed(e)
                 this.setState({pagesRequested: false})
             })
         }
     }
 
+    getPrevPageFromItems = () => {
+        if(this.state.items.length == 0) return -1
+        return Math.ceil(this.state.items.length / (this.props.rowsPerPage || this.ROWS_PER_PAGE)) - 1
+    }
+
+    pageRefs = []
+
     render() {
         this.init()
-        this.getPages()
-        //console.log("ListEditable", this.haveReadPermission(), this.state)
         return(
             <>
                 {
@@ -191,8 +259,10 @@ class ListEditable extends Editable {
                 <section class={this.props.className? this.props.className : ""}>
                     {
                         this.state.items && this.haveReadPermission()?
-                        this.state.items.map((item, index) => {
-                            return this.props.onItem(item, index)
+                        this.state.items.map((page, index) => {
+                            return this.props.onItem(page, index, this.props.onBuildItemName, (ref) => {
+                                this.pageRefs.push(ref)
+                            })
                         })
                         :
                         <></>
@@ -201,7 +271,7 @@ class ListEditable extends Editable {
                 {
                     this.props.edit && this.haveWritePermission()?
                     <div style={styles.addButtonContainer}>
-                        <button style={styles.addButton} onClick={this.addNew}>
+                        <button style={styles.addButton} onClick={this.handleAddClick}>
                             <span>
                                 <i className="fa fa-2x fa-plus"></i> Add New {
                                 this.props.itemReadableName || this.keyToText()

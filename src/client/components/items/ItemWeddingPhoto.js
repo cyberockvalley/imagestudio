@@ -13,36 +13,31 @@ class ItemWeddingPhoto extends Item {
   }
 
   componentDidMount() {
-    console.log("ItemWeddingPhotos", this.context)
-    this.setState({name: ("aaa" + Math.random()).replace(".", "")})
+    this.setState({pageOptions: this.pageOptions})
+    super.componentDidMount()
   }
-
-  heights = [300, 305, 350, 500, 550, 650, 600, 700]
 
   pageOptions = {
     no_text: true, 
     no_video: true, 
     no_iframe: true, 
-    no_list: true,
-    image_key: ["photo"]
+    no_list: true
   }
 
   render() {
-    return super.render(this.pageOptions, 
-      <div>
-        <a href={""}>
-          <ImageEditable 
-            key={this.props.key}
-            edit={lastValueOrThis(this.context, "edit", false)}
-            name={"photo"}
-            {...this.context.imageElementsProps}
+    return super.render( 
+      <ImageEditable 
+            name="photo"
+            id={this.props.onBuildItemName(this.props.index, "photo")}
+            {...this.state.imageElementsProps}
+            edit={this.context.edit}
             spinnerWidth={50}
             spinnerHeight={50}
             spinnerThickness={7}
             spinnerRunnerColor="#f33"
-            style={{height: this.heights[Math.floor(Math.random() * this.heights.length)]}} />
-        </a>
-      </div>
+/*
+            style={(this.state.page && !this.state.page.id) || this.context.edit?{} : {height: 300}}
+            add_overlay={(this.state.page && !this.state.page.id) || this.context.edit}*/ />
     )
   }
 }

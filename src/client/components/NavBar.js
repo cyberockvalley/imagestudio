@@ -80,7 +80,7 @@ class NavBar extends React.Component {
                       >
                         <Link
                           title="Full Stories"
-                          to="/portfolio/stories"
+                          to="/photo/"
                           className="dropdown-item"
                         >
                           Full Stories
@@ -158,7 +158,7 @@ class NavBar extends React.Component {
                   >
                     <Link
                       title="Packages"
-                      to="/packages/"
+                      to="/shop/"
                       className="nav-link"
                     >
                       Packages

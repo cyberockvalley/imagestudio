@@ -11,21 +11,23 @@ class HeaderImageBanner extends React.Component {
 
   getBannerName() {
     var name = ""
-    if(this.props.path.startsWith("/portfolio/stories")) {
-      name = "site_info_wedding_stories_header_image"
-
-    } else if(this.props.path.startsWith("/portfolio")) {
-      name = "site_info_wedding_photos_header_image"
-
-    } else if(this.props.path.startsWith("/videos/music")) {
-      name = "site_info_music_video_header_image"
-      
-    } else if(this.props.path.startsWith("/videos/commercial")) {
-      name = "site_info_commercial_video_header_image"
-      
-    } else if(this.props.path.startsWith("/videos")) {
-      name = "site_info_wedding_video_header_image"
-      
+    if(this.props.path) {
+      if(this.props.path.startsWith("/portfolio/stories")) {
+        name = "site_info_wedding_stories_header_image"
+  
+      } else if(this.props.path.startsWith("/portfolio")) {
+        name = "site_info_wedding_photos_header_image"
+  
+      } else if(this.props.path.startsWith("/videos/music")) {
+        name = "site_info_music_video_header_image"
+        
+      } else if(this.props.path.startsWith("/videos/commercial")) {
+        name = "site_info_commercial_video_header_image"
+        
+      } else if(this.props.path.startsWith("/videos")) {
+        name = "site_info_wedding_video_header_image"
+        
+      }
     }
     return name
   }
