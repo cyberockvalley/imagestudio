@@ -91,11 +91,11 @@ class FileEditable extends Editable {
             this.setState({fileRequested: true})
             //get the file relation
             this.Element.relation("data").query().find()
-            .then(list => {console.log("loadImages", "FileEditables", "updateFile", "list", list, JSON.stringify(this.Element))
+            .then(list => {
                 this.processData(list)
 
             })
-            .catch(e => {console.log("loadImages", "FileEditables", "updateFile", "error", e)
+            .catch(e => {
                 handleParseError(e)
                 this.setState({fileRequested: false})
             })

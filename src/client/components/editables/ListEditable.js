@@ -213,6 +213,9 @@ class ListEditable extends Editable {
                 }
             }
             
+            pageQuery.include("featured_image")
+            pageQuery.include("featured_image.editor")
+            pageQuery.ascending("position_as_an_item")
             pageQuery.find()
             .then(list => {
                 if(!this.props.noPagination) {

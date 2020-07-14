@@ -39,9 +39,12 @@ class Editable extends React.Component {
 
     init() {
         if(this.props.elements) {
-            console.log("handleChange", "push", 4, JSON.stringify(this.props.elements))
             for(var i = 0; i < this.props.elements.length; i++) {
                 var thisElement = this.props.elements[i]
+                
+                if(thisElement.className == "ImageElement") {
+                    console.log("addElement", "FeaturedImage", 4, this.componentKey, thisElement, JSON.stringify(thisElement))
+                }
                 if(thisElement.get("key") == this.componentKey) {
                     this.ElementIndex = i;
                     this.Element = thisElement

@@ -4,6 +4,8 @@ import EditableStateContext from "../editables/EditableStateContext";
 import ImageEditable from "../editables/ImageEditable";
 import TextEditable from "../editables/TextEditable";
 import { SEO_BASE_URL, PAGE_404, ROLES } from "../../../both/Constants";
+import { slugify } from "../../../both/Functions";
+import { Link } from "react-router-dom";
 
 class ItemWeddingStory extends Item {
   static contextType = EditableStateContext
@@ -13,6 +15,7 @@ class ItemWeddingStory extends Item {
   }
 
   componentDidMount() {
+    console.log("SlugifyTest", "Wedding in Rome – Irina & Sam", "=>", slugify("Wedding in Rome – Irina & Sam"))
     this.setState({pageOptions: this.pageOptions})
     super.componentDidMount()
   }
@@ -21,16 +24,15 @@ class ItemWeddingStory extends Item {
     no_text: true, 
     no_video: true, 
     no_iframe: true, 
-    no_list: true,
-    image_key: ["story"]
+    no_list: true
   }
 
   getPageLink = () => {
     if(this.state.page) {
-      return SEO_BASE_URL + this.state.page.slug
+      return "/" + this.state.page.get("slug")
 
     } else {
-      return SEO_BASE_URL + PAGE_404
+      return "/" + PAGE_404
     }
   }
 
@@ -44,7 +46,7 @@ class ItemWeddingStory extends Item {
           }}
         >
           <div className="story">
-            <a href={this.context.edit? "javascript:void()" : this.getPageLink()}>
+            <Link to={this.context.edit? "javascript:void()" : this.getPageLink()}>
               <ImageEditable
                 isPointer
                 role={ROLES.mod}
@@ -75,7 +77,7 @@ class ItemWeddingStory extends Item {
                     is_input_text />
                 </h2>
               </div>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

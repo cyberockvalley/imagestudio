@@ -93,7 +93,7 @@ class FileChangerView extends React.Component {
             }
 
         }
-        if(this.props.active) styles.paddingTop = 20
+        //if(this.props.active) styles.paddingTop = 20
         return styles
     }
 

@@ -40,7 +40,6 @@ class ImageEditable extends FileEditable {
     }
 
     cancelEdit = () => {
-        console.log("cancelEdit", this.componentKey, this.state)
         this.setState({
             data: "",
             tags: ""
@@ -102,7 +101,8 @@ class ImageEditable extends FileEditable {
                  style={!this.haveReadPermission()? imageHide : styles.image}>
                     {
                         this.state.fileShades.map((imageData, index) => {
-                            return(<img key={index} src={imageData.src} type={imageData.mime} />)
+                            return(<img key={index} src={imageData.src} type={imageData.mime} 
+                            style={this.props.style? this.props.style : {}} />)
                         })
                     }
                 </picture>

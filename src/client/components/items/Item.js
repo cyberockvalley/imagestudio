@@ -28,6 +28,7 @@ class Item extends Page {
   }
 
   render(child) {
+    console.log("ITEM", this.state.pageOptions)
     return (
       <>
         {child}

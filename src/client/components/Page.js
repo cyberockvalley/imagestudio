@@ -2,6 +2,7 @@ import React from 'react'
 import ParseClient, { ParseClasses, getParseQuery, handleParseError, getParseRole } from '../../both/Parse'
 import EditableStateContext from './editables/EditableStateContext'
 import { isObject } from 'lodash'
+import { slugify } from '../../both/Functions'
 
 class Page extends React.Component {
     constructor(props) {
@@ -130,67 +131,50 @@ class Page extends React.Component {
     }
 
     addElement = (element, field, notRelation, notAnObject) => {
-        console.log("addHandler", element, this.state.page.key)
         var props = this.getElementGroup(element)
-        console.log("addHandler", "props", props)
         if(props == null) return
         if(["TextElement", "IframeElement"].includes(element.className)) {
             props.elements.push(element)
             this.updateElementGroup(element, props)
-            console.log("addElement", "update")
         }
         
         if(notRelation) {
-            console.log("addElement", field, notAnObject? element.get("data") : JSON.stringify(element))
             var page = this.state.page
             page.set(field, notAnObject? element.get("data") : element)
             //update savables counter
-            this.setState({totalSavables: this.state.totalSavables - 1})
-            console.log("addElement", field, notAnObject? element.get("data") : JSON.stringify(element), this.state.totalSavables)
+            this.totalSavables = this.totalSavables - 1
 
             //to avoid sending multiple update request to server on same page,
             // it is important to check if the last element has been updated on the page.
             //If not checked, for every element updated, the server will receive a update request 
             // for the page. This is obviously. We should wait until the last element has been updated
             // on the page before sending the page itself for update
-            if(this.state.totalSavables == 0) {
+            if(this.totalSavables == 0) {
+                if((!page.get("slug") || page.get("slug").length == 0) && page.get("title") && page.get("title").length > 0) {
+                    page.set("slug", slugify(page.get("title")))
+                    this.setState({page: page})
+                }
                 page.save()
-                .then(pageRes => {
-                    console.log("addElement", "savePage", pageRes.get("key"), pageRes)
-
-                })
-                .catch(e => {
-                    console.log("addElement", "savePageError", page.get("key"), e)
-                    handleParseError(e)
-        
-                })
             }
 
         } else {
             element.save()
             .then(elementRes => {
                 if(!["TextElement", "IframeElement"].includes(element.className)) {
-                    console.log("addElement", "saveNew", elementRes.get("key"), JSON.stringify(elementRes))
                     props.elements.push(elementRes)
                     this.updateElementGroup(elementRes, props)
-                    console.log("addElement", "update")
                 }
                 var page = this.state.page
                 page.relation(field).add(elementRes)
                 //update savables counter
-                this.setState({totalSavables: this.state.totalSavables - 1})
+                this.totalSavables = this.totalSavables - 1
 
-                if(this.state.totalSavables == 0) {
+                if(this.totalSavables == 0) {
+                    if((!page.get("slug") || page.get("slug").length == 0) && page.get("title") && page.get("title").length > 0) {
+                        page.set("slug", slugify(page.get("title")))
+                        this.setState({page: page})
+                    }
                     page.save()
-                    .then(pageRes => {
-                        console.log("addElement", "savePage", pageRes.get("key"), pageRes)
-
-                    })
-                    .catch(e => {
-                        console.log("addElement", "savePageError", page.get("key"), e)
-                        handleParseError(e)
-            
-                    })
                 }
 
             })
@@ -204,7 +188,6 @@ class Page extends React.Component {
 
     handleEditableState = (key, criticalData) => {
         var attrs = this.state.elementsAttributes
-        console.log("handleEditableState", key, criticalData, attrs)
         attrs[[key]] = criticalData
         //this.setState({elementsAttributes: attrs})
     }
@@ -214,8 +197,6 @@ class Page extends React.Component {
         if(index > -1) {
             var props = this.state.textElementsProps
             var elements = props.elements
-            console.log("handleChange", "push", 3, JSON.stringify(this.state.textElementsProps))
-            console.log("handleChange", "AAA", elements[index], index, elements, value)
             if(value) {
                 elements[index].set("data", value)
             }
@@ -262,13 +243,14 @@ class Page extends React.Component {
             })
         } else {
             var pageQuery = getParseQuery(ParseClasses.Page)
-            pageQuery.include("featured_image")
             if(options && options.isLocal) {
                 pageQuery.equalTo("local_key", key)
 
             } else {
                 pageQuery.equalTo("key", key)
             }
+            pageQuery.include("featured_image")
+            pageQuery.include("featured_image.editor")
             return pageQuery.first()
         }
     }
@@ -296,7 +278,6 @@ class Page extends React.Component {
                     if(attribute == "data") this.state.page.set("title", value)
                 }
             })
-            console.log("handleChange", "push", 1, JSON.stringify(textElementsProps))
             //expose description to edit
             textElementsProps.elements.push({
                 className: "TextElement",
@@ -310,12 +291,12 @@ class Page extends React.Component {
                 }
             })
             this.setState({textElementsProps: textElementsProps})
-            console.log("handleChange", "push", 2, JSON.stringify(this.state.textElementsProps))
 
             //expose featured_image to edit
+            
             if(this.state.page.get("featured_image")) {
                 var imageElementsProps = this.state.imageElementsProps
-                imageElementsProps.elements.push(page.get("featured_image"))
+                imageElementsProps.elements.push(this.state.page.get("featured_image"))
                 this.setState({imageElementsProps: imageElementsProps})
             }
 
@@ -361,7 +342,7 @@ class Page extends React.Component {
         query.find()
         .then(list => {
             var props = this.state.textElementsProps
-            props.elements.push(list)
+            props.elements = props.elements.concat(list)
             this.setState({textElementsProps: props})
 
         })
@@ -380,9 +361,13 @@ class Page extends React.Component {
             query.limit(options.image_limit)
         }
         query.find()
-        .then(list => {console.log("ListItem", "loadImages", "find", list)
+        .then(list => {
+            if(list.length > 0) {
+                console.log("addElementH", "FeaturedImage", 3, list[0], JSON.stringify(list[0]))
+            }
+            console.log("ListItem", "loadImages", "find", list)
             var props = this.state.imageElementsProps
-            props.elements.push(list)
+            props.elements = props.elements.concat(list)
             this.setState({imageElementsProps: props})
             console.log("ListItem", "loadImages", "find", this.state.imageElementsProps)
 
@@ -403,7 +388,7 @@ class Page extends React.Component {
         query.find()
         .then(list => {
             var props = this.state.videoElementsProps
-            props.elements.push(list)
+            props.elements = props.elements.concat(list)
             this.setState({videoElementsProps: props})
 
         })
@@ -423,7 +408,7 @@ class Page extends React.Component {
         query.find()
         .then(list => {
             var props = this.state.iframeElementsProps
-            props.elements.push(list)
+            props.elements = props.elements.concat(list)
             this.setState({iframeElementsProps: props})
 
         })
@@ -443,7 +428,7 @@ class Page extends React.Component {
         query.find()
         .then(list => {
             var props = this.state.listElementsProps
-            props.elements = props.elements.push(list)
+            props.elements = props.elements.concat(list)
             this.setState({listElementsProps: props})
 
         })
@@ -470,15 +455,11 @@ class Page extends React.Component {
                     }
                     savablesIds.push(element.componentKey)
                     if(element.detailsHasChanged()) {
-                        console.log("addElementH", 3, element.componentKey, savablesIds)
                         savables++
-                    } else {
-                        
-                        console.log("addElementH", 4, element.componentKey, savablesIds)
                     }
                 }
             });
-            this.setState({totalSavables: savables})
+            this.totalSavables = savables
             var saveIds = []
             this.editors.forEach(element => {
                 //to avoid elments with the same key, which will and should definetly contain the same
