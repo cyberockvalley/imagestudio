@@ -86,7 +86,7 @@ export default {
   'components.controls.image.image_selector.insert_placeholder': "Enter image url",
   'components.controls.image.image_selector.insert_submit': "Get Iamge",
   'components.controls.image.image_selector.loading_text': "Loading...",
-  'components.controls.image.image_selector.insert_url_error_message': "Image retrieval failed. Check your the url or your internet connection."
+  'components.controls.image.image_selector.insert_url_error_message': "Image retrieval failed. Check your the url or your internet connection.",
 
   //ImageGrid
   "components.controls.imagegrid.image_selector.title": "Select images for the grid",
