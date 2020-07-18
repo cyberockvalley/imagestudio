@@ -56,14 +56,6 @@ class WordProcessor extends React.Component {
         this.setState({ showEditor: true });
 	}
 
-	handleImageUpload(files) {
-		return new Promise(
-		  (resolve, reject) => {
-			resolve({ data: { links: ["http://dummy_image_src.com"] } })
-		  }
-		)
-	}
-
 	getImageMediaLibrary = (searchAndFilters) => {
 		return new Promise(
 			(resolve, reject) => {
@@ -90,7 +82,7 @@ class WordProcessor extends React.Component {
 					<Image 
 						icon={WordProcessorSettings.ToolBar.image.icon} 
 						onMediaLibrary={this.getImageMediaLibrary}
-						onUpload={this.handleImageUpload} />,
+						onUpload={this.props.uploadHandler} />,
 					<ImageGrid 
 						icon={WordProcessorSettings.ToolBar.image_grid.icon} 
 						onMediaLibrary={this.getImageMediaLibrary}

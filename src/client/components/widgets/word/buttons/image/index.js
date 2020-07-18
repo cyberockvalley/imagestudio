@@ -7,6 +7,8 @@ import Option from '../../components/Option'
 import Modal from '@material-ui/core/Modal'
 import ImageSelector from '../../components/ImageSelector';
 
+const $ = require('jquery')
+
 class Image extends React.Component {
     static PropTypes = {
       onChange: PropTypes.func,
@@ -42,6 +44,24 @@ class Image extends React.Component {
     handleImageSubmit = imageUrls => {
 
     }
+
+    componentDidMount() {
+        var that = this
+        console.log("ROOT_CLASS", "modal-child")
+        $(".modal-child").on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+          })
+          .on('dragover dragenter', function() {
+            that.setState({draggedOver: true})
+          })
+          .on('dragleave dragend drop', function() {
+            that.setState({draggedOver: false})
+          })
+          .on('drop', function(e) {
+            //that.onFile(e.originalEvent.dataTransfer.files[0])
+        })
+    }
   
     render() {
       const { translations, icon, title, onMediaLibrary, onUpload } = this.props;
@@ -56,7 +76,10 @@ class Image extends React.Component {
         insertUrlInputPlaceHolder: translations['components.controls.image.image_selector.insert_placeholder'],
         insertUrlSubmitText: translations['components.controls.image.image_selector.insert_submit'],
         loadingText: translations['components.controls.image.image_selector.loading_text'],
-        insertUrlErrorMessage: translations['components.controls.image.image_selector.insert_url_error_message']
+        insertUrlErrorMessage: translations['components.controls.image.image_selector.insert_url_error_message'],
+        selectFilesText: translations['components.controls.image.image_selector.select_files_text'],
+        dropFilesText: translations['components.controls.image.image_selector.drop_files_text'],
+        uploadErrorMessage: translations['components.controls.image.image_selector.upload_error_message']
       }
       return (
         <div
@@ -80,8 +103,8 @@ class Image extends React.Component {
               <ImageSelector 
                 title={title}
                 translations={translations}
-                onMediaLibrary={onMediaLibrary}
-                onUpload={onUpload}
+                mediaLibraryHandler={onMediaLibrary}
+                uploadHandler={onUpload}
                 submitHandler={this.handleImageSubmit}
                 closeHandler={this.handleModalClose}
                 {...selectorProps} />

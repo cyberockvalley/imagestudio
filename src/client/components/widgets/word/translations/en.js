@@ -83,10 +83,13 @@ export default {
   "components.controls.image.image_selector.title": "Add Images",
   "components.controls.image.image_selector.submit_single": "Configure Image",
   "components.controls.image.image_selector.submit_multiple": "Configure Images",
-  'components.controls.image.image_selector.insert_placeholder': "Enter image url",
-  'components.controls.image.image_selector.insert_submit': "Get Iamge",
+  'components.controls.image.image_selector.insert_placeholder': "Enter image url...",
+  'components.controls.image.image_selector.insert_submit': "Get Image",
   'components.controls.image.image_selector.loading_text': "Loading...",
-  'components.controls.image.image_selector.insert_url_error_message': "Image retrieval failed. Check your the url or your internet connection.",
+  'components.controls.image.image_selector.insert_url_error_message': "Image retrieval failed. Check the url or your internet connection.",
+  'components.controls.image.image_selector.select_files_text': "Select Images",
+  'components.controls.image.image_selector.drop_files_text': "Drop Images",
+  'components.controls.image.image_selector.upload_error_message': "Image Upload Failed!",
 
   //ImageGrid
   "components.controls.imagegrid.image_selector.title": "Select images for the grid",
@@ -102,9 +105,6 @@ export default {
   "components.controls.image_selector.upload_file": "Upload File",
   "components.controls.image_selector.file_url": "Insert From URL",
   "components.controls.image_selector.media_library": "Media Library",
-  "components.controls.image_selector.drop_files": "Drop files to upload",
-  "components.controls.image_selector.or": "or",
-  "components.controls.image_selector.select_files": "Select Files",
 
   "components.controls.image_selector.search": "Search",
 

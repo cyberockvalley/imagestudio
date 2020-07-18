@@ -39,6 +39,15 @@
     height: 150px;
     padding-right: 10px;
     padding-bottom: 10px;
+    position: relative;
+}
+.image-selectior-image-item .spinner-border {
+    position: absolute;
+    z-index: 1;
+    width: 32px;
+    height: 32px;
+    left: 59px;
+    top: 59px;
 }
 .image-selectior-image-item img {
     width: 100%;
@@ -47,6 +56,17 @@
 
 #image-selector .images {
     margin: 20px 10px;
+}
+.media-modal-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	min-height: 360px;
+	background: #5b9dd9;
+	opacity: .7;
+	z-index: 500000;
 }
 
 .media-modal-close {

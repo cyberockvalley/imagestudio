@@ -120,12 +120,12 @@ class FileChangerView extends React.Component {
                                         :<></>
                                     }
                                     <div>
-                                        <label style={styles.button}>
+                                        <label style={styles.button} for="file">
                                             {
                                                 this.state.accept?
-                                                <input onChange={this.handleChange} name="file" type="file" style={{display: "none"}} accept={this.state.accept} />
+                                                <input onChange={this.handleChange} id="file" name="file" type="file" style={{display: "none"}} accept={this.state.accept} />
                                                 :
-                                                <input onChange={this.handleChange} name="file" type="file" style={{display: "none"}} />
+                                                <input onChange={this.handleChange} id="file" name="file" type="file" style={{display: "none"}} />
                                             }
                                             <span style={styles.buttonText}>Choose File <span style={styles.buttonInnerText}>(or drag and drop it)</span></span>
                                         </label>

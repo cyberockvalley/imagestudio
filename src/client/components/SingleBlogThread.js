@@ -10,6 +10,7 @@ import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constan
 import TextEditable from "./editables/TextEditable";
 
 import WordProcessor from "./widgets/word/WordProcessor";
+import ParseClient from "../../both/Parse";
 
 class SingleBlogThread extends Page {
   static contextType = EditableStateContext
@@ -33,11 +34,34 @@ class SingleBlogThread extends Page {
 
   }
 
-    onEditorStateChange = editorState => {
-        this.setState({
-          editorState,
-        });
-    }
+  onEditorStateChange = editorState => {
+      this.setState({
+        editorState,
+      });
+  }
+
+  wordProcessorUploadHandler = (files) => {
+		return new Promise(
+		  (resolve, reject) => {
+			
+			var promises = []
+			for(var i = 0; i < files.length; i++) {
+				var parseFile = new ParseClient.File("file", files[i])
+				promises.push(parseFile.save())
+			}
+			Promise.all(promises)
+			.then(uploads => {
+        var urls = []
+        uploads.forEach(upload => {
+          urls.push(upload.url())
+        })
+        resolve({data: {list: urls}})
+			})
+			.catch(e => {
+				reject()
+			})
+    })
+	}
 
   render() {
     return super.render(
@@ -75,7 +99,9 @@ class SingleBlogThread extends Page {
           <div>{this.state.page? this.formatDate(this.state.page.get("createdAt")) : ""}</div>
         </section>
         <section className="stories">
-          <WordProcessor />
+          <WordProcessor 
+            uploadHandler={this.wordProcessorUploadHandler}
+          />
           {/*<TextEditable isHtml 
             role={ROLES.mod}
             name="content"
