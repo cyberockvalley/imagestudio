@@ -9,6 +9,7 @@ import Paths from './utils/Paths'
 import { Helmet } from 'react-helmet'
 import Axios from 'axios'
 import { BASE_URL, API_PORT, API_ROOT_DIR } from '../both/Constants'
+import InitialData from './InitialData'
 
 var express = require("express")
 var path = require("path")
@@ -167,16 +168,9 @@ var dashboard = new ParseDashboard(
 // make the Parse Dashboard available at /parse/dashboard
 app.use("/dashboard", dashboard);
 
+app.use("*", InitialData)
 app.get(Paths, (req, res) => {
-  var meta = {
-    title: "Get title, pre, and seo with path",
-    pre: [],
-    seo: []
-  }
-
-  var initialData = {
-    user: null
-  }
+  var initialData = res.locals.initialData
 
   var body = ReactDOMServer.renderToString(
     <Router location={req.url}>

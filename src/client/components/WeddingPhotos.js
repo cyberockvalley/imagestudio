@@ -12,6 +12,9 @@ import ListEditable from "./editables/ListEditable";
 import EditableStateContext from "./editables/EditableStateContext";
 import ItemWeddingPhoto from "./items/ItemWeddingPhoto";
 
+import '../res/css/mansory.css'
+import '../res/css/loading.css'
+
 class WeddingPhotos extends Page {
   static contextType = EditableStateContext
   constructor(props){

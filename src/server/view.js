@@ -16,8 +16,6 @@ export default (helmet, initialData, body) => {
             <link rel='stylesheet' id='font-awesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.1' type='text/css' media='all'/>
             
             <link rel="stylesheet" href="/client/res/css/styles.css">
-            <link rel="stylesheet" href="/client/res/css/mansory.css">
-            <link rel="stylesheet" href="/client/res/css/animations.css">
             ${helmet.title.toString()}
             ${helmet.meta.toString()}
             ${helmet.link.toString()}
@@ -25,7 +23,7 @@ export default (helmet, initialData, body) => {
 
             <!---InitialData-->
             <script>
-                windows.__initialData__ = ${JSON.stringify(initialData)}
+                window.__initialData__ = ${JSON.stringify(initialData)}
             </script>
         </head>
         <body style="width:100%;margin:0;padding:0;overflow-x:hidden">

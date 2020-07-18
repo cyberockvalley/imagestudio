@@ -1,10 +1,21 @@
 import React from "react"
 import { handleParseError, ParseClasses } from "../../../both/Parse"
 import Editable, { TEXT_ELEMENTS_STATE_KEY_PREFIX } from "./Editable"
+import { EditorState } from 'draft-js';
+import dynamic from 'next/dynamic'
+const Editor = dynamic(
+    () => import('react-draft-wysiwyg').then(mod => mod.Editor),
+    { ssr: false }
+)/*
+dynamic(
+    () => import('react-draft-wysiwyg/dist/react-draft-wysiwyg.css').then(mod => mod.Editor),
+    { ssr: false }
+)*/
 
 class TextEditable extends Editable {
     constructor(props) {
         super(props)
+        this.state.editorState = EditorState.createEmpty()
 
         this.handleEditClick = this.handleEditClick.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -131,17 +142,41 @@ class TextEditable extends Editable {
         e.preventDefault()
     }
 
+    onEditorStateChange = editorState => {
+        this.setState({
+          editorState,
+        });
+    }
+
     render() {
         this.init()
+        const { editorState } = this.state
         return(
             <>
                 {
+                    /*
+                          <Editor  
+                              onClick={this.handleEditClick} 
+                              placeholder={this.props.placeholder || `${this.keyToText()}...`} 
+                              onChange={this.handleChange} style={this.getStyle()}
+                              editorState={editorState}
+                              toolbarClassName="toolbarClassName"
+                              wrapperClassName="wrapperClassName"
+                              editorClassName="editorClassName"
+                              onEditorStateChange={this.onEditorStateChange}
+                          />*/
                     this.props.edit && this.haveWritePermission()?
                         !this.props.is_input_text?
-                            <textarea id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} onClick={this.handleEditClick} 
-                            placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()}>
-                                {this.getText()}
-                            </textarea>
+                            this.props.isHtml?
+                                <Editor
+                                    editorState={editorState}
+                                    onEditorStateChange={this.onEditorStateChange}
+                                />
+                                :
+                                <textarea id={this.props.id? this.props.id : ""} className={this.props.class? this.props.class : ""} onClick={this.handleEditClick} 
+                                    placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()}>
+                                    {this.getText()}
+                                </textarea>
                             :
                             <input id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} type="text" value={this.getText()} onClick={this.handleEditClick} 
                             placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()} />

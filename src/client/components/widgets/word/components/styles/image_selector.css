@@ -1,0 +1,83 @@
+.image-selector-body {
+    padding: 15px;
+    min-height: 300px
+}
+.image-selector-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    padding: 15px;
+}
+.image-selector-footer > * {
+    margin: 0px !important;
+    border: transparent !important;
+}
+.form-image-right > input {
+    border-left: 1px solid #ced4da;
+    border-top: 1px solid #ced4da;
+    border-bottom: 1px solid #ced4da;
+    border-right: none !important;
+    background: transparent !important;
+}
+.form-image-right > div > * {
+    border-left: none !important;
+    border-top: 1px solid #ced4da;
+    border-bottom: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+    background: transparent !important;
+}
+.form-image-right > div > * .spinner-grow {
+    width: 1rem !important;
+    height: 1rem !important;
+}
+.form-control:focus {
+    box-shadow: 0 0 0 .2px rgba(0,123,255,.25) !important;
+}
+.image-selectior-image-item {
+    width: 150px;
+    height: 150px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+}
+.image-selectior-image-item img {
+    width: 100%;
+    height: 100%;
+}
+
+#image-selector .images {
+    margin: 20px 10px;
+}
+
+.media-modal-close {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+	width: 50px;
+	height: 50px;
+	margin: 0;
+	padding: 0;
+	border: 1px solid transparent;
+	background: 0 0;
+	color: #666;
+	cursor: pointer;
+	outline: 0;
+	transition: color .1s ease-in-out,background .1s ease-in-out;
+}
+.screen-reader-text, .screen-reader-text span, .ui-helper-hidden-accessible {
+	border: 0;
+	clip: rect(1px,1px,1px,1px);
+	-webkit-clip-path: inset(50%);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	word-wrap: normal !important;
+}
+.close:hover {
+    color: #d20000;
+}
+.close:before {font-size: 20px;}

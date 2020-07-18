@@ -3,8 +3,14 @@ import { Link } from "react-router-dom";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
 import { lastValueOrThis } from "../../both/Functions";
 import TextEditable from "./editables/TextEditable";
+import EditableStateContext from "./editables/EditableStateContext";
 
 class FooterContactUs extends React.Component {
+  static contextType = EditableStateContext
+  constructor(props) {
+    super(props)
+  }
+
   render() {
     return (
       <div className="contact-us" style={{marginTop: 150}}>

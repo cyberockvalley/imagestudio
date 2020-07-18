@@ -6,12 +6,14 @@ const devMode = process.env.NODE_ENV !== 'production'?'development':'production'
 
 /*
 const styleLoader = require("style-loader")
-const cssLoader = require("css-loader")
 const sassLoader = require("sass-loader")
 */
+const cssLoader = require("css-loader")
+
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const js = {
-  test: /\.js$/,
+  test: /\.(js|jsx)$/,
   exclude: [/node_modules/],
   use: {
     loader: 'babel-loader',
@@ -33,20 +35,18 @@ const fonts = {
   use: ['file-loader']
 }
 
-const css = {
-  test: /\.css$/,
+const serverCss = {
+  test: /\.css$/i,
   use: [
-     // style-loader
-     { loader: 'style-loader' },
-     // css-loader
-     {
-       loader: 'css-loader',
-       options: {
-         modules: true
-       }
-     },
-     // sass-loader
-     { loader: 'sass-loader' }
+    MiniCssExtractPlugin.loader,
+    'css-loader'
+  ]
+}
+
+const clientCss = {
+  test: /\.css$/i,
+  use: [
+    'style-loader', 'css-loader'
   ]
 }
 
@@ -60,8 +60,11 @@ const serverConfig = {
   entry: {
     'index.js': path.resolve(__dirname, 'src/server/index.js')
   },
+  plugins: [
+    new MiniCssExtractPlugin()
+  ],
   module: {
-    rules: [js, fonts, css]
+    rules: [js, fonts, serverCss]
   },
   output: {
     path: path.resolve(__dirname, 'dist/server'),
@@ -76,11 +79,12 @@ const clientConfig = {
     'index.js': path.resolve(__dirname, 'src/client/index.js')
   },
   module: {
-    rules: [js, fonts, css]
+    rules: [js, fonts, clientCss]
   },
   optimization: {
     splitChunks: {
       chunks: 'all'
+
     }
   },
   output: {
@@ -92,7 +96,7 @@ const clientConfig = {
     tls: 'empty',
     dns: 'empty',
     fs: 'empty',
-    child_process: 'empty'
+    child_process: 'empty',
     
   }
 }

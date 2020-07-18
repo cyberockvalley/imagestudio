@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router } from 'react-router-dom'
 import ComponentsRoutes from './ComponentsRoutes'
-
+import serviceWorker from './serviceWorker'
 const initialData = window.__initialData__
 delete window.__initialData__
 
@@ -13,3 +13,4 @@ const App = () => (
 )
 
 ReactDOM.hydrate(<App suppressHydrationWarning={true} />, document.getElementById('root'))
+//serviceWorker()

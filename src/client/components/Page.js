@@ -1,8 +1,7 @@
 import React from 'react'
 import ParseClient, { ParseClasses, getParseQuery, handleParseError, getParseRole } from '../../both/Parse'
 import EditableStateContext from './editables/EditableStateContext'
-import { isObject } from 'lodash'
-import { slugify } from '../../both/Functions'
+import { slugify, isObject } from '../../both/Functions'
 
 class Page extends React.Component {
     constructor(props) {
@@ -244,10 +243,23 @@ class Page extends React.Component {
         } else {
             var pageQuery = getParseQuery(ParseClasses.Page)
             if(options && options.isLocal) {
-                pageQuery.equalTo("local_key", key)
+                if(!Array.isArray(key)) {
+                    pageQuery.equalTo("local_key", key)
+
+                } else {
+                    pageQuery.containedIn("local_key", key)
+                }
 
             } else {
-                pageQuery.equalTo("key", key)
+                if(!Array.isArray(key)) {
+                    pageQuery.equalTo("key", key)
+
+                } else {
+                    pageQuery.containedIn("key", key)
+                }
+            }
+            if(options && options.slug) {
+                pageQuery.equalTo("slug", options.slug)
             }
             pageQuery.include("featured_image")
             pageQuery.include("featured_image.editor")

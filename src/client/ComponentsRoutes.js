@@ -15,6 +15,7 @@ import SingleProduct from './components/SingleProduct'
 import Movies from './components/Movies'
 import FileUpload from './components/admin/FileUpload'
 import AdminHome from './components/admin/AdminHome'
+import SingleBlogSpool from './components/SingleBlogSpool'
 
 const ComponentsRoutes = (props) => (
   <Switch className="App">
@@ -58,7 +59,7 @@ const ComponentsRoutes = (props) => (
       render={(propz) => <FileUpload {...propz} data={props.initialData} />}
     />
     <Route exact path="/:title" 
-      render={(propz) => <SingleWeddingStory {...propz} data={props.initialData} />}
+      render={(propz) => <SingleBlogSpool {...propz} data={props.initialData} />}
     />
     <Route exact path="/product/:title" 
       render={(propz) => <SingleProduct {...propz} data={props.initialData} />}

@@ -9,16 +9,18 @@ import TextEditable from "./editables/TextEditable";
 
 import { Helmet } from 'react-helmet'
 import Page from "./Page";
-import Axios from "axios";
 import EditableStateContext from "./editables/EditableStateContext";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
-import { truncate } from "lodash";
 import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
 import ListEditable from "./editables/ListEditable";
 import ItemWeddingPhoto from "./items/ItemWeddingPhoto";
 import InstaGrid from "./widgets/InstaGrid";
 import ImageEditable from "./editables/ImageEditable";
+
+import '../res/css/mansory.css'
+import '../res/css/filmroller.css'
+import '../res/css/loading.css'
 
 
 const jQuery = require('jquery')

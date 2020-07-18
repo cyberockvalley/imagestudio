@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { lastValueOrThis, isNullOrEmpty } from "../../../both/Functions";
 import ImageEditable from "../editables/ImageEditable";
-import { initial } from "lodash";
 import EditableStateContext from "../editables/EditableStateContext";
 import Item from "./Item";
 
