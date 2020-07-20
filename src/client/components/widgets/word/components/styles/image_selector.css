@@ -1,6 +1,6 @@
 .image-selector-body {
     padding: 15px;
-    min-height: 300px
+    min-height: 300px;
 }
 .image-selector-footer {
     display: flex;
@@ -34,14 +34,43 @@
 .form-control:focus {
     box-shadow: 0 0 0 .2px rgba(0,123,255,.25) !important;
 }
-.image-selectior-image-item {
+.image-selector-image-item {
     width: 150px;
     height: 150px;
-    padding-right: 10px;
-    padding-bottom: 10px;
+    margin-right: 22px;
+    margin-bottom: 22px;
     position: relative;
 }
-.image-selectior-image-item .spinner-border {
+.image-selector-image-item.selected {
+    box-shadow: 0 0 0 1px #fff,0 0 0 5px #0073aa;
+
+}
+.image-selector-image-item .checkbox {
+    position: absolute;
+    top: -10px;
+    left: 136px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    background: #0073aa;
+    box-shadow: 0 0 0 1px #fff,0 0 0 2px #0073aa;
+    color: #fff;
+}
+.image-selector-image-item .checkbox > :not(.active) {
+    display: none;
+}
+.image-selector-image-item .checkbox > .active {
+    display: inline-block;
+}
+.image-selector-image-item .checkbox:hover > :not(.active), .image-selector-image-item img:hover + .checkbox > :not(.active) {
+    display: inline-block;
+}
+.image-selector-image-item .checkbox:hover > .active, .image-selector-image-item img:hover + .checkbox > .active {
+    display: none;
+}
+.image-selector-image-item .spinner-border {
     position: absolute;
     z-index: 1;
     width: 32px;
@@ -49,13 +78,21 @@
     left: 59px;
     top: 59px;
 }
-.image-selectior-image-item img {
+.image-selector-image-item img {
     width: 100%;
     height: 100%;
 }
-
-#image-selector .images {
+#image-achitect .images-container, #image-selector .images-container {
+    height: 400px;
+}
+#image-achitect .images {
+    display: flex;
+    flex-wrap: wrap;
+}
+.scroll-y{overflow-y: auto;}
+#image-selector .images, #image-achitect .images {
     margin: 20px 10px;
+    height: 100%;
 }
 .media-modal-backdrop {
 	position: fixed;
@@ -67,6 +104,12 @@
 	background: #5b9dd9;
 	opacity: .7;
 	z-index: 500000;
+}
+
+.resize-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 .media-modal-close {

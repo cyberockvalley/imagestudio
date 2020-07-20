@@ -4,7 +4,7 @@ import HeaderImageBanner from "./HeaderImageBanner";
 import { Helmet } from 'react-helmet'
 import Page from "./Page";
 import EditableStateContext from "./editables/EditableStateContext";
-import { lastValueOrThis, truncText, isClient } from "../../both/Functions";
+import { lastValueOrThis, truncText, isClient, slugify } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
 import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
@@ -101,6 +101,7 @@ class SingleBlogThread extends Page {
         <section className="stories">
           <WordProcessor 
             uploadHandler={this.wordProcessorUploadHandler}
+            imageAlt={this.state.page? slugify(this.state.page.get("title")).replaceAll("-", " ") : ""}
           />
           {/*<TextEditable isHtml 
             role={ROLES.mod}

@@ -32,15 +32,25 @@ class Image extends React.Component {
             }
         })
     }
+    
+    handleClick = () => {
+        if(this.props.clickHandler) {
+            this.props.clickHandler(!this.props.selected)
+        }
+    }
 
     render() {
         return (
-            <div className="image-selectior-image-item">
-                <img src={this.props.src} class="check_status" />
+            <div className={`image-selector-image-item ${this.props.selected? "selected" : ""}`}>
+                <img onClick={this.handleClick} src={this.props.src} class="check_status action" />
                 {
                     this.state.loading?
                     <div class="spinner-border text-danger"></div> : null
                 }
+                <div onClick={this.handleClick} className="checkbox action">
+                    <span className={`fa fa-check ${this.props.selected? "active" : ""}`}></span>
+                    <span className={`fa fa-minus ${this.props.selected? "" : "active"}`}></span>
+                </div>
             </div>
             
         )
@@ -118,6 +128,14 @@ class ImageSelector extends React.Component {
         this.uploadFiles(e.target.files)
     }
 
+    handleFilesSubmit = () => {
+        var urls = this.state.selected_url_images.
+        concat(this.state.selected_url_images)
+        .concat(this.state.selected_library_images)
+        this.props.submitHandler(urls)
+        $("#close").click()
+    }
+
     render() {
         const {  
             mediaLibraryHandler,
@@ -151,7 +169,7 @@ class ImageSelector extends React.Component {
                     </div>
                     {
                         closeHandler?
-                        <button onClick={closeHandler} type="button" className="media-modal-close">
+                        <button id="close" onClick={closeHandler} type="button" className="media-modal-close">
                             <span className="close fa fa-times">
                                 <span className="screen-reader-text">
                                     {
@@ -188,7 +206,7 @@ class ImageSelector extends React.Component {
                         }
                     </div>
                 </nav>
-                <div className="tab-content image-selector-body" id="nav-tabContent" 
+                <div className="tab-content image-selector-body scroll-y" id="nav-tabContent" 
                 style={this.state.draggedOver? styles.draggedOver : {}}>
                     {
                         !uploadHandler? null :
@@ -216,18 +234,37 @@ class ImageSelector extends React.Component {
                                 this.state.upload_images.map((url, index) => {
                                     return <Image key={index} src={url} 
                                         onload={() => {
-                                            var urlImagesSelected = this.state.selected_upload_images
-                                            urlImagesSelected.push(url)
-                                            this.setState({
-                                                selected_upload_images: urlImagesSelected
-                                            })
+                                            if(!this.state.selected_upload_images.includes(url)) {
+                                                var urlImagesSelected = this.state.selected_upload_images
+                                                urlImagesSelected.push(url)
+                                                this.setState({
+                                                    selected_upload_images: urlImagesSelected
+                                                })
+                                            }
                                         }}
-                                        onerror={(e) => {
+                                        onerror={() => {
                                             var images = this.state.upload_images
                                             images.splice(index, 1)
                                             this.setState({
                                                 upload_images: images
                                             })
+                                        }}
+                                        selected={this.state.selected_upload_images.includes(url)}
+                                        clickHandler={select => {
+                                            var images = this.state.selected_upload_images
+                                            if(select) {
+                                                console.log("CheckTest", "BeforeInsert", "fileUpload", this.state.selected_upload_images)
+                                                images.push(url)
+                                                this.setState({selected_upload_images: images})
+                                                console.log("CheckTest", "AfterInsert", "fileUpload", this.state.selected_upload_images)
+
+                                            } else {
+                                                console.log("CheckTest", "BeforeRemove", "fileUpload", this.state.selected_upload_images)
+                                                var index = images.indexOf(url)
+                                                images.splice(index, 1)
+                                                this.setState({selected_upload_images: images})
+                                                console.log("CheckTest", "AfterRemove", "fileUpload", this.state.selected_upload_images)
+                                            }
                                         }} />
                                 })
                             }
@@ -298,6 +335,23 @@ class ImageSelector extends React.Component {
                                                 insert_url: "",
                                                 insert_url_has_error: true
                                             })
+                                        }}
+                                        selected={this.state.selected_url_images.includes(image.url)}
+                                        clickHandler={select => {
+                                            var images = this.state.selected_url_images
+                                            if(select) {
+                                                console.log("CheckTest", "BeforeInsert", "urlInsert", this.state.selected_url_images)
+                                                images.push(image.url)
+                                                this.setState({selected_url_images: images})
+                                                console.log("CheckTest", "AfterInsert", "urlInsert", this.state.selected_url_images)
+
+                                            } else {
+                                                console.log("CheckTest", "BeforeRemove", "urlInsert", this.state.selected_url_images)
+                                                var index = images.indexOf(image.url)
+                                                images.splice(index, 1)
+                                                this.setState({selected_url_images: images})
+                                                console.log("CheckTest", "AfterRemove", "urlInsert", this.state.selected_url_images)
+                                            }
                                         }} />
                                 })
                             }
@@ -315,7 +369,7 @@ class ImageSelector extends React.Component {
                         this.state.selected_upload_images.length > 0 || this.state.selected_url_images.length > 0 || this.state.selected_library_images.length > 0?
                         <button 
                             type="button" className="btn btn-primary" 
-                            onClick={submitHandler}>
+                            onClick={this.handleFilesSubmit}>
                             {
                                 this.state.selected_upload_images.length + this.state.selected_url_images.length + this.state.selected_library_images.length == 1?
                                 submitSingleButtonText || "Submit File"

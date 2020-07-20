@@ -1,11 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-import { Modifier, EditorState } from 'draft-js';
+import { Modifier, EditorState, AtomicBlockUtils } from 'draft-js';
 
 import Option from '../../components/Option'
 
 import Modal from '@material-ui/core/Modal'
 import ImageSelector from '../../components/ImageSelector';
+import ImageArchitect, { DEFAULT_GRID_ITEMS_SPACING } from '../../components/ImageArchitect';
+import GridImageEntity from '../../entities/GridImageEntity';
 
 const $ = require('jquery')
 
@@ -24,17 +26,25 @@ class Image extends React.Component {
     }
   
     handleClick = () => {
-      const { editorState, onChange } = this.props;
-      /*
-      const contentState = Modifier.replaceText(
-        editorState.getCurrentContent(),
-        editorState.getSelection(),
-        '<div>ss</div>',
-        editorState.getCurrentInlineStyle(),
-      );
-      onChange(EditorState.push(editorState, contentState, 'insert-characters'));
-      */
      this.setState({openModal: true})
+    }
+
+    handleConfigurationChange = entityData => {
+      console.log("handleConfigurationChange", entityData)
+      const { editorState, onChange } = this.props;
+
+      const entityKey = editorState
+        .getCurrentContent()
+        .createEntity('GRID_IMAGE', 'MUTABLE', entityData)
+        .getLastCreatedEntityKey();
+
+      const newEditorState = AtomicBlockUtils.insertAtomicBlock(
+        editorState,
+        entityKey,
+        ' '
+      )
+      
+      onChange(newEditorState);
     }
 
     handleModalClose = () => {
@@ -42,25 +52,47 @@ class Image extends React.Component {
     }
 
     handleImageSubmit = imageUrls => {
+      console.log("ImageSubmit", imageUrls)
+    }
 
+    preconfigureImages = urls => {
+      var images = []
+      urls.forEach(url => {
+        images.push({
+          src: url,
+          width: 20, widthType: "%",
+          height: 200, heightType: "px"
+        })
+      })
+      return images
     }
 
     componentDidMount() {
-        var that = this
-        console.log("ROOT_CLASS", "modal-child")
-        $(".modal-child").on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-          })
-          .on('dragover dragenter', function() {
-            that.setState({draggedOver: true})
-          })
-          .on('dragleave dragend drop', function() {
-            that.setState({draggedOver: false})
-          })
-          .on('drop', function(e) {
-            //that.onFile(e.originalEvent.dataTransfer.files[0])
-        })
+      var test_urls = [
+        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1154.jpg',
+        'https://imagestudio.com/wp-content/uploads/2019/10/o-Luxury-Wedding-Photographer.jpg',
+        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1145.jpg',
+        'https://imagestudio.com/wp-content/uploads/2019/07/o-E15A3338-2.jpg',
+        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1317.jpg',
+        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1095.jpg',
+        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1299.jpg',
+        'https://imagestudio.com/wp-content/uploads/2019/09/o-Site-Portfolio.jpg',
+        'https://imagestudio.com/wp-content/uploads/2019/09/o-Photos-446.jpg',
+        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1293.jpg',
+        'https://imagestudio.com/wp-content/uploads/2019/09/o-photos111.jpg',
+        'https://imagestudio.com/wp-content/uploads/2019/09/o-Photos-227.jpg',
+        'https://imagestudio.com/wp-content/uploads/2019/07/o-1a.jpg',
+        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1101-1.jpg',
+        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1048.jpg',
+        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-654.jpg',
+        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1189.jpg',
+        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1112.jpg'
+      ]
+      this.setState({
+        show_selector: false, 
+        images: this.preconfigureImages(test_urls),
+        gridItemsSpacing: DEFAULT_GRID_ITEMS_SPACING
+      })
     }
   
     render() {
@@ -79,7 +111,7 @@ class Image extends React.Component {
         insertUrlErrorMessage: translations['components.controls.image.image_selector.insert_url_error_message'],
         selectFilesText: translations['components.controls.image.image_selector.select_files_text'],
         dropFilesText: translations['components.controls.image.image_selector.drop_files_text'],
-        uploadErrorMessage: translations['components.controls.image.image_selector.upload_error_message']
+        uploadErrorMessage: translations['components.controls.image.image_selector.upload_error_message'],
       }
       return (
         <div
@@ -99,15 +131,30 @@ class Image extends React.Component {
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
           >
-            <div style={styles.image_selection_container}>
-              <ImageSelector 
-                title={title}
-                translations={translations}
-                mediaLibraryHandler={onMediaLibrary}
-                uploadHandler={onUpload}
-                submitHandler={this.handleImageSubmit}
-                closeHandler={this.handleModalClose}
-                {...selectorProps} />
+            <div style={styles.image_widget_container}>
+              {
+                this.state.show_selector?
+                <ImageSelector 
+                  title={title}
+                  translations={translations}
+                  mediaLibraryHandler={onMediaLibrary}
+                  uploadHandler={onUpload}
+                  submitHandler={this.handleImageSubmit}
+                  closeHandler={this.handleModalClose}
+                  {...selectorProps} />
+                :
+                <>
+                {
+                  this.state.images?
+                  <ImageArchitect
+                    images={this.state.images}
+                    submitHandler={this.handleConfigurationChange}
+                    closeHandler={this.handleModalClose}
+                    gridItemsSpacing={this.state.gridItemsSpacing}
+                    alt={this.props.alt} /> : null
+                }
+                </>
+              }
             </div>
           </Modal>
         </div>
@@ -116,10 +163,12 @@ class Image extends React.Component {
 }
 
 const styles = {
-  image_selection_container: {
+  image_widget_container: {
     background: "#fcfcfc",
-    margin: "30px",
-    boxShadow: "0 5px 15px rgba(0,0,0,.7)"
+    boxShadow: "0 5px 15px rgba(0,0,0,.7)",
+    width: "95%",
+    height: "95%",
+    margin: "30px auto",
   }
 }
 

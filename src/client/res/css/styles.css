@@ -6,6 +6,83 @@ a > img, a > div, a:hover > img, a:hover > div {color: transparent;}
 .action {
     cursor: pointer;
 }
+.move {cursor: move;}
+.col-resize {
+	cursor: col-resize;
+}
+.row-resize {
+	cursor: row-resize;
+}
+.ne-resize {
+	cursor: ne-resize;
+	position: absolute;
+    user-select: none;
+    width: 20px;
+    height: 20px;
+    right: -5px;
+    top: -5px;
+}
+.nw-resize {
+	cursor: nw-resize;    
+	position: absolute;
+    user-select: none;
+    width: 20px;
+    height: 20px;
+    left: -5px;
+	top: -5px;
+}
+.sw-resize {
+	cursor: sw-resize;
+	position: absolute;
+    user-select: none;
+    width: 20px;
+    height: 20px;
+    left: -5px;
+    bottom: -5px;
+}
+.se-resize {
+	cursor: se-resize;
+	position: absolute;
+    user-select: none;
+    width: 20px;
+    height: 20px;
+    right: -5px;
+    bottom: -5px;
+}
+.resize-bar-left {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    height: 100%;
+    width: 5px;
+	cursor: col-resize;
+}
+.resize-bar-right {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 100%;
+    width: 5px;
+	cursor: col-resize;
+}
+.resize-bar-top {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 5px;
+    width: 100%;
+	cursor: row-resize;
+}
+.resize-bar-bottom {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    height: 5px;
+    width: 100%;
+	cursor: row-resize;
+}
+
 .flex-center-both {justify-content: center; align-items: center;}
 .flex-align-center {align-items: center;}
 .w-margin-auto {margin-left: auto !important; margin-right: auto !important;}

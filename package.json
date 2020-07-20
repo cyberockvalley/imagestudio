@@ -35,10 +35,12 @@
     "parse-server-dedicated-email-adapter": "1.0.1",
     "path": "0.12.7",
     "pretty-print-json": "^0.2.1",
+    "re-resizable": "^6.5.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-draft-wysiwyg": "^1.14.5",
     "react-helmet": "^6.1.0",
+    "react-rnd": "^10.1.10",
     "react-router-dom": "5.2.0",
     "recompose": "^0.30.0",
     "tcomb-form": "^0.9.21"

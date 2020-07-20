@@ -8,6 +8,7 @@ import Image from "./buttons/image/index";
 import ImageGrid from "./buttons/imagegrid/index";
 import Language from "./buttons/language";
 import translationsMap from "./translations";
+import { gridImageDecorator } from "./entities/decorators";
 
 class WordProcessor extends React.Component {
 	constructor(props) {
@@ -53,7 +54,7 @@ class WordProcessor extends React.Component {
     
     componentDidMount() {
         Editor = require('react-draft-wysiwyg').Editor
-        this.setState({ showEditor: true });
+		this.setState({ showEditor: true });
 	}
 
 	getImageMediaLibrary = (searchAndFilters) => {
@@ -82,15 +83,20 @@ class WordProcessor extends React.Component {
 					<Image 
 						icon={WordProcessorSettings.ToolBar.image.icon} 
 						onMediaLibrary={this.getImageMediaLibrary}
-						onUpload={this.props.uploadHandler} />,
+						onUpload={this.props.uploadHandler}
+						alt={this.props.imageAlt} />,
 					<ImageGrid 
 						icon={WordProcessorSettings.ToolBar.image_grid.icon} 
 						onMediaLibrary={this.getImageMediaLibrary}
-						onUpload={this.handleImageUpload} />, 
+						onUpload={this.handleImageUpload}
+						alt={this.props.imageAlt} />, 
 					<Language 
 						currentLanguage={this.state.language} 
 						onLanguageChange={this.handleLanguageChange}
 						options={WordProcessorSettings.ToolBar.language.options} />
+				]}
+				customDecorators={[
+					gridImageDecorator()
 				]}
 				localization={{
 					locale: this.state.language.key,
