@@ -12,26 +12,49 @@ export const gridImageStrategy = (contentBlock, callback, contentState) => {
 class GridImageEntity extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {}
     }
 
     componentDidMount() {
-        const { entityKey, children, contentState } = this.props
-        const { 
-            gridItemsSpacing,
-            alt,
-            images
-        } = contentState.getEntity(entityKey).getData()
-        console.log("GridImageEntity", contentState.getEntity(entityKey).getData())
+        this.setState({
+            editLeft: 0,
+            editTop: 0
+        })
+    }
+
+    toggleHovered = () => {
+        const hoverState = !this.state.hovered
+        this.setState({
+            hovered: hoverState,
+        })
+    }
+
+    onEdit = () => {
+
+    }
+
+    onUpdate = () => {
+        const { block, contentState, config } = this.props;
+        const entityKey = block.getEntityAt(0)
+        /*
+        contentState.mergeEntityData(entityKey, { alignment })
+        config.onChange(EditorState.push(config.getEditorState(), contentState, 'change-block-data'))
+        this.setState({
+        dummy: true,
+        })*/
     }
 
     render() {
-        const { entityKey, children, contentState } = this.props
+        const { entityKey, children, contentState, config } = this.props; console.log("GIM", config)
         const { 
             gridItemsSpacing,
             alt,
             images
         } = contentState.getEntity(entityKey).getData()
-        return <div style={{width: "100%", display: "flex", flexWrap: "wrap"}}>
+        return <div 
+        onMouseEnter={this.toggleHovered}
+        onMouseLeave={this.toggleHovered}
+        style={{width: "100%", display: "flex", flexWrap: "wrap"}}>
             {
                 images.map((image, index) => (
                     <div style={{
@@ -44,7 +67,35 @@ class GridImageEntity extends React.Component {
                     </div>
                 ))
             }
+            {
+                this.state.hovered?
+                <div onClick={this.onEdit} className="action" style={{
+                    ...styles.hover,
+                    left: this.state.editLeft,
+                    top: this.state.editTop
+                }}>
+                   <span className="fa fa-2x fa-pencil"></span>
+                </div> : null
+            }
         </div>
+    }
+}
+
+const EDIT_WIDTH = 50
+const EDIT_HEIGHT = 50
+const styles = {
+    hover: {
+        position: "absolute",
+        width: EDIT_WIDTH,
+        height: EDIT_HEIGHT,
+        padding: "5px",
+        background: "#000",
+        opacity: 0.8,
+        color: "#bcbcbc",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: "3px"
     }
 }
 
