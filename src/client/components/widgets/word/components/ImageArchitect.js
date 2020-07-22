@@ -31,12 +31,15 @@ class ImageArchitect extends React.Component {
     }
 
     componentDidMount() {
+        const data = this.props.data
+        this.setState(data)
+        /*
         this.setState({
             images: this.props.images,
             submitHandler: this.props.submitHandler,
             gridItemsSpacing: this.props.gridItemsSpacing,
             alt: this.props.alt || ""
-        })
+        })*/
     }
 
     onImageDrag = (ref, index) => {
@@ -84,12 +87,14 @@ class ImageArchitect extends React.Component {
     }
 
     handleTextChange = e => {
+        console.log("handleTextChange spacing1", this.state.gridItemsSpacing)
+        console.log("handleTextChange spacing2", e.target.name, e.target.value)
         this.state[e.target.name] = e.target.value
         this.setState({[e.target.name]: e.target.value})
         console.log("handleTextChange spacing", this.state.gridItemsSpacing)
     }
 
-    handleSubmit = () => {
+    getConfig = () => {
         var states = []
         for(var i = 0; i < this.state.images.length; i++) {
             var image = this.imageRefs[`image${i}`]
@@ -102,11 +107,22 @@ class ImageArchitect extends React.Component {
                 src: image.props.src
             })
         }
-        this.props.submitHandler({
+        return {
+            alignment: this.state.alignment,
+            width: this.state.width,
             gridItemsSpacing: this.state.gridItemsSpacing,
             alt: this.state.alt,
             images: states
-        })
+        }
+    }
+
+    handleSubmit = () => {
+        this.props.submitHandler(this.getConfig())
+        $("#close").click()
+    }
+
+    addImage = () => {
+        this.props.addHandler(this.getConfig())
         $("#close").click()
     }
 
@@ -116,67 +132,86 @@ class ImageArchitect extends React.Component {
             multipleImageTitle,
             closeText,
             closeHandler,
-            images,
+            data,
             submitHandler,
             marginText,
             submitSingleButtonText,
             submitMultipleButtonText,
             altText
         } = this.props
-        if(!images || images.length == 0 || !submitHandler) return
+        if(!data || !data.images || data.images.length == 0 || !submitHandler) return
         return(
             <div id="image-achitect">
                 <div style={styles.header}>
                     <div>
                         <h1 style={styles.title}>
                             {
-                                images.length == 1?
+                                data.images.length == 1?
                                 singleImageTitle || "Configure Image"
                                 :
                                 multipleImageTitle || "Configure Images"
                             }
                         </h1>
                     </div>
-                    {
-                        closeHandler?
-                        <button id="close" onClick={closeHandler} type="button" className="media-modal-close">
-                            <span className="close fa fa-times">
-                                <span className="screen-reader-text">
-                                    {
-                                        closeText || "Close Dialog"
-                                    }
+                    <div className="edit-bar-group-item">
+                        <button 
+                            type="button" className="btn btn-primary d-inline" style={{margin: "0px 10px"}} 
+                            onClick={this.handleSubmit}>
+                            {
+                                this.state.images == 1?
+                                submitSingleButtonText || "Insert Image"
+                                :
+                                submitMultipleButtonText || "Insert Images"
+                            }
+                        </button>
+                        {
+                            closeHandler?
+                            <button id="close" onClick={closeHandler} type="button" className="media-modal-close">
+                                <span className="close fa fa-times">
+                                    <span className="screen-reader-text">
+                                        {
+                                            closeText || "Close Dialog"
+                                        }
+                                    </span>
                                 </span>
-                            </span>
-                        </button> 
+                            </button> 
+                            : null
+                        }
+                    </div>
+                </div>
+                <div style={{display: "flex", flexDirection: "row", justifyContent: "start", alignItems: "center", padding: "0px 10px"}}>
+                    <div className="form-group" style={{margin: "0px 10px  0px 0px"}}>
+                        <label for="grid-items-spacing" className="col-form-label d-inline" style={{marginRight: "5px"}}>
+                            {
+                                marginText || "Margin:"
+                            }
+                        </label>
+                        <input id="grid-items-spacing" name="gridItemsSpacing" onChange={this.handleTextChange} className="form-control d-inline" style={{width: "100px"}} type="number" value={this.state.gridItemsSpacing} />
+                    </div>
+                    <div className="form-group" style={{margin: "0px 10px  0px 0px"}}>
+                        <label for="alt" className="col-form-label d-inline" style={{marginRight: "5px"}}>
+                            {
+                                `${altText || "Desciption"}(alt):`
+                            }
+                        </label>
+                        <input id="alt" name="alt" onChange={this.handleTextChange} className="form-control d-inline" style={{width: "200px"}} type="text" value={this.state.alt} />
+                    </div>
+                    {
+                        this.props.addHandler?
+                        <button 
+                            type="button" className="btn btn-secondary fa fa-plus" style={{margin: "0px 10px  0px 0px"}} 
+                            onClick={this.addImage}>
+                        </button>
                         : null
                     }
                 </div>
-                <div className="form-group d-inline" style={{padding: "15px"}}>
-                    <label for="grid-items-spacing" className="col-form-label d-inline" style={{marginRight: "15px"}}>
-                        {
-                            marginText || "Margin"
-                        }
-                    </label>
-                    <input id="grid-items-spacing" name="gridItemsSpacing" onChange={this.handleTextChange} className="form-control d-inline" style={{width: "100px"}} type="number" value={this.state.gridItemsSpacing} />
-                </div>
-                <div className="form-group d-inline" style={{padding: "15px"}}>
-                    <label for="alt" className="col-form-label d-inline" style={{marginRight: "15px"}}>
-                        {
-                            `${altText || "Descipttion"}(alt):`
-                        }
-                    </label>
-                    <input id="alt" name="alt" onChange={this.handleTextChange} className="form-control d-inline" style={{width: "200px"}} type="text" value={this.state.alt} />
-                </div>
-                <button 
-                    type="button" className="btn btn-primary d-inline" style={{margin: "0px 50px"}} 
-                    onClick={this.handleSubmit}>
-                    {
-                        this.state.images == 1?
-                        submitSingleButtonText || "Insert Image"
-                        :
-                        submitMultipleButtonText || "Insert Images"
-                    }
-                </button>
+                <ImageEditBar {...this.props}
+                    width={this.state.width}
+                    onWidthChange={this.updateWidth}
+                    onLeft={this.alignLeft}
+                    onRight={this.alignRight}
+                    onCenter={this.alignCenter}
+                    moreHandler={this.configurationSettings} />
                 <div className="images-container">
                     <div className="resizables images scroll-y">
                         {

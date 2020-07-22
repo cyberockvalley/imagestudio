@@ -24,7 +24,8 @@ class WordProcessor extends React.Component {
 			  editorState: EditorState.createEmpty(),//EditorState.createWithContent(state)
 			  language: WordProcessorSettings.ToolBar.language.options[
 				  WordProcessorSettings.ToolBar.language.defaultIndex
-			  ]
+			  ],
+			  readOnly: false
             }
       
           } else {
@@ -32,7 +33,8 @@ class WordProcessor extends React.Component {
 				editorState: EditorState.createEmpty(),
 			  	language: WordProcessorSettings.ToolBar.language.options[
 					WordProcessorSettings.ToolBar.language.defaultIndex
-				]
+				],
+				readOnly: false
             }
         }
 	}
@@ -49,7 +51,11 @@ class WordProcessor extends React.Component {
 	onChange = editorState => {
 		this.setState({
 			editorState
-		});
+		})
+	}
+
+	getEditorState = () => {
+		return this.state.editorState
 	}
     
     componentDidMount() {
@@ -65,12 +71,15 @@ class WordProcessor extends React.Component {
 		)
 	}
 
-	
+	updateReadOnly = readOnly => {
+		this.setState({readOnly: readOnly})
+	}
 	
 	render() {
         if(!this.state.showEditor) return null
 		return (
 			<Editor
+				readOnly={this.state.readOnly}
 				editorState={this.state.editorState}
 				onEditorStateChange={this.onChange}
 				toolbar={{
@@ -96,7 +105,14 @@ class WordProcessor extends React.Component {
 						options={WordProcessorSettings.ToolBar.language.options} />
 				]}
 				customDecorators={[
-					gridImageDecorator()
+					gridImageDecorator({
+						onChange: this.onChange,
+						getEditorState: this.getEditorState,
+						translations: this.getTranslations(this.state.language.key),
+						onMediaLibrary: this.getImageMediaLibrary,
+						onUpload: this.handleImageUpload,
+						updateReadOnly: this.updateReadOnly
+					})
 				]}
 				localization={{
 					locale: this.state.language.key,

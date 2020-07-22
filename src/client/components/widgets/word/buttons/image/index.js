@@ -11,6 +11,25 @@ import GridImageEntity from '../../entities/GridImageEntity';
 
 const $ = require('jquery')
 
+export const getImageSelectorProps = translations => {
+  return {
+    title: translations['components.controls.image.image_selector.title'],
+    closeText: translations['components.controls.popups.close'],
+    uploadTitle: translations['components.controls.image_selector.upload_file'],
+    insertUrlTitle: translations['components.controls.image_selector.file_url'],
+    mediaLibraryTitle: translations['components.controls.image_selector.media_library'],
+    submitSingleButtonText: translations['components.controls.image.image_selector.submit_single'],
+    submitMultipleButtonText: translations['components.controls.image.image_selector.submit_multiple'],
+    insertUrlInputPlaceHolder: translations['components.controls.image.image_selector.insert_placeholder'],
+    insertUrlSubmitText: translations['components.controls.image.image_selector.insert_submit'],
+    loadingText: translations['components.controls.image.image_selector.loading_text'],
+    insertUrlErrorMessage: translations['components.controls.image.image_selector.insert_url_error_message'],
+    selectFilesText: translations['components.controls.image.image_selector.select_files_text'],
+    dropFilesText: translations['components.controls.image.image_selector.drop_files_text'],
+    uploadErrorMessage: translations['components.controls.image.image_selector.upload_error_message'],
+  }
+}
+
 class Image extends React.Component {
     static PropTypes = {
       onChange: PropTypes.func,
@@ -41,7 +60,7 @@ class Image extends React.Component {
       const newEditorState = AtomicBlockUtils.insertAtomicBlock(
         editorState,
         entityKey,
-        ' '
+        '.'
       )
       
       onChange(newEditorState);
@@ -97,22 +116,6 @@ class Image extends React.Component {
   
     render() {
       const { translations, icon, title, onMediaLibrary, onUpload } = this.props;
-      const selectorProps = {
-        title: translations['components.controls.image.image_selector.title'],
-        closeText: translations['components.controls.popups.close'],
-        uploadTitle: translations['components.controls.image_selector.upload_file'],
-        insertUrlTitle: translations['components.controls.image_selector.file_url'],
-        mediaLibraryTitle: translations['components.controls.image_selector.media_library'],
-        submitSingleButtonText: translations['components.controls.image.image_selector.submit_single'],
-        submitMultipleButtonText: translations['components.controls.image.image_selector.submit_multiple'],
-        insertUrlInputPlaceHolder: translations['components.controls.image.image_selector.insert_placeholder'],
-        insertUrlSubmitText: translations['components.controls.image.image_selector.insert_submit'],
-        loadingText: translations['components.controls.image.image_selector.loading_text'],
-        insertUrlErrorMessage: translations['components.controls.image.image_selector.insert_url_error_message'],
-        selectFilesText: translations['components.controls.image.image_selector.select_files_text'],
-        dropFilesText: translations['components.controls.image.image_selector.drop_files_text'],
-        uploadErrorMessage: translations['components.controls.image.image_selector.upload_error_message'],
-      }
       return (
         <div
           className="rdw-image-wrapper"
@@ -135,23 +138,23 @@ class Image extends React.Component {
               {
                 this.state.show_selector?
                 <ImageSelector 
-                  title={title}
-                  translations={translations}
                   mediaLibraryHandler={onMediaLibrary}
                   uploadHandler={onUpload}
                   submitHandler={this.handleImageSubmit}
                   closeHandler={this.handleModalClose}
-                  {...selectorProps} />
+                  {...getImageSelectorProps(translations)} />
                 :
                 <>
                 {
                   this.state.images?
                   <ImageArchitect
-                    images={this.state.images}
+                    data={{
+                      gridItemsSpacing: this.state.gridItemsSpacing,
+                      alt: this.props.alt,
+                      images: this.state.images
+                    }}
                     submitHandler={this.handleConfigurationChange}
-                    closeHandler={this.handleModalClose}
-                    gridItemsSpacing={this.state.gridItemsSpacing}
-                    alt={this.props.alt} /> : null
+                    closeHandler={this.handleModalClose} /> : null
                 }
                 </>
               }
@@ -171,5 +174,7 @@ const styles = {
     margin: "30px auto",
   }
 }
+
+export const imageModalContainerStyles = styles
 
 export default Image

@@ -1,8 +1,13 @@
+import React from "react"
+
 import GridImageEntity, { gridImageStrategy } from "./GridImageEntity";
 
-export const gridImageDecorator = () => {
+export const gridImageDecorator = config => {
     return {
         strategy: gridImageStrategy,
-        component: GridImageEntity
+        component: GridImageEntity,
+        props: {
+            config: config
+        }
     }
 }
