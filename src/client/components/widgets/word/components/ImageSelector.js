@@ -89,6 +89,46 @@ class ImageSelector extends React.Component {
         }
     }
 
+    handlePageUrlSubmit = () => {
+        if(this.state.insert_url) {
+            this.setState({url_loading: true})
+            var urlImages = this.state.url_images
+
+            this.props.imageFromPageHandler(this.state.insert_url)
+            .then(response => {
+                var urls = response.data.list
+                urls.forEach(url => {
+                    urlImages.push({
+                        url: url,
+                        justAdded: true
+                    })
+                })
+                this.setState({
+                    url_images: urlImages, 
+                    insert_url_has_error: false
+                })
+            })
+            .catch(e => {
+                console.log("getImageFromPage", "error2", e)
+                this.setState({ 
+                    insert_url_has_error: true
+                })
+            })
+            
+        }
+    }
+
+    uploadFiles = files => {
+        this.setState({uploading: true, upload_error: ""})
+        this.props.uploadHandler(files)
+        .then(response => {
+            this.setState({uploading: false, upload_images: response.data.list.concat(this.state.upload_images)})
+        })
+        .catch(() => {
+            this.setState({uploading: false, upload_error: this.props.uploadErrorMessage || "Upload Failed!"})
+        })
+    }
+
     handleTextChange = e => {
         this.setState({[e.target.name]: e.target.value})
     }
@@ -113,27 +153,15 @@ class ImageSelector extends React.Component {
         })
     }
 
-    uploadFiles = files => {
-        this.setState({uploading: true, upload_error: ""})
-        this.props.uploadHandler(files)
-        .then(response => {
-            this.setState({uploading: false, upload_images: response.data.list.concat(this.state.upload_images)})
-        })
-        .catch(() => {
-            this.setState({uploading: false, upload_error: this.props.uploadErrorMessage || "Upload Failed!"})
-        })
-    }
-
     handleFileChange = e => {
         this.uploadFiles(e.target.files)
     }
 
     handleFilesSubmit = () => {
-        var urls = this.state.selected_url_images.
+        var urls = this.state.selected_upload_images.
         concat(this.state.selected_url_images)
         .concat(this.state.selected_library_images)
         this.props.submitHandler(urls)
-        $("#close").click()
     }
 
     render() {
@@ -167,19 +195,35 @@ class ImageSelector extends React.Component {
                             }
                         </h1>
                     </div>
-                    {
-                        closeHandler?
-                        <button id="close" onClick={closeHandler} type="button" className="media-modal-close">
-                            <span className="close fa fa-times">
-                                <span className="screen-reader-text">
-                                    {
-                                        closeText || "Close Dialog"
-                                    }
+                    <div className="edit-bar-group-item">
+                        {
+                            this.state.selected_upload_images.length > 0 || this.state.selected_url_images.length > 0 || this.state.selected_library_images.length > 0?
+                            <button 
+                                type="button" className="btn btn-primary d-inline" style={{margin: "0px 10px"}} 
+                                onClick={this.handleFilesSubmit}>
+                                {
+                                    this.state.selected_upload_images.length + this.state.selected_url_images.length + this.state.selected_library_images.length == 1?
+                                    submitSingleButtonText || "Submit File"
+                                    :
+                                    submitMultipleButtonText || "Submit Files"
+                                }
+                            </button>
+                            : null
+                        }
+                        {
+                            closeHandler?
+                            <button id="close" onClick={closeHandler} type="button" className="media-modal-close">
+                                <span className="close fa fa-times">
+                                    <span className="screen-reader-text">
+                                        {
+                                            closeText || "Close Dialog"
+                                        }
+                                    </span>
                                 </span>
-                            </span>
-                        </button> 
-                        : null
-                    }
+                            </button> 
+                            : null
+                        }
+                    </div>
                 </div>
                 <nav>
                     <div className="nav nav-tabs" id="nav-tab" role="tablist">
@@ -206,7 +250,7 @@ class ImageSelector extends React.Component {
                         }
                     </div>
                 </nav>
-                <div className="tab-content image-selector-body scroll-y" id="nav-tabContent" 
+                <div className="tab-content image-selector-body" id="nav-tabContent" 
                 style={this.state.draggedOver? styles.draggedOver : {}}>
                     {
                         !uploadHandler? null :
@@ -229,7 +273,7 @@ class ImageSelector extends React.Component {
                                 <div class="invalid-feedback d-block">{this.state.upload_error}</div> : null
                             }
 
-                            <div className="row images">
+                            <div className="row modal-scroll-y">
                             {
                                 this.state.upload_images.map((url, index) => {
                                     return <Image key={index} src={url} 
@@ -292,10 +336,24 @@ class ImageSelector extends React.Component {
                                         </div>
                                     </div>
                                     :
-                                    <div className="input-group-append" onClick={this.handleUrlSubmit} style={{cursor: "pointer"}}>
-                                        <div className="input-group-text">
-                                            <span>{insertUrlSubmitText || "Get Image"}</span>
-                                        </div>
+                                    <div className="input-group-append" style={{cursor: "pointer"}}>
+                                        {
+                                            this.props.imageFromPageHandler?
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary btn-lg input-group-dropdown" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    {insertUrlSubmitText || "Get"}
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a onClick={this.handleUrlSubmit} dataFrom="src" class="dropdown-item" href="#">Image</a>
+                                                    <a onClick={this.handlePageUrlSubmit} dataFrom="page" class="dropdown-item" href="#">Images from page</a>
+                                                </div>
+                                            </div>
+                                            :
+                                            <div onClick={this.handleUrlSubmit} className="input-group-text">
+                                                <span>{insertUrlSubmitText || "Get Image"}</span>
+                                            </div>
+                                            
+                                        }
                                     </div>
                                 }
                             </div>
@@ -310,7 +368,7 @@ class ImageSelector extends React.Component {
                             }
                         </div>
                         
-                        <div className="row images">
+                        <div className="row modal-scroll-y">
                             {
                                 this.state.url_images.map((image, index) => {
                                     return  <Image key={index} src={image.url} 
@@ -362,22 +420,6 @@ class ImageSelector extends React.Component {
                         <div className="tab-pane fade" id="nav-media-library" role="tabpanel" aria-labelledby="nav-media-library-tab">
 
                         </div>
-                    }
-                </div>
-                <div className="modal-footer image-selector-footer">
-                    {
-                        this.state.selected_upload_images.length > 0 || this.state.selected_url_images.length > 0 || this.state.selected_library_images.length > 0?
-                        <button 
-                            type="button" className="btn btn-primary" 
-                            onClick={this.handleFilesSubmit}>
-                            {
-                                this.state.selected_upload_images.length + this.state.selected_url_images.length + this.state.selected_library_images.length == 1?
-                                submitSingleButtonText || "Submit File"
-                                :
-                                submitMultipleButtonText || "Submit Files"
-                            }
-                        </button>
-                        : null
                     }
                 </div>
             </div>

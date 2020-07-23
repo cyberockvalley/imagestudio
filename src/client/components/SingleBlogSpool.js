@@ -22,6 +22,19 @@ class SingleBlogSpool extends Page {
     })
   }
 
+  threads = []
+
+  addThread = thread => {
+    if(!this.threads.includes(thread)) this.threads.push(thread)
+  }
+
+  editOrSaveSpool = () => {
+    this.handleEditOrSaveButtonClick()
+    this.threads.forEach(thread => {
+      thread.handleEditOrSaveButtonClick()
+    });
+  }
+
   render() {
     return super.render(
       <>
@@ -29,13 +42,14 @@ class SingleBlogSpool extends Page {
           edit={this.state.edit}
           user={this.state.user}
           userRole={this.state.userRole}
-          onEditOrSaveButtonClicked={this.handleEditOrSaveButtonClick}
+          onEditOrSaveButtonClicked={this.editOrSaveSpool}
           onCancelEdit={this.handleCancelEdit}
           textEditableProps={this.state.textElementsProps} />
         <NavBar />
         <SingleBlogThread {...this.props}  
           edit={this.state.edit}
-          spoolAttributes={this.state.elementsAttributes} />
+          spoolAttributes={this.state.elementsAttributes}
+          threadAdder={this.addThread} />
         <FooterContactUs
           edit={this.state.edit}
           user={this.state.user}

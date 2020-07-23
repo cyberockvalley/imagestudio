@@ -11,11 +11,11 @@ class ResizableImage extends React.Component {
     }
 
     componentDidMount() {
-        const { width, height, refSetter, widthType, heightType } = this.props
+        const { width, height, refSetter, widthType, heightType, autoWidth, autoHeight } = this.props
         refSetter(this, this.props.index)
         this.setState({
             loading: true,
-            width, height, widthType, heightType
+            width, height, widthType, heightType, autoWidth, autoHeight
         })
         var that = this
         $("img.check_status")
@@ -44,7 +44,9 @@ class ResizableImage extends React.Component {
     }
 
     setSize = e => {
-        var size = parseInt(e.target.value)
+        var size = e.target.value
+        if(size.startsWith("0")) size = size.substring(1)
+        size = size.includes(".")? parseFloat(size) : parseInt(size)
         //if(size < MIN_SIZE) size = MIN_SIZE
         if(!isNaN(size) && size > 100 && (
             (e.target.name == "width" && this.props.widthType == "%") 
@@ -59,13 +61,18 @@ class ResizableImage extends React.Component {
         }
     }
 
+    setAuto = e => {
+        console.log("setAuto", e.target.checked)
+        this.setState({[e.target.name]: e.target.checked})
+    }
+
     render() {
         const {
             widthText, heightText
         } = this.props
         return (
             <Resizable
-                size={{ width: this.state.width + this.state.widthType, height: this.state.height + this.state.heightType }}
+                size={{ width: this.state.autoWidth? "auto" : this.state.width + this.state.widthType, height: this.state.autoHeight? "auto" : this.state.height + this.state.heightType }}
                 onResizeStop={this.handleResize} style={{
                     paddingRight: !isNaN(parseInt(this.props.space))? `${parseInt(this.props.space)}px` : DEFAULT_GRID_ITEMS_SPACING + "px",
                     paddingBottom: !isNaN(parseInt(this.props.space))? `${parseInt(this.props.space)}px` : DEFAULT_GRID_ITEMS_SPACING + "px"
@@ -86,13 +93,19 @@ class ResizableImage extends React.Component {
                         </label>
                         <input style={styles.input} className="form-control col-10" id="item-width" name="width" onChange={this.setSize} type="number" value={this.state.width} />
                     </div>
-                    <div>
-                        <label for="item-height" className="col-form-label">
-                            {
-                                `${heightText || "Height"} (${this.props.heightType}):`
-                            }
+                    <div className="size-px-auto">
+                        <label className="col-form-label">
+                            <span>{heightText || "Height"} ({this.props.heightType}): / </span>
+                            <div>
+                                <label className="action" for="autoHeight"> Make auto</label>
+                                <input className="form-check-input action" id="autoHeight" name="autoHeight" onChange={this.setAuto} type="checkbox" checked={this.state.autoHeight} />
+                            </div>
                         </label>
-                        <input style={styles.input} className="form-control col-10" id="item-height" name="height" onChange={this.setSize} type="number" value={this.state.height} />
+                        {
+                            !this.state.autoHeight?
+                            <input style={styles.input} className="form-control col-10" id="item-height" name="height" onChange={this.setSize} type="number" value={this.state.height} />
+                            : null
+                        }
                     </div>
                 </div>
             </Resizable>

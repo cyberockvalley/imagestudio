@@ -8,8 +8,9 @@ import ComponentsRoutes from '../client/ComponentsRoutes'
 import Paths from './utils/Paths'
 import { Helmet } from 'react-helmet'
 import Axios from 'axios'
-import { BASE_URL, API_PORT, API_ROOT_DIR } from '../both/Constants'
+import { BASE_URL, API_PORT, API_ROOT_DIR, API_SECONDARY_ROOT_DIR } from '../both/Constants'
 import InitialData from './InitialData'
+import SecondaryApi from './SecondaryApi'
 
 var express = require("express")
 var path = require("path")
@@ -167,6 +168,8 @@ var dashboard = new ParseDashboard(
 
 // make the Parse Dashboard available at /parse/dashboard
 app.use("/dashboard", dashboard);
+
+app.use("/" + API_SECONDARY_ROOT_DIR, SecondaryApi)
 
 app.use("*", InitialData)
 app.get(Paths, (req, res) => {

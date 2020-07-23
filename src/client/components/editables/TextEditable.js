@@ -1,21 +1,16 @@
 import React from "react"
-import { handleParseError, ParseClasses } from "../../../both/Parse"
+import ParseClient, { handleParseError, ParseClasses } from "../../../both/Parse"
 import Editable, { TEXT_ELEMENTS_STATE_KEY_PREFIX } from "./Editable"
-import { EditorState } from 'draft-js';
-import dynamic from 'next/dynamic'
-const Editor = dynamic(
-    () => import('react-draft-wysiwyg').then(mod => mod.Editor),
-    { ssr: false }
-)/*
-dynamic(
-    () => import('react-draft-wysiwyg/dist/react-draft-wysiwyg.css').then(mod => mod.Editor),
-    { ssr: false }
-)*/
+import WordProcessor from "../widgets/word/WordProcessor"
+import { isObject } from "../../../both/Functions";
+import { customDraftToHtml } from "../widgets/word/entities/functions";
+import Axios from "axios";
+import { BASE_URL, API_SECONDARY_ROOT_DIR, WEB_PAGE_IMAGES_ENDPOINT } from "../../../both/Constants";
 
 class TextEditable extends Editable {
     constructor(props) {
         super(props)
-        this.state.editorState = EditorState.createEmpty()
+        this.editorRef = React.createRef()
 
         this.handleEditClick = this.handleEditClick.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -54,12 +49,27 @@ class TextEditable extends Editable {
         return text
     }
 
+    getEditorRawContent = () => {
+        var data = this.Element && this.haveReadPermission()? this.Element.get("json_data") : this.state.data;
+        //console.log("rawContent", "getEditorRawContent", data, this.componentKey)
+        return data
+    }
+
+    getEditorDisplayContent = () => {
+        var data = this.Element && this.haveReadPermission()? this.Element.get("json_data") : this.state.data;
+        data = data? customDraftToHtml(data) : ""
+        //console.log("getEd",  this.Element, this.haveReadPermission(), data)
+        return data
+    }
+
     cancelEdit = () => {
-        console.log("cancelEdit", this.componentKey, this.state)
+        //console.log("cancelEdit", this.componentKey, this.state)
         this.setState({
-            data: "",
+            data: this.props.isHtml? undefined : "",
             tags: ""
         })
+
+        //this.editorRef.clearEditor()
     }
 
     createElement = () => {
@@ -79,7 +89,14 @@ class TextEditable extends Editable {
         } else {
             var element = new ParseClasses.TextElement()
             element.set("key", this.componentKey)
-            element.set("data", this.state.data)
+            if(this.props.isHtml) {
+                element.set("json_data", this.state.data)
+                element.set("data", "Empty")
+
+            } else {
+                element.set("data", this.state.data)
+            }
+            element.set("is_html", this.props.isHtml)
             element.set("tags", this.state.tags)
             element.set("editor", this.props.user)
             var ACL = this.guessACL()
@@ -88,12 +105,24 @@ class TextEditable extends Editable {
         }
     }
     save() {
+        if(this.componentKey == "content") {
+            console.log("rawContent", "detailsHasChanged", 1)
+        }
         if(this.detailsHasChanged()) {
+            if(this.componentKey == "content") {
+                console.log("rawContent", "detailsHasChanged", true)
+            }
             if(this.notAnObject()) {
+                if(this.componentKey == "content") {
+                    console.log("rawContent", "detailsHasChanged", "notAnObject")
+                }
                 if(!this.Element) this.Element = this.createElement()
                 this.props.addHandler(this.Element, this.componentKey, true, true)
 
             } else {
+                if(this.componentKey == "content") {
+                    console.log("rawContent", "detailsHasChanged", "isAnObject")
+                }
                 if(this.Element) {
                     this.Element.save()
                     
@@ -113,7 +142,8 @@ class TextEditable extends Editable {
     }
 
     dataHasChanged() {
-        return this.state.data.length > 0 && this.state.data != this.state.initialData
+        return (this.state.data.length > 0 && this.state.data != this.state.initialData) 
+        || (this.props.isHtml && isObject(this.state.data) && JSON.stringify(this.state.data) != JSON.stringify(this.state.initialData))
     }
     tagsHaveChanged() {
         return this.state.tags.length > 0 && this.state.tags != this.state.initialTags
@@ -131,6 +161,20 @@ class TextEditable extends Editable {
         return this.props.changeHandler(this.ElementIndex, e.target.value)
     }
 
+    handleEditorChange = rawContent => {
+        if(!this.state.initialData) {
+            this.setState({
+                initialData: this.Element? this.Element.get("json_data") : undefined,
+                initialTags: this.Element? this.Element.get("tags") : ""
+            })
+        }
+        
+        this.setState({data: rawContent})
+        console.log("rawContent", "handleEditorChange", rawContent)
+        console.log("handleChange", "detailsHasChanged", this.state, !this.Element)
+        return this.props.changeHandler(this.ElementIndex, rawContent, null, this.props.isHtml)
+    }
+
     componentDidMount() {
         super.componentDidMount()
         if(this.props.refSetter) this.props.refSetter(this)
@@ -141,36 +185,74 @@ class TextEditable extends Editable {
     handleEditClick = e => {
         e.preventDefault()
     }
+  
+    wordProcessorUploadHandler = (files) => {
+        return new Promise(
+        (resolve, reject) => {
+            var promises = []
+            for(var i = 0; i < files.length; i++) {
+                var parseFile = new ParseClient.File("file", files[i])
+                promises.push(parseFile.save())
+            }
+            Promise.all(promises)
+            .then(uploads => {
+                var urls = []
+                uploads.forEach(upload => {
+                    urls.push(upload.url())
+                })
+                resolve({data: {list: urls}})
+            })
+            .catch(e => {
+                reject()
+            })
+        })
+    }
 
-    onEditorStateChange = editorState => {
-        this.setState({
-          editorState,
-        });
+    getImageMediaLibrary = (searchAndFilters) => {
+		return new Promise(
+			(resolve, reject) => {
+			  resolve({ data: { list: ["http://dummy_image_src.com"] } })
+			}
+		)
+    }
+    
+    getImageFromPage = url => {
+        //#SECURITY_CHECK
+        return new Promise(
+			(resolve, reject) => {
+                Axios.get(BASE_URL + API_SECONDARY_ROOT_DIR + WEB_PAGE_IMAGES_ENDPOINT + "?url=" + encodeURI(url))
+                .then(response => {
+                    if(response.data.result && Array.isArray(response.data.result)) {
+                        resolve({ data: { list: response.data.result } })
+
+                    } else {
+                        reject()
+                    }
+                })
+                .catch(e => {
+                    reject()
+                })
+			}
+		)
     }
 
     render() {
         this.init()
-        const { editorState } = this.state
         return(
             <>
                 {
-                    /*
-                          <Editor  
-                              onClick={this.handleEditClick} 
-                              placeholder={this.props.placeholder || `${this.keyToText()}...`} 
-                              onChange={this.handleChange} style={this.getStyle()}
-                              editorState={editorState}
-                              toolbarClassName="toolbarClassName"
-                              wrapperClassName="wrapperClassName"
-                              editorClassName="editorClassName"
-                              onEditorStateChange={this.onEditorStateChange}
-                          />*/
                     this.props.edit && this.haveWritePermission()?
                         !this.props.is_input_text?
                             this.props.isHtml?
-                                <Editor
-                                    editorState={editorState}
-                                    onEditorStateChange={this.onEditorStateChange}
+                                <WordProcessor 
+                                    uploadHandler={this.wordProcessorUploadHandler}
+                                    imageMediaLibraryHandler={this.getImageMediaLibrary}
+                                    imageFromPageHandler={this.getImageFromPage}
+                                    imageAlt={this.props.editorImageAlt? this.props.editorImageAlt : ""}
+                                    rawContent={this.getEditorRawContent()}
+                                    ref={this.editorRef}
+                                    onChange={this.handleEditorChange}
+                                    placeholder={this.props.placeholder || `${this.keyToText()}...`}
                                 />
                                 :
                                 <textarea id={this.props.id? this.props.id : ""} className={this.props.class? this.props.class : ""} onClick={this.handleEditClick} 
@@ -181,8 +263,8 @@ class TextEditable extends Editable {
                             <input id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} type="text" value={this.getText()} onClick={this.handleEditClick} 
                             placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()} />
                         :
-                        this.props.is_html?
-                        <span dangerouslySetInnerHTML={{__html: this.getText()}}></span>
+                        this.props.isHtml?
+                        <span dangerouslySetInnerHTML={{__html: this.getEditorDisplayContent()}}></span>
                         :
                         <>{this.getText()}</>
                 }

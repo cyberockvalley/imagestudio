@@ -38,6 +38,7 @@ export default (helmet, initialData, body) => {
             
             
             <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js?ver=3.4.0'></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
             <script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js?ver=4.3.11'></script>
             <!--<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
             <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

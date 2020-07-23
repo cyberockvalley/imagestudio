@@ -1,5 +1,8 @@
 
 const ToolBar = {
+    entities: {
+      image: 'GRID_IMAGE'
+    },
     options: [
       'inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 
       'colorPicker', 'link', 'embedded', 'emoji', 'remove', 'history'],

@@ -139,7 +139,7 @@ class Page extends React.Component {
         
         if(notRelation) {
             var page = this.state.page
-            page.set(field, notAnObject? element.get("data") : element)
+            page.set(field, notAnObject? element.get("is_html")? element.get("json_data") : element.get("data") : element)
             //update savables counter
             this.totalSavables = this.totalSavables - 1
 
@@ -192,12 +192,16 @@ class Page extends React.Component {
     }
     
 
-    handleTextChange = (index, value, tags) => {
+    handleTextChange = (index, value, tags, isHtml) => {
         if(index > -1) {
             var props = this.state.textElementsProps
             var elements = props.elements
             if(value) {
-                elements[index].set("data", value)
+                if(!isHtml) {
+                    elements[index].set("data", value)
+                } else {
+                    elements[index].set("json_data", value)
+                }
             }
             if(tags && tags.length > 0) {
                 elements[index].set("tags", tags)
@@ -522,6 +526,10 @@ class Page extends React.Component {
                 data: props.elements[i].get("data"),
                 tags: props.elements[i].get("tags")
             }
+            if(props.elements[i].className == "TextElement") {
+                console.log("saveBa", props.elements)
+                backup[i].json_data = props.elements[i].get("json_data")
+            }
         }
         props.elements_backup = backup
     }
@@ -529,6 +537,9 @@ class Page extends React.Component {
     restoreElementsBackUp = (props, onSetState) => {
         var currentLists = props.elements
         for(var i = 0; i < props.elements.length; i++) {
+            if(props.elements_backup[i].json_data) {
+                currentLists[i].set("json_data", props.elements_backup[i].json_data)
+            }
             currentLists[i].set("data", props.elements_backup[i].data)
             currentLists[i].set("tags", props.elements_backup[i].tags)
         }

@@ -1,5 +1,5 @@
 import React from "react";
-import { EditorState, RichUtils, convertFromHTML, ContentState } from "draft-js";
+import { EditorState, RichUtils, convertFromHTML, ContentState, convertFromRaw, convertToRaw } from "draft-js";
 let Editor
 import { isClient } from "../../../../both/Functions"
 import '../../../res/css/react-draft.css'
@@ -36,7 +36,14 @@ class WordProcessor extends React.Component {
 				],
 				readOnly: false
             }
-        }
+		}
+		this.state = {
+			editorState: EditorState.createEmpty(),
+			  language: WordProcessorSettings.ToolBar.language.options[
+				WordProcessorSettings.ToolBar.language.defaultIndex
+			],
+			readOnly: false
+		}
 	}
 	
 	handleLanguageChange = language => {
@@ -52,6 +59,13 @@ class WordProcessor extends React.Component {
 		this.setState({
 			editorState
 		})
+		if(this.props.onChange) {
+			this.props.onChange(convertToRaw(editorState.getCurrentContent()))
+		}
+	}
+
+	clearEditor = () => {
+		this.setState({editorState: EditorState.createEmpty()})
 	}
 
 	getEditorState = () => {
@@ -59,16 +73,23 @@ class WordProcessor extends React.Component {
 	}
     
     componentDidMount() {
-        Editor = require('react-draft-wysiwyg').Editor
-		this.setState({ showEditor: true });
-	}
+		Editor = require('react-draft-wysiwyg').Editor
+		var initialState;
+		if(this.props.rawContent) {
+			console.log("rawContent", "wordProcessor", this.props.rawContent)
+			initialState = EditorState.createWithContent(convertFromRaw(this.props.rawContent))
 
-	getImageMediaLibrary = (searchAndFilters) => {
-		return new Promise(
-			(resolve, reject) => {
-			  resolve({ data: { links: ["http://dummy_image_src.com"] } })
-			}
-		)
+		} else {
+			initialState = EditorState.createEmpty()
+		}
+		this.setState({
+			editorState: initialState,
+			  language: WordProcessorSettings.ToolBar.language.options[
+				WordProcessorSettings.ToolBar.language.defaultIndex
+			],
+			readOnly: false,
+			showEditor: true
+		})
 	}
 
 	updateReadOnly = readOnly => {
@@ -79,6 +100,7 @@ class WordProcessor extends React.Component {
         if(!this.state.showEditor) return null
 		return (
 			<Editor
+				placeholder={this.props.placeholder? this.props.placeholder : ""}
 				readOnly={this.state.readOnly}
 				editorState={this.state.editorState}
 				onEditorStateChange={this.onChange}
@@ -91,8 +113,9 @@ class WordProcessor extends React.Component {
 				toolbarCustomButtons={[
 					<Image 
 						icon={WordProcessorSettings.ToolBar.image.icon} 
-						onMediaLibrary={this.getImageMediaLibrary}
+						onMediaLibrary={this.props.imageMediaLibraryHandler}
 						onUpload={this.props.uploadHandler}
+						imageFromPageHandler={this.props.imageFromPageHandler}
 						alt={this.props.imageAlt} />,
 					<ImageGrid 
 						icon={WordProcessorSettings.ToolBar.image_grid.icon} 

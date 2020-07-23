@@ -9,9 +9,6 @@ import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
 import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
 
-import WordProcessor from "./widgets/word/WordProcessor";
-import ParseClient from "../../both/Parse";
-
 class SingleBlogThread extends Page {
   static contextType = EditableStateContext
   constructor(props) {
@@ -19,6 +16,7 @@ class SingleBlogThread extends Page {
   }
 
   componentDidMount() {
+    if(this.props.threadAdder) this.props.threadAdder(this)
     console.log("SingleBlogThread", this.props.match.params.title, this.props)
     this.loadPage(["site_content_wedding_stories", "site_content_blog_posts"], {
       slug: this.props.match.params.title
@@ -33,35 +31,6 @@ class SingleBlogThread extends Page {
     return dateFormat(date, "mmmm d, yyyy HH:MM")
 
   }
-
-  onEditorStateChange = editorState => {
-      this.setState({
-        editorState,
-      });
-  }
-
-  wordProcessorUploadHandler = (files) => {
-		return new Promise(
-		  (resolve, reject) => {
-			
-			var promises = []
-			for(var i = 0; i < files.length; i++) {
-				var parseFile = new ParseClient.File("file", files[i])
-				promises.push(parseFile.save())
-			}
-			Promise.all(promises)
-			.then(uploads => {
-        var urls = []
-        uploads.forEach(upload => {
-          urls.push(upload.url())
-        })
-        resolve({data: {list: urls}})
-			})
-			.catch(e => {
-				reject()
-			})
-    })
-	}
 
   render() {
     return super.render(
@@ -92,26 +61,25 @@ class SingleBlogThread extends Page {
           <meta name="twitter:creator" content="@CSS" />
           <meta name="twitter:site" content="@CSS" />
         </Helmet>
-        <HeaderImageBanner 
-            imageEditableProps={{...this.state.imageElementsProps, edit: this.props.edit}} />
+        {/*
+          <HeaderImageBanner 
+          imageEditableProps={{...this.state.imageElementsProps, edit: this.props.edit}} />*/
+        }
         <section className="story-title">
           <a href="/blog/this-story-title">{this.state.page? this.state.page.get("title") : ""}</a>
           <div>{this.state.page? this.formatDate(this.state.page.get("createdAt")) : ""}</div>
         </section>
-        <section className="stories">
-          <WordProcessor 
-            uploadHandler={this.wordProcessorUploadHandler}
-            imageAlt={this.state.page? slugify(this.state.page.get("title")).replaceAll("-", " ") : ""}
-          />
-          {/*<TextEditable isHtml 
+        <section className="blog-content">
+          <TextEditable isHtml 
+            editorImageAlt={this.state.page? slugify(this.state.page.get("title")).replaceAll("-", " ") : ""}
             role={ROLES.mod}
             name="content"
-            textEditableProps={this.state.textElementsProps}
+            {...this.state.textElementsProps}
             edit={this.props.edit}
             style={{
               width: "100%",
               height: "500px"
-            }} />*/}
+            }} />
         </section>
         <section className="row navigators-and-likes">
           <div className="col-12 col-md-6">

@@ -9,6 +9,7 @@ class ImageEditBar extends React.Component {
     }
 
     componentDidMount() {
+        console.log("Arc2", this.props)
         this.setState({width: this.props.width || 100})
     }
 
@@ -31,14 +32,14 @@ class ImageEditBar extends React.Component {
     }
 
     getStyle = () => {
-        const style = this.props.bottom? {bottom: "10px"} : {}
+        var style = this.props.bottom? {bottom: "10px"} : {}
         if(this.props.style) style = {...style, ...this.props.style}
         return style
     }
 
     render() {
         return (
-            <div className="edit-bar" style={this.getStyle}>
+            <div className="edit-bar" style={this.getStyle()}>
                 <div className="edit-bar-group-item">
                     <Option onClick={this.alignLeft} className="rdw-image-alignment-option fa fa-align-left"></Option>
                     <Option onClick={this.alignCenter} className="rdw-image-alignment-option fa fa-align-center"></Option>
@@ -47,8 +48,8 @@ class ImageEditBar extends React.Component {
                 {
                     this.props.onWidthChange?
                     <div className="edit-bar-group-item" style={{flexDirection: "column", width: "100%"}}>
-                        <label for="width" style={{color: "#bcbcbc", textAlign: "center", marginBottom: "0px"}}>{`${this.state.width}%`}</label>
-                        <input onChange={this.handleWidthSlider} type="range" class="custom-range" min="0" max="100" value={this.state.width} id="width" style={{width: "70%", margin: "0px auto"}} />
+                        <label for="width" style={{color: "#bcbcbc", textAlign: "center", marginBottom: "0px"}}>{`${this.props.width}%`}</label>
+                        <input onChange={this.handleWidthSlider} type="range" class="custom-range" min="0" max="100" value={this.props.width} id="width" style={{width: "70%", margin: "0px auto"}} />
                     </div>
                     : null
                 }

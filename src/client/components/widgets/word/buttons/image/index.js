@@ -8,6 +8,7 @@ import Modal from '@material-ui/core/Modal'
 import ImageSelector from '../../components/ImageSelector';
 import ImageArchitect, { DEFAULT_GRID_ITEMS_SPACING } from '../../components/ImageArchitect';
 import GridImageEntity from '../../entities/GridImageEntity';
+import WordProcessorSettings from '../../WordProcessorSettings';
 
 const $ = require('jquery')
 
@@ -40,12 +41,8 @@ class Image extends React.Component {
     constructor(props) {
       super(props)
       this.state = {
-          openModal: true
+          openModal: false
       }
-    }
-  
-    handleClick = () => {
-     this.setState({openModal: true})
     }
 
     handleConfigurationChange = entityData => {
@@ -54,7 +51,7 @@ class Image extends React.Component {
 
       const entityKey = editorState
         .getCurrentContent()
-        .createEntity('GRID_IMAGE', 'MUTABLE', entityData)
+        .createEntity(WordProcessorSettings.ToolBar.entities.image, 'MUTABLE', entityData)
         .getLastCreatedEntityKey();
 
       const newEditorState = AtomicBlockUtils.insertAtomicBlock(
@@ -67,11 +64,27 @@ class Image extends React.Component {
     }
 
     handleModalClose = () => {
-      this.setState({openModal: false})
+      this.setState({openModal: false, show_selector: false})
+    }
+  
+    handleClick = () => {
+     this.setState({openModal: true, show_selector: true})
     }
 
     handleImageSubmit = imageUrls => {
       console.log("ImageSubmit", imageUrls)
+      var data = {
+        width: 100,
+        alignment: "center",
+        gridItemsSpacing: DEFAULT_GRID_ITEMS_SPACING,
+        alt: this.props.alt,
+        images: this.preconfigureImages(imageUrls)
+      }
+      
+      this.setState({
+        data: data,
+        show_selector: false
+      })
     }
 
     preconfigureImages = urls => {
@@ -87,31 +100,6 @@ class Image extends React.Component {
     }
 
     componentDidMount() {
-      var test_urls = [
-        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1154.jpg',
-        'https://imagestudio.com/wp-content/uploads/2019/10/o-Luxury-Wedding-Photographer.jpg',
-        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1145.jpg',
-        'https://imagestudio.com/wp-content/uploads/2019/07/o-E15A3338-2.jpg',
-        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1317.jpg',
-        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1095.jpg',
-        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1299.jpg',
-        'https://imagestudio.com/wp-content/uploads/2019/09/o-Site-Portfolio.jpg',
-        'https://imagestudio.com/wp-content/uploads/2019/09/o-Photos-446.jpg',
-        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1293.jpg',
-        'https://imagestudio.com/wp-content/uploads/2019/09/o-photos111.jpg',
-        'https://imagestudio.com/wp-content/uploads/2019/09/o-Photos-227.jpg',
-        'https://imagestudio.com/wp-content/uploads/2019/07/o-1a.jpg',
-        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1101-1.jpg',
-        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1048.jpg',
-        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-654.jpg',
-        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1189.jpg',
-        'https://imagestudio.com/wp-content/uploads/2020/02/o-Photos-1112.jpg'
-      ]
-      this.setState({
-        show_selector: false, 
-        images: this.preconfigureImages(test_urls),
-        gridItemsSpacing: DEFAULT_GRID_ITEMS_SPACING
-      })
     }
   
     render() {
@@ -140,19 +128,16 @@ class Image extends React.Component {
                 <ImageSelector 
                   mediaLibraryHandler={onMediaLibrary}
                   uploadHandler={onUpload}
+                  imageFromPageHandler={this.props.imageFromPageHandler}
                   submitHandler={this.handleImageSubmit}
                   closeHandler={this.handleModalClose}
                   {...getImageSelectorProps(translations)} />
                 :
                 <>
                 {
-                  this.state.images?
+                  this.state.data && this.state.data.images && this.state.data.images.length > 0?
                   <ImageArchitect
-                    data={{
-                      gridItemsSpacing: this.state.gridItemsSpacing,
-                      alt: this.props.alt,
-                      images: this.state.images
-                    }}
+                    data={this.state.data}
                     submitHandler={this.handleConfigurationChange}
                     closeHandler={this.handleModalClose} /> : null
                 }

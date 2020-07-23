@@ -2542,3 +2542,12 @@ h3.miracle-body {
 .angle-line + .contact-photo {
 	z-index: 10;margin-left: 4rem;
 }
+.blog-content {
+	padding: 0px;
+	width: 95%;
+	margin: 25px auto;
+}
+.blog-content > * {
+	display: block !important;
+	width: 100% !important;
+}

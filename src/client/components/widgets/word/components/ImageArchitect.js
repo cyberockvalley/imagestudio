@@ -2,44 +2,45 @@ import React from 'react'
 import '../components/styles/image_selector.css'
 import { getRowNeighbours } from '../../../../../algos'
 import ResizableImage from './ResizableImage'
+import ImageEditBar from './ImageEditBar'
+import classNames from 'classnames';
+import { roundTo } from '../../../../../both/Functions'
 
 const $ = require('jquery')
 
 export const DEFAULT_GRID_ITEMS_SPACING = 10
 
 export const pixelToPercentage = (full, px) => {
-    return Math.round((px / full) * 100)
+    var result = (px / full) * 100
+    //if((result + "").includes(".")) result = roundTo(result, 2)
+    return Math.round(result)
 }
 
 export const percentageToPixel = (full, p) => {
-    return Math.round((p * 100) / full)
+    var result = (p * 100) / full
+    //if((result + "").includes(".")) result = roundTo(result, 2)
+    return Math.round(result)
 }
 
 export const getImagesContainerWidth = () => {
-    return parseInt($(".resizables.images")[0].offsetWidth) + 0
+    return $("#architect-images").innerWidth + 15
 }
 export const getImagesContainerHeight = () => {
-    return parseInt($(".resizables.images")[0].offsetHeight)
+    return $("#architect-images").innerHeight
 }
 
 class ImageArchitect extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            images: []
-        }
+    }
+
+    state = {
+        image: []
     }
 
     componentDidMount() {
         const data = this.props.data
         this.setState(data)
-        /*
-        this.setState({
-            images: this.props.images,
-            submitHandler: this.props.submitHandler,
-            gridItemsSpacing: this.props.gridItemsSpacing,
-            alt: this.props.alt || ""
-        })*/
     }
 
     onImageDrag = (ref, index) => {
@@ -49,29 +50,24 @@ class ImageArchitect extends React.Component {
     onImageResize = (image, d) => {
         var containerWidth = getImagesContainerWidth()
         var containerHeight = getImagesContainerHeight()
-        console.log("onImageResize", "d", d)
-        console.log("onImageResize", "sizeBefore", image.state.width, image.state.height)
         if(d) {
             image.setState({
                 width: image.state.width + (image.state.widthType == "%"? pixelToPercentage(containerWidth, d.width) : d.width),
                 height: image.state.height + (image.state.heightType == "%"? pixelToPercentage(containerHeight, d.height) : d.height),
             })
         }
-        console.log("onImageResize", "sizeAfter", image.state.width, image.state.height)
 
         var neigbours = getRowNeighbours(this.state.images.length, image.props.index, image.getWidth(), 
         (currentWidth, currentIndex) => {
             var newRowWidth = currentWidth + this.imageRefs[`image${currentIndex}`].getWidth()
-            var maxRowWidth = image.state.widthType == "%"? 100 : getImagesContainerWidth() 
-            console.log("onImageResize", "onWidth", currentWidth, newRowWidth, maxRowWidth)
+            var maxRowWidth = image.state.widthType == "%"? 99 : getImagesContainerWidth() 
+            console.log("onImageResize", "currentW", currentWidth, "imageWidth", this.imageRefs[`image${currentIndex}`].getWidth(), "newW", newRowWidth)
             if(newRowWidth > maxRowWidth) return 0
             return newRowWidth
         })
 
         
         var newHeight = parseInt(image.state.height)
-
-        console.log("onImageResize", neigbours)
 
         neigbours.forEach(imageIndex => {
             var image = this.imageRefs[`image${imageIndex}`]
@@ -87,11 +83,8 @@ class ImageArchitect extends React.Component {
     }
 
     handleTextChange = e => {
-        console.log("handleTextChange spacing1", this.state.gridItemsSpacing)
-        console.log("handleTextChange spacing2", e.target.name, e.target.value)
         this.state[e.target.name] = e.target.value
         this.setState({[e.target.name]: e.target.value})
-        console.log("handleTextChange spacing", this.state.gridItemsSpacing)
     }
 
     getConfig = () => {
@@ -103,7 +96,8 @@ class ImageArchitect extends React.Component {
                 height: image.state.height,
                 widthType: image.state.widthType,
                 heightType: image.state.heightType,
-                alt: this.state.alt,
+                autoWidth: image.state.autoWidth,
+                autoHeight: image.state.autoHeight,
                 src: image.props.src
             })
         }
@@ -126,6 +120,23 @@ class ImageArchitect extends React.Component {
         $("#close").click()
     }
 
+    alignLeft = () => {
+        this.setState({alignment: "left"})
+    }
+
+    alignCenter = () => {
+        this.setState({alignment: "center"})
+    }
+
+    alignRight = () => {
+        this.setState({alignment: "right"})
+
+    }
+
+    updateWidth = newWidth => {
+        this.setState({width: newWidth})
+    }
+
     render() {
         const {
             singleImageTitle,
@@ -139,9 +150,10 @@ class ImageArchitect extends React.Component {
             submitMultipleButtonText,
             altText
         } = this.props
-        if(!data || !data.images || data.images.length == 0 || !submitHandler) return
+        const {alignment, width} = this.state
+        if(!this.state || !this.state.images || this.state.images.length == 0 || !submitHandler) return null
         return(
-            <div id="image-achitect">
+            <div id="image-architect">
                 <div style={styles.header}>
                     <div>
                         <h1 style={styles.title}>
@@ -205,15 +217,29 @@ class ImageArchitect extends React.Component {
                         : null
                     }
                 </div>
-                <ImageEditBar {...this.props}
-                    width={this.state.width}
+                <ImageEditBar
+                    width={width}
                     onWidthChange={this.updateWidth}
                     onLeft={this.alignLeft}
                     onRight={this.alignRight}
                     onCenter={this.alignCenter}
-                    moreHandler={this.configurationSettings} />
-                <div className="images-container">
-                    <div className="resizables images scroll-y">
+                    style={{
+                        position: "relative",
+                        width: "100%",
+                        margin: "5px auto"
+                    }} />
+                <div className="images-container" 
+                    className={classNames(
+                        'rdw-image-alignment',
+                        {
+                            'rdw-image-left': alignment === 'left',
+                            'rdw-image-right': alignment === 'right',
+                            'rdw-image-center': alignment === 'center' || !alignment || alignment === 'none',
+                        },
+                        )}
+                    style={{ width: "100%" }}>
+                    <div id="architect-images" className="modal-scroll-y" 
+                    style={{width: `${width || 100}%`}}>
                         {
                             this.state.images.map((image, index) => {
                                 return <ResizableImage 

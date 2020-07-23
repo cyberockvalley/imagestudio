@@ -105,6 +105,46 @@
 	opacity: .7;
 	z-index: 500000;
 }
+#image-selector .modal-scroll-y, #image-architect .modal-scroll-y {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.modal-scroll-y {
+    overflow-y: auto !important;
+    height: 400px !important;
+    padding: 5px;
+}
+.size-px-auto > label, .size-px-auto > label > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.size-px-auto > label > div label {
+    margin-right: 5px;
+    margin-bottom: 0px !important;
+}
+.size-px-auto .form-check-input {
+    margin: 0px !important;
+    position: relative !important;
+}
+.input-group-dropdown {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+.input-group-dropdown{
+    white-space: nowrap;
+}
+.input-group-dropdown::after {
+	display: inline-block !important;
+	margin-left: .255em !important;
+	vertical-align: .255em !important;
+	content: "" !important;
+	border-top: .3em solid !important;
+	border-right: .3em solid transparent !important;
+	border-bottom: 0;
+	border-left: .3em solid transparent !important;
+}
 
 .resize-container {
     position: relative;

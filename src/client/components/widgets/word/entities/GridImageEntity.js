@@ -7,13 +7,14 @@ import ImageSelector from '../components/ImageSelector';
 import ImageArchitect from '../components/ImageArchitect';
 import { getImageSelectorProps, imageModalContainerStyles } from '../buttons/image';
 import ImageEditBar from '../components/ImageEditBar';
+import WordProcessorSettings from '../WordProcessorSettings';
 
 export const gridImageStrategy = (contentBlock, callback, contentState) => {
     contentBlock.findEntityRanges(character => {
-        const entityKey = character.getEntity();
+        const entityKey = character.getEntity()
         return (
           entityKey !== null &&
-          contentState.getEntity(entityKey).getType() === 'GRID_IMAGE'
+          contentState.getEntity(entityKey).getType() === WordProcessorSettings.ToolBar.entities.image
         );
     }, callback)
 }
@@ -46,7 +47,7 @@ class GridImageEntity extends React.Component {
         data.contentState.mergeEntityData(data.entityKey, updates)
         data.config.onChange(EditorState.push(data.config.getEditorState(), data.contentState, 'change-block-data'))
         this.setState({
-            entityData: {...this.state.entityData, updates},
+            entityData: {...this.state.entityData, ...updates},
         })
     }
 
@@ -126,10 +127,10 @@ class GridImageEntity extends React.Component {
         const { 
             gridItemsSpacing,
             alignment,
-            width,
             alt,
             images
         } = data.entityData
+        console.log("Arc3", data.entityData)
         const {
             translations,
             onMediaLibrary,
@@ -138,6 +139,7 @@ class GridImageEntity extends React.Component {
         const {
             show_selector, show_architect
         } = this.state
+        const {width} = this.state.entityData || {width: 100}
         return <>
                     <div
                         onMouseEnter={this.toggleHovered}
@@ -153,12 +155,12 @@ class GridImageEntity extends React.Component {
                         style={{ width: "100%" }}
                     >
                         <div 
-                        style={{width: "100%", display: "flex", flexWrap: "wrap", width: `${width || 100}%`}}>
+                        style={{display: "flex", flexWrap: "wrap", width: `${width || 100}%`}}>
                             {
                                 images.map((image, index) => (
                                     <div key={index} style={{
-                                        width: image.width + image.widthType,
-                                        height: image.height + image.heightType,
+                                        width: image.autoWidth? "auto" : image.width + image.widthType,
+                                        height: image.autoHeight? "auto" : image.height + image.heightType,
                                         paddingRight: gridItemsSpacing + "px",
                                         paddingBottom: gridItemsSpacing + "px"
                                     }}>
