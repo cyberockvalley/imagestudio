@@ -3,8 +3,8 @@ import Item from "./Item";
 import EditableStateContext from "../editables/EditableStateContext";
 import ImageEditable from "../editables/ImageEditable";
 import TextEditable from "../editables/TextEditable";
-import { SEO_BASE_URL, PAGE_404, ROLES } from "../../../both/Constants";
-import { slugify } from "../../../both/Functions";
+import { PAGE_404, ROLES } from "../../../both/Constants";
+import BroadLink from "../widgets/BroadLink";
 import { Link } from "react-router-dom";
 
 class ItemWeddingStory extends Item {
@@ -15,7 +15,6 @@ class ItemWeddingStory extends Item {
   }
 
   componentDidMount() {
-    console.log("SlugifyTest", "Wedding in Rome – Irina & Sam", "=>", slugify("Wedding in Rome – Irina & Sam"))
     this.setState({pageOptions: this.pageOptions})
     super.componentDidMount()
   }
@@ -25,6 +24,10 @@ class ItemWeddingStory extends Item {
     no_video: true, 
     no_iframe: true, 
     no_list: true
+  }
+
+  getUnique = (name) => {
+    return this.state.page && this.state.page.get("slug")? this.state.page.get("slug") : this.props.onBuildItemName(this.props.index, name)
   }
 
   getPageLink = () => {
@@ -46,12 +49,12 @@ class ItemWeddingStory extends Item {
           }}
         >
           <div className="story">
-            <Link to={this.context.edit? "javascript:void()" : this.getPageLink()}>
+          <a href={!this.context.edit? this.getPageLink()  : "/photo/#/"}>
               <ImageEditable
                 isPointer
                 role={ROLES.mod}
                 name="featured_image"
-                id={this.props.onBuildItemName(this.props.index, "featured_image")}
+                id={this.getUnique("featured_image")}
                 {...this.state.imageElementsProps}
                 edit={this.context.edit}
                 spinnerWidth={50}
@@ -62,6 +65,8 @@ class ItemWeddingStory extends Item {
                   width: "100%",
                   minHeight: "100%"
                 }}
+                emptyWidth="100%"
+                emptyHeight="400px"
                 add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
               />
               <div className="fade-box fade-in-down" style={{zIndex:1}}>
@@ -77,7 +82,7 @@ class ItemWeddingStory extends Item {
                     is_input_text />
                 </h2>
               </div>
-            </Link>
+            </a>
           </div>
         </div>
       </div>

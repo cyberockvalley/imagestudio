@@ -230,11 +230,12 @@ class FileEditable extends Editable {
         return false
     }
     detailsHasChanged() {
-        console.log("detailsHasChanged", this.dataHasChanged() || this.tagsHaveChanged())
+        console.log("detailsHasChanged", this.componentKey, this.props.link, this.dataHasChanged() || this.tagsHaveChanged())
         return this.dataHasChanged() || this.tagsHaveChanged()
     }
 
     dataHasChanged() {
+        console.log("detailsHasChanged", 2, this.componentKey, this.props.link, JSON.stringify(this.state.data), JSON.stringify(this.state.initialData))
         return this.state.data && JSON.stringify(this.state.data).length > 0 && JSON.stringify(this.state.data) != JSON.stringify(this.state.initialData)
     }
     tagsHaveChanged() {

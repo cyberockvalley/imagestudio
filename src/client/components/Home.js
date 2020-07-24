@@ -93,10 +93,10 @@ class Home extends Page {
           onCancelEdit={this.handleCancelEdit}
           textEditableProps={this.state.textElementsProps}
           />
+        <NavBar />
         <HeaderVideoBanner 
             videoEditableProps={this.state.videoElementsProps}
             textEditableProps={this.state.textElementsProps} />
-        <NavBar />
         <div className="flo-block__container">
           <div className="flo-image-block-1 flo-image-block-1--244">
             <div className="flo-image-block-1__top-wrap">

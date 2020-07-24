@@ -57,13 +57,9 @@ class ImageArchitect extends React.Component {
             })
         }
 
-        var neigbours = getRowNeighbours(this.state.images.length, image.props.index, image.getWidth(), 
-        (currentWidth, currentIndex) => {
-            var newRowWidth = currentWidth + this.imageRefs[`image${currentIndex}`].getWidth()
-            var maxRowWidth = image.state.widthType == "%"? 99 : getImagesContainerWidth() 
-            console.log("onImageResize", "currentW", currentWidth, "imageWidth", this.imageRefs[`image${currentIndex}`].getWidth(), "newW", newRowWidth)
-            if(newRowWidth > maxRowWidth) return 0
-            return newRowWidth
+        var neigbours = getRowNeighbours(this.state.images.length, image.props.index, image.state.widthType == "%"? 100 : getImagesContainerWidth(), 
+        currentIndex => {
+            return this.imageRefs[`image${currentIndex}`].getWidth()
         })
 
         

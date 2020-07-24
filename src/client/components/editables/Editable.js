@@ -43,7 +43,8 @@ class Editable extends React.Component {
                 var thisElement = this.props.elements[i]
                 
                 if(thisElement.className == "ImageElement") {
-                    console.log("addElement", "FeaturedImage", 4, this.componentKey, thisElement, JSON.stringify(thisElement))
+                    console.log("addElement", "FeaturedImage", 4, this.componentKey, this.props.link, thisElement, JSON.stringify(thisElement))
+                    console.log("addElement", "FeaturedImage", 5, this.componentKey, this.props.link, JSON.stringify(thisElement.get("featured_image")))
                 }
                 if(thisElement.get("key") == this.componentKey) {
                     this.ElementIndex = i;
@@ -64,13 +65,17 @@ class Editable extends React.Component {
     }
 
     //haveReadPermission(this.props.user, this.props.userRole, this.Element.get("ACL"))
-    haveWritePermission = () => {return true
+    haveWritePermission = () => {if(this.props.user) return true
         var ACL = !this.Element || !this.notAnObject()? this.guessedACL : this.Element.get("ACL")
-        return !ACL || (
-            ACL.getPublicWriteAccess() || 
-            ACL.getWriteAccess(this.props.user) || 
-            ACL.getRoleWriteAccess(this.props.userRole) 
+        console.log("WriteAcl1", this.props.userRole, ACL.getRoleWriteAccess(this.props.userRole))
+        console.log("WriteAcl2", this.Element.get("ACL"), this.guessedACL, ACL)
+        var permitted = !ACL || (
+            ACL.getPublicWriteAccess() ||  
+            ACL.getRoleWriteAccess(this.props.userRole) ||
+            ACL.getWriteAccess(this.props.user)
         )
+        console.log("WriteAcl3", this.componentKey, permitted)
+        return permitted
     }
     
     //haveWritePermission(this.props.user, this.props.userRole, this.Element? this.Element.get("ACL") : this.guessedACL)
@@ -78,8 +83,8 @@ class Editable extends React.Component {
         var ACL = !this.Element || !this.notAnObject()? this.guessedACL : this.Element.get("ACL")
         return !ACL || (
             ACL.getPublicReadAccess() || 
-            ACL.getReadAccess(this.props.user) || 
-            ACL.getRoleReadAccess(this.props.userRole) 
+            ACL.getRoleReadAccess(this.props.userRole) ||
+            ACL.getReadAccess(this.props.user)
         )
     }
 
@@ -121,8 +126,8 @@ class Editable extends React.Component {
                 } else {
                     //give no one read or write access
                     ACL = new ParseClient.ACL()
-                    //ACL = ACL.setPublicReadAccess(false)
-                    //ACL = ACL.setPublicWriteAccess(false)
+                    ACL.setPublicReadAccess(true)
+                    ACL.setPublicWriteAccess(false)
                 }
             }
             return ACL

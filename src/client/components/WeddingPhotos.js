@@ -7,7 +7,7 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
 import ListEditable from "./editables/ListEditable";
 import EditableStateContext from "./editables/EditableStateContext";
 import ItemWeddingPhoto from "./items/ItemWeddingPhoto";
@@ -104,13 +104,14 @@ class WeddingPhotos extends Page {
             onEditOrSaveButtonClicked={this.handleEditOrSaveButtonClick}
             onCancelEdit={this.handleCancelEdit}
             textEditableProps={this.state.textElementsProps} />
+          <NavBar />
           <HeaderImageBanner 
             path={this.props.location.pathname}
             imageEditableProps={this.state.imageElementsProps} />
-          <NavBar />
           <ListEditable 
               requestPageMetasOnNewItem={false}
               className="masonry masonry-col-2 masonry-col-sm-3 masonry-gap-10"
+              role={ROLES.mod}
               name={"site_content_home_masonry"}
               onBuildItemName={(index, name) => {
                 return `site_content_wedding_photo_${index}${name}`

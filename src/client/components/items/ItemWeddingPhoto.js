@@ -25,7 +25,8 @@ class ItemWeddingPhoto extends Item {
 
   render() {
     return super.render( 
-      <ImageEditable 
+      <>
+        <ImageEditable 
             name="photo"
             id={this.props.onBuildItemName(this.props.index, "photo")}
             {...this.state.imageElementsProps}
@@ -34,9 +35,14 @@ class ItemWeddingPhoto extends Item {
             spinnerHeight={50}
             spinnerThickness={7}
             spinnerRunnerColor="#f33"
-/*
-            style={(this.state.page && !this.state.page.id) || this.context.edit?{} : {height: 300}}
-            add_overlay={(this.state.page && !this.state.page.id) || this.context.edit}*/ />
+            style={{
+              width: "100%",
+              minHeight: "100%"
+            }}
+            emptyWidth="100%"
+            emptyHeight="400px"
+            add_overlay={!this.state.page || !this.state.page.id || this.context.edit} />
+      </>
     )
   }
 }

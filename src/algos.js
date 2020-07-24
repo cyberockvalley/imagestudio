@@ -13,18 +13,20 @@
  * If the result is greater than the maximum row width, it returns the result; 
  * else it returns a number not greater than the currentRowWidth } onRowWidth 
  */
-export const getRowNeighbours = (matrixArea, itemIndex, itemWidth, onRowWidth) => {
+export const getRowNeighbours = (matrixArea, itemIndex, maxRowWidth, onItemWidth) => {
     var currentRowWidth = 0
     var neigbours = []
     for(var i = 0; i < matrixArea; i++) {
         //get the new row width after the width of the elements at i has been added to the 
         // currentRowWidth
-        var rowWidth = onRowWidth(currentRowWidth, i)
-        if(rowWidth > currentRowWidth) {
+        var itemWidth = onItemWidth(i)
+        var newRowWidth = currentRowWidth + itemWidth
+        console.log("onImageResize", "currentW", currentRowWidth, "itemWidth", itemWidth, "newW", newRowWidth)
+        if(i != itemIndex) neigbours.push(i)
+        if(Math.round(newRowWidth) < maxRowWidth) {
             //if we get here, then it means the element at i has not broken to the next row,
             // and it's probably a neighbour :)
-            currentRowWidth = rowWidth
-            if(i != itemIndex) neigbours.push(i)
+            currentRowWidth = newRowWidth
 
         } else {
             //If we get here, then it means we are at the start of a new row,

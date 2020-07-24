@@ -127,7 +127,7 @@ class ListEditable extends Editable {
         super.componentDidMount()
         if(this.props.refSetter) this.props.refSetter(this)
         if(this.props.privateRef) {
-            this.props.privateRef(this)
+            this.props.privateRef(this, this.componentKey)
         }
         this.setState({data: "", tags: "", items: []})
         this.ElementClass = ParseClasses.ListElement
@@ -169,7 +169,9 @@ class ListEditable extends Editable {
     //pagination methods exposed through the privateRef props END
 
     getPages(paginationType, onLoaded, onFailed) {
+        console.log("List", 1)
         if(!this.state.pagesRequested) {
+            console.log("List", 2)
             this.setState({pagesRequested: true})
             var pageQuery = getParseQuery(ParseClasses.Page)
             pageQuery.equalTo("key", this.componentKey)
@@ -218,6 +220,8 @@ class ListEditable extends Editable {
             pageQuery.ascending("position_as_an_item")
             pageQuery.find()
             .then(list => {
+                
+        console.log("List", 3, list)
                 if(!this.props.noPagination) {
                     list = this.pagination.update(list)
                 }
@@ -225,7 +229,7 @@ class ListEditable extends Editable {
                     this.setState({items: paginationType == PAGINATION.more? this.state.items.concat(list) : list})
 
                 }
-                console.log("PAGINATION", "itemsCount", this.state.items.length)
+                console.log("PAGINATION", "itemsCount", this.state.items.length, list, JSON.stringify(list))
                 if(onLoaded) onLoaded({has_prev: this.hasPrev(), has_next: this.hasNext()})
                 this.setState({pagesRequested: false})
             })
@@ -309,7 +313,8 @@ const styles = {
     listHeaderContainer: {
         background: "#282828",
         width: "100%",
-        padding: "15px"
+        padding: 5,
+        marginBottom: 10
     },
     listHeader: {
         color: "#fff",

@@ -136,9 +136,11 @@ class Page extends React.Component {
             props.elements.push(element)
             this.updateElementGroup(element, props)
         }
-        
+        var page = this.state.page
+        if(this.props.index && !isNaN(parseInt(this.props.index)) && parseInt(this.props.index) > 0) {
+            page.set("position_as_an_item", parseInt(this.props.index))
+        }
         if(notRelation) {
-            var page = this.state.page
             page.set(field, notAnObject? element.get("is_html")? element.get("json_data") : element.get("data") : element)
             //update savables counter
             this.totalSavables = this.totalSavables - 1
@@ -163,7 +165,6 @@ class Page extends React.Component {
                     props.elements.push(elementRes)
                     this.updateElementGroup(elementRes, props)
                 }
-                var page = this.state.page
                 page.relation(field).add(elementRes)
                 //update savables counter
                 this.totalSavables = this.totalSavables - 1

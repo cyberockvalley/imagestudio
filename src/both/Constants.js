@@ -10,3 +10,5 @@ export const ROLES = {
     admins: "admins",
     mod: "moderators"
 }
+export const FACE_BOOK_APP_ID = "582589769123729"
+export const GOOGLE_CAPTCHA_SITE_KEY = "6Lf-CrUZAAAAAE_seI5UFs3sJ3x5Gd8VKd3IeWeo"

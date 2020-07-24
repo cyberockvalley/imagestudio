@@ -11,7 +11,7 @@ import TextEditable from "./editables/TextEditable";
 import PageReaction from "./widgets/PageReaction";
 import { Link } from "react-router-dom";
 
-class SingleBlogThread extends Page {
+class SingleStoryThread extends Page {
   static contextType = EditableStateContext
   constructor(props) {
     super(props)
@@ -20,7 +20,7 @@ class SingleBlogThread extends Page {
   componentDidMount() {
     this.setState({likes: 0})
     if(this.props.threadAdder) this.props.threadAdder(this)
-    console.log("SingleBlogThread", this.props.match.params.title, this.props)
+    console.log("SingleStoryThread", this.props.match.params.title, this.props)
     this.loadPage(["site_content_wedding_stories", "site_content_blog_posts"], {
       slug: this.props.match.params.title
     })
@@ -140,4 +140,4 @@ class SingleBlogThread extends Page {
   }
 }
 
-export default SingleBlogThread;
+export default SingleStoryThread;

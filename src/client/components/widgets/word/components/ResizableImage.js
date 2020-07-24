@@ -1,6 +1,7 @@
 import React from 'react'
 import { Resizable } from "re-resizable"
 import { DEFAULT_GRID_ITEMS_SPACING } from './ImageArchitect'
+import { isFloat } from '../../../../../both/Functions'
 const $ = require('jquery')
 
 const MIN_SIZE = 10
@@ -40,13 +41,13 @@ class ResizableImage extends React.Component {
     }
 
     getWidth = () => {
-        return parseInt(this.state.width);// + parseInt(this.state.space)
+        return !isFloat(this.state.width)? parseInt(this.state.width) : parseFloat(this.state.width)
     }
 
     setSize = e => {
         var size = e.target.value
         if(size.startsWith("0")) size = size.substring(1)
-        size = size.includes(".")? parseFloat(size) : parseInt(size)
+        size = isFloat(size)? parseFloat(size) : parseInt(size)
         //if(size < MIN_SIZE) size = MIN_SIZE
         if(!isNaN(size) && size > 100 && (
             (e.target.name == "width" && this.props.widthType == "%") 

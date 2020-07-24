@@ -7,7 +7,7 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
 import ListEditable from "./editables/ListEditable";
 import EditableStateContext from "./editables/EditableStateContext";
 import ItemWeddingStory from "./items/ItemWeddingStory";
@@ -104,12 +104,13 @@ class WeddingStories extends Page {
             onEditOrSaveButtonClicked={this.handleEditOrSaveButtonClick}
             onCancelEdit={this.handleCancelEdit}
             textEditableProps={this.state.textElementsProps} />
+          <NavBar />
           <HeaderImageBanner 
             path={this.props.location.pathname}
             imageEditableProps={this.state.imageElementsProps} />
-          <NavBar />
           <ListEditable 
               requestPageMetasOnNewItem={false}
+              role={ROLES.mod}
               className="stories"
               name={"site_content_wedding_stories"}
               onBuildItemName={(index, name) => {
@@ -122,14 +123,6 @@ class WeddingStories extends Page {
               privateRef={this.weddingStoriesRef}
               onItem={this.buildWeddingStoriesItem}
               itemDraggable={true}
-              item_tag_options={[
-                {
-                  title: "Select width",
-                  description: "Your option determines how much space This image takes on a row. 12 takes a whole row, 6 takes half...",
-                  key: "width",
-                  values: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
-                }
-              ]}
               onItemsLoaded = {
                 info => {
                 this.setState({

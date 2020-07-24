@@ -44,6 +44,7 @@ class FileChangerView extends React.Component {
     }
 
     handleChange = e => {
+        console.log("UploadTracker", "FileChangeView", "handleChange", this.props.id, this.rootClass, e.target.getAttribute("datacheck"), e.target.files[0])
         this.onFile(e.target.files[0])
     }
 
@@ -99,7 +100,7 @@ class FileChangerView extends React.Component {
 
     render() {
         return(
-            <div class={this.rootClass + this.elementClass} style={this.getRootStyle()} onDragEnter={this.handleDragEnter}>
+            <div className={this.rootClass + this.elementClass} style={this.getRootStyle()} onDragEnter={this.handleDragEnter}>
                 <div style={!this.state.draggedOver? styles.fileStyle1 : dragStyles.fileStyle1}>
                     <div style={!this.state.draggedOver? styles.fileStyle2 : dragStyles.fileStyle2}>
                         <div style={!this.state.draggedOver? styles.fileStyle3 : dragStyles.fileStyle3}>
@@ -120,13 +121,8 @@ class FileChangerView extends React.Component {
                                         :<></>
                                     }
                                     <div>
-                                        <label style={styles.button} for="file">
-                                            {
-                                                this.state.accept?
-                                                <input onChange={this.handleChange} id="file" name="file" type="file" style={{display: "none"}} accept={this.state.accept} />
-                                                :
-                                                <input onChange={this.handleChange} id="file" name="file" type="file" style={{display: "none"}} />
-                                            }
+                                        <label style={styles.button} for={this.rootClass || "file"}>
+                                            <input id={this.rootClass || "file"} datacheck={this.rootClass} onChange={this.handleChange} type="file" style={{display: "none"}} accept={this.state.accept? this.state.accept : ""} />
                                             <span style={styles.buttonText}>Choose File <span style={styles.buttonInnerText}>(or drag and drop it)</span></span>
                                         </label>
                                     </div>

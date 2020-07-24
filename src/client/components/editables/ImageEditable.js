@@ -74,7 +74,7 @@ class ImageEditable extends FileEditable {
 
     render() {
         this.init()
-        console.log("ImageEditable", this.state)
+        console.log("UploadTracker", "ImageEditable", this.props.link, this.props.id)
         return (
             <FileChangerView
                 key={this.props.key}

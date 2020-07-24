@@ -12,7 +12,7 @@ class HeaderImageBanner extends React.Component {
   getBannerName() {
     var name = ""
     if(this.props.path) {
-      if(this.props.path.startsWith("/portfolio/stories")) {
+      if(this.props.path.startsWith("/photo")) {
         name = "site_info_wedding_stories_header_image"
   
       } else if(this.props.path.startsWith("/portfolio")) {
@@ -41,7 +41,7 @@ class HeaderImageBanner extends React.Component {
         }}
       >
         <ImageEditable
-          id="introVideoMobile"
+          id={this.getBannerName()}
           style={{
             position: "relative",
             backgroundPosition: "center center",
@@ -52,6 +52,7 @@ class HeaderImageBanner extends React.Component {
             overflow: "hidden"
           }}
           name={this.getBannerName()}
+          link={this.getBannerName()}
           {...this.props.imageEditableProps}
           spinnerWidth={100}
           spinnerHeight={100}

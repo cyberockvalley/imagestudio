@@ -1,6 +1,31 @@
-const Axios = require("axios");
-const { response } = require("express");
+const { default: Axios } = require("axios")
+const qs = require('querystring')
 
+
+const BOT_TOKEN_VERIFICATION_ENDPOINT = "https://www.google.com/recaptcha/api/siteverify"
+const STATUS = {
+    success: 0,
+    failed: 1
+}
+const ERROR = {
+    types: {
+        action: 0
+    },
+    codes: {
+        action: {
+            bot_check_token_missing: 1,
+            bot_check_token_failed: 2,
+            missing_data: 3,
+            request_catch: 4,
+            may_be_bot: 5
+        }
+    }
+}
+const urlEncodedFormConfig = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+}
 Parse.Cloud.define('hello', function(req, res) {
     return 'Hi';
 })
@@ -18,6 +43,42 @@ Parse.Cloud.define('instagramPosts', function(req, res) {
     .catch(e => {
         return {error: e}
     })
+    
+})
+
+Parse.Cloud.define('pageReactionUpdate', function(req, res) {
+    const user = req.user
+    console.log("ReqUser", user, req.user)
+    //const userId = user.id
+    const actionInfo = req.params.info
+    const actionData = req.params.data
+    const botCheckToken = req.params.bot_check_token
+    if(actionInfo && actionInfo.pageId && actionInfo.type) {
+        if(!botCheckToken) {
+            return {status: STATUS.failed, error_type: ERROR.types.action, error_code: ERROR.codes.action.bot_check_token_missing}
+    
+        } else {
+            return Axios.post(BOT_TOKEN_VERIFICATION_ENDPOINT, qs.stringify({
+                secret: process.env.BOT_TOKEN_VERIFICATION_SECRET_KEY,
+                response: botCheckToken
+            }), urlEncodedFormConfig)
+            .then(response => {
+                if(response.data.success && response.data.score > 0.5) {
+                    //log action here
+                    return {status: STATUS.success}
+
+                } else {
+                    return {status: STATUS.failed, error_type: ERROR.types.action, error_code: ERROR.codes.action.may_be_bot}
+                }
+            })
+            .catch(e => {
+                return {status: STATUS.failed, error_type: ERROR.types.action, error_code: ERROR.codes.action.request_catch}
+            })
+        }
+
+    } else {
+        return {status: STATUS.failed, error_type: ERROR.types.action, error_code: ERROR.codes.action.missing_data}
+    }
     
 })
 
