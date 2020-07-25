@@ -85,7 +85,6 @@ class Contact extends Page {
                       <TextEditable 
                         name={"site_info_contact_page_body_1"}
                         {...this.state.textElementsProps}
-                        is_html
                         enable_line_break />
                     </h3>
                   </div>

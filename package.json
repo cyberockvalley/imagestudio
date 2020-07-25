@@ -5,10 +5,10 @@
   "main": "dist/server/index.js",
   "scripts": {
     "build": "webpack --mode=production && npm run copy_static_assets",
-    "dev": "webpack && npm run copy_static_assets && concurrently \"webpack --watch\" \"nodemon --watch dist/server",
+    "dev": "webpack && npm run copy_static_assets && concurrently \"webpack --watch\" \"nodemon --watch dist/server\"",
     "watch_not": "webpack && npm run copy_static_assets && concurrently \"webpack --watch\" \"nodemon dist --ignore json\"",
     "test": "webpack --config webpack.test.js && concurrently \"webpack --config webpack.test.js --watch\" \"mocha --watch\"",
-    "start": "NODE_ENV=production node copyStaticAssets.js && node dist/server/index.js &&",
+    "start": "NODE_ENV=production node copyStaticAssets.js && node dist/server/index.js &",
     "copy_static_assets": "node copyStaticAssets.js"
   },
   "engines": {

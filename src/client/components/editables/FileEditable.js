@@ -156,12 +156,12 @@ class FileEditable extends Editable {
                         }
                         this.processData([fileData])
                         this.setState({loading: false})
+                        element.relation("data").add(fileDataResponse)
                         if(this.Element) {
                             this.props.changeHandler(this.ElementIndex, fileDataResponse)
                             element.save()
             
                         } else {
-                            element.relation("data").add(fileDataResponse)
                             if(this.props.isPointer) {
                                 this.props.addHandler(element, this.componentKey, true)
 

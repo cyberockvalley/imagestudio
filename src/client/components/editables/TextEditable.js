@@ -266,7 +266,13 @@ class TextEditable extends Editable {
                         this.props.isHtml?
                         <span dangerouslySetInnerHTML={{__html: this.getEditorDisplayContent()}}></span>
                         :
-                        <>{this.getText()}</>
+                        <>
+                        {
+                            this.props.enable_line_break?
+                            <span dangerouslySetInnerHTML={{__html: this.getText()}}></span>
+                            : <>{this.getText()}</>
+                        }
+                        </>
                 }
             </>
         )

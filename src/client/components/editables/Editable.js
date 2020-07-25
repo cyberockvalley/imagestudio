@@ -67,8 +67,6 @@ class Editable extends React.Component {
     //haveReadPermission(this.props.user, this.props.userRole, this.Element.get("ACL"))
     haveWritePermission = () => {if(this.props.user) return true
         var ACL = !this.Element || !this.notAnObject()? this.guessedACL : this.Element.get("ACL")
-        console.log("WriteAcl1", this.props.userRole, ACL.getRoleWriteAccess(this.props.userRole))
-        console.log("WriteAcl2", this.Element.get("ACL"), this.guessedACL, ACL)
         var permitted = !ACL || (
             ACL.getPublicWriteAccess() ||  
             ACL.getRoleWriteAccess(this.props.userRole) ||

@@ -41,7 +41,6 @@ class HeaderImageBanner extends React.Component {
         }}
       >
         <ImageEditable
-          id={this.getBannerName()}
           style={{
             position: "relative",
             backgroundPosition: "center center",

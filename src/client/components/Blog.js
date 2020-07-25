@@ -89,7 +89,6 @@ class Blog extends Page {
                     style={{minHeight: 300}}
                     name={"site_info_blog_side_bar_body"}
                     {...this.state.textElementsProps}
-                    is_html
                     enable_line_break />
                 </p>
               </div>

@@ -937,6 +937,9 @@ a:link, a:visited, a:active {
 .navbar-static-top {
 	position: absolute; left: 0; right: 0;
 }
+#navigation + :not(#intro) {
+	padding-top: 50px !important;
+}
 .fixed-top {
 	position: fixed !important;
 }
