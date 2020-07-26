@@ -4,8 +4,6 @@ import EditableStateContext from "../editables/EditableStateContext";
 import ImageEditable from "../editables/ImageEditable";
 import TextEditable from "../editables/TextEditable";
 import { PAGE_404, ROLES } from "../../../both/Constants";
-import BroadLink from "../widgets/BroadLink";
-import { Link } from "react-router-dom";
 
 class ItemWeddingStory extends Item {
   static contextType = EditableStateContext
@@ -35,7 +33,7 @@ class ItemWeddingStory extends Item {
       return "/" + this.state.page.get("slug")
 
     } else {
-      return "/" + PAGE_404
+      return PAGE_404
     }
   }
 

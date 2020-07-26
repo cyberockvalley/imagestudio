@@ -7,8 +7,8 @@ export const customDraftToHtml = rawContentState => {
 }
 
 const customEntityTransform = (entity, text) => {
-  console.log("customEntity", entity, text)
-  if (entity.type == WordProcessorSettings.ToolBar.entities.image) {
+  //console.log("customEntity", entity, text)
+  if (entity.type == WordProcessorSettings.ToolBar.entities.imageGrid) {
     const { gridItemsSpacing, alt} = entity.data
     var justify = "center"
     if(entity.data.alignment == "left") {
@@ -27,7 +27,7 @@ const customEntityTransform = (entity, text) => {
         height: ${image.autoHeight? "auto" : image.height + image.heightType};
         padding-right: ${gridItemsSpacing + "px"};
         padding-bottom: ${gridItemsSpacing + "px"}
-    ">
+    " class="editor-image-container">
         <img src="${image.src}" alt="${alt}" style="width: 100%; height: 100%" />
     </div>`
     })

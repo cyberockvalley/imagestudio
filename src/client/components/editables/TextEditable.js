@@ -264,13 +264,13 @@ class TextEditable extends Editable {
                             placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()} />
                         :
                         this.props.isHtml?
-                        <span dangerouslySetInnerHTML={{__html: this.getEditorDisplayContent()}}></span>
+                        <span dangerouslySetInnerHTML={{__html: this.props.onDisplayText? this.props.onDisplayText(this.getEditorDisplayContent()) : this.getEditorDisplayContent()}}></span>
                         :
                         <>
                         {
                             this.props.enable_line_break?
-                            <span dangerouslySetInnerHTML={{__html: this.getText()}}></span>
-                            : <>{this.getText()}</>
+                            <span dangerouslySetInnerHTML={{__html: this.props.onDisplayText? this.props.onDisplayText(this.getText()) : this.getText()}}></span>
+                            : <>{this.props.onDisplayText? this.props.onDisplayText(this.getText()) : this.getText()}</>
                         }
                         </>
                 }

@@ -56,7 +56,8 @@ class HeaderImageBanner extends React.Component {
           spinnerWidth={100}
           spinnerHeight={100}
           spinnerThickness={7}
-          spinnerRunnerColor="#f33" />
+          spinnerRunnerColor="#f33"
+          {...this.props} />
       </section>
     );
   }

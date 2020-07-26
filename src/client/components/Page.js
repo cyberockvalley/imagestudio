@@ -2,6 +2,7 @@ import React from 'react'
 import ParseClient, { ParseClasses, getParseQuery, handleParseError, getParseRole } from '../../both/Parse'
 import EditableStateContext from './editables/EditableStateContext'
 import { slugify, isObject } from '../../both/Functions'
+import { PAGE_404 } from '../../both/Constants'
 
 class Page extends React.Component {
     constructor(props) {
@@ -282,6 +283,10 @@ class Page extends React.Component {
                 this.setState({page: page})
             }
             
+            if(!this.state.page ) {
+                this.props.history.push(PAGE_404)
+            }
+            
             //expose title to edit
             var textElementsProps = this.state.textElementsProps
             textElementsProps.elements.push({
@@ -304,7 +309,7 @@ class Page extends React.Component {
                     if(attribute == "tags") return ""
                 },
                 set: (attribute, value) => {
-                    if(attribute == "data") this.state.page.set("title", value)
+                    if(attribute == "data") this.state.page.set("description", value)
                 }
             })
             this.setState({textElementsProps: textElementsProps})

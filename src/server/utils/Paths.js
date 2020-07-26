@@ -1,3 +1,5 @@
+import { PAGE_404 } from "../../both/Constants"
+
 const Paths = [
     "/", "/contact", "/about", "/blog", "/reviews", "/blog/:title",
     "/videos", "/videos/music", "/videos/commercial", 
@@ -5,7 +7,8 @@ const Paths = [
     "/photo", //stories
     "/:title",//blog, story
     "/shop", "/product/:title", "/movies", "/upload-test",
-    "/admin/"
+    "/admin/",
+    PAGE_404
 ]
 
 export default Paths

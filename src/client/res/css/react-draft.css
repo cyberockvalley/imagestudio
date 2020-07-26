@@ -772,6 +772,7 @@
     position: relative;
   }
   .rdw-link-decorator-icon {
+    display: none !important;
     position: absolute;
     left: 40%;
     top: 0;

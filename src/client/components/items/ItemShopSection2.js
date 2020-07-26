@@ -31,7 +31,7 @@ class ItemShopSection1 extends Item {
       return "/product/" + this.state.page.get("slug")
 
     } else {
-      return "/" + PAGE_404
+      return PAGE_404
     }
   }
 

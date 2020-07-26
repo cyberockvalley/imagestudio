@@ -1,11 +1,11 @@
 
 const ToolBar = {
     entities: {
-      image: 'GRID_IMAGE'
+      imageGrid: 'IMAGE_GRID'
     },
     options: [
       'inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 
-      'colorPicker', 'link', 'embedded', 'emoji', 'remove', 'history'],
+      'colorPicker', 'link', 'image', 'embedded', 'emoji', 'remove', 'history'],
     /*
     inline: {
       inDropdown: false,

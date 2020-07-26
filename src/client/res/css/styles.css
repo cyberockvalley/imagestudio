@@ -1667,7 +1667,15 @@ hr.title_break {
 	font-family: "Georgia";
 }
 .blog-body {
-	margin: 0px auto;
+	margin: 50px auto;
+	width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+	.blog-body {
+		margin: 50px auto;
+		width: 90% !important;
+	}
 }
 
 .blog-body a {
@@ -1677,16 +1685,6 @@ hr.title_break {
 	color: #d59f46 !important;
 	outline: none !important;
 	text-decoration: none !important;
-}
-.blog-body p {
-	padding-top: 0.7em;
-	padding-bottom: 0.7em;
-	text-align: left;
-}
-.blog-body img {
-	padding-top: 0.75%;
-	max-width: 100%;
-    height: auto;
 }
 .shop-1 > div > div {
 	height: 165px;
@@ -2559,3 +2557,4 @@ h3.miracle-body {
 	display: block !important;
 	width: 100% !important;
 }
+.modal-container > * {z-index: 10000 !important;}

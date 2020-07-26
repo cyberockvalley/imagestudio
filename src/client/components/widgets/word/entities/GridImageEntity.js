@@ -2,19 +2,19 @@ import React from 'react'
 import classNames from 'classnames';
 import '../../../../res/css/react-draft.css'
 import { EditorState } from 'draft-js';
-import Modal from '@material-ui/core/Modal'
 import ImageSelector from '../components/ImageSelector';
 import ImageArchitect from '../components/ImageArchitect';
-import { getImageSelectorProps, imageModalContainerStyles } from '../buttons/image';
+import { getImageSelectorProps, imageModalContainerStyles } from '../buttons/imagegrid';
 import ImageEditBar from '../components/ImageEditBar';
 import WordProcessorSettings from '../WordProcessorSettings';
+import ModalView from '../../ModalView';
 
 export const gridImageStrategy = (contentBlock, callback, contentState) => {
     contentBlock.findEntityRanges(character => {
         const entityKey = character.getEntity()
         return (
           entityKey !== null &&
-          contentState.getEntity(entityKey).getType() === WordProcessorSettings.ToolBar.entities.image
+          contentState.getEntity(entityKey).getType() === WordProcessorSettings.ToolBar.entities.imageGrid
         );
     }, callback)
 }
@@ -189,7 +189,7 @@ class GridImageEntity extends React.Component {
                             </>: null
                         }
                     </div>
-                    <Modal
+                    <ModalView
                         open={this.state.openModal}
                         onClose={this.handleModalClose}
                         aria-labelledby="simple-modal-title"
@@ -218,7 +218,7 @@ class GridImageEntity extends React.Component {
                             </>
                         }
                         </div>
-                    </Modal>
+                    </ModalView>
                 </>
     }
 }

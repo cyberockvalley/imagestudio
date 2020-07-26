@@ -1,6 +1,5 @@
 import React from "react";
 import Header from "./Header";
-import HeaderImageBanner from "./HeaderImageBanner";
 import NavBar from "./NavBar";
 import FooterContactUs from "./FooterContactUs";
 import Footer from "./Footer";
@@ -47,9 +46,9 @@ class SingleBlogSpool extends Page {
           textEditableProps={this.state.textElementsProps} />
         <NavBar />
         <SingleBlogThread {...this.props}  
-          edit={this.state.edit}
-          spoolAttributes={this.state.elementsAttributes}
-          threadAdder={this.addThread} />
+            edit={this.state.edit}
+            spoolAttributes={this.state.elementsAttributes}
+            threadAdder={this.addThread} />
         <FooterContactUs
           edit={this.state.edit}
           user={this.state.user}

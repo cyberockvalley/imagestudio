@@ -21,18 +21,16 @@ class SingleBlogThread extends Page {
     this.setState({likes: 0})
     if(this.props.threadAdder) this.props.threadAdder(this)
     console.log("SingleBlogThread", this.props.match.params.title, this.props)
-    this.loadPage(["site_content_wedding_stories", "site_content_blog_posts"], {
+    this.loadPage(["site_content_blog_posts"], {
       slug: this.props.match.params.title
     })
 
     
   }
 
-  formatDate = date => {
+  getDate = () => {
     //"dddd, mmmm dS, yyyy, h:MM:ss TT" => Saturday, June 9th, 2007, 5:46:21 PM
-    //September 1, 2019 22:00
-    return dateFormat(date, "mmmm d, yyyy HH:MM")
-
+    return this.state.page && this.state.page.get? dateFormat(this.state.page.get("createdAt"), "mmmm d, yyyy") : ""
   }
 
   increaseLikes = () => {
@@ -68,71 +66,24 @@ class SingleBlogThread extends Page {
           <meta name="twitter:creator" content="@CSS" />
           <meta name="twitter:site" content="@CSS" />
         </Helmet>
-        {/*
-          <HeaderImageBanner 
-          imageEditableProps={{...this.state.imageElementsProps, edit: this.props.edit}} />*/
-        }
-        <section className="story-title">
-          <a href="/blog/this-story-title">{this.state.page? this.state.page.get("title") : ""}</a>
-          <div>{this.state.page? this.formatDate(this.state.page.get("createdAt")) : ""}</div>
-        </section>
-        <section className="blog-content">
-          <TextEditable isHtml 
-            editorImageAlt={this.state.page? slugify(this.state.page.get("title")).replaceAll("-", " ") : ""}
-            role={ROLES.mod}
-            name="content"
-            {...this.state.textElementsProps}
-            edit={this.props.edit}
-            style={{
-              width: "100%",
-              height: "500px"
-            }} />
-        </section>
-        <section className="row navigators-and-likes">
-          <div className="col-12 col-md-6">
-            <ul className="breadcrumb">
-              <li>
-                <Link to="/">ImageStudio</Link>
-              </li>
-              <li className="exception">
-                <Link to="/photo/">Stories</Link>
-              </li>
-              {/*
-                <li className="exception">
-                <a href="https://taraweddings.ca/portfolio/priya-sid/">
-                  Wedding Type
-                </a>
-              </li>*/
-              }
-              <li className="exception">
-                <Link to={`/${this.props.match.params.title}`} style={{textTransform: "capitalize"}}>
-                  {
-                    this.props.match.params.title? this.props.match.params.title.replace(/-/g, " ") : ""
-                  }
-                </Link>
-              </li>
-            </ul>
+        <HeaderImageBanner 
+          imageEditableProps={{...this.state.imageElementsProps, edit: this.props.edit}}
+          isPointer
+          role={ROLES.mod}
+          name="featured_image" />
+        <section className="blog-header">
+          <h1>{this.state.page? this.state.page.get("title") : ""}</h1>
+          <hr className="title_break" />
+          <div className="post_detail">
+            <span className="post_info_date">{this.getDate()}</span>
           </div>
-          <div className="col-8 col-md-4">
-            <a href="#">
-              <span>〈</span>
-              <span>Previous</span>
-            </a>
-            <span>|</span>
-            <a href="#">
-              <span>Next</span>
-              <span>〉</span>
-            </a>
-          </div>
-          <div className="col-4 col-md-2">
-            <PageReaction info={{type: "like", pageId: this.state.page? this.state.page.id : null}} 
-            widget_loading_text="Like button loading..." onValid={this.increaseLikes}>
-              <a id="likeButton" href="javascript:void(0);">
-                <i className="fa fa-heart" />
-              </a>
-            </PageReaction>
-            <span>{this.state.likes}</span>
-            <span>likes</span>
+          <div className="col-12 blog-body">
+            <TextEditable isHtml 
+              editorImageAlt={this.state.page? slugify(this.state.page.get("title")).replaceAll("-", " ") : ""}
+              role={ROLES.mod}
+              name="content"
+              {...this.state.textElementsProps}
+              edit={this.props.edit} />
           </div>
         </section>
       </>

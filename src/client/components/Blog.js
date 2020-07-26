@@ -6,12 +6,17 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROWS_PER_LIST, ROLES } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
+import ListEditable from "./editables/ListEditable";
+import ItemBlogPost from "./items/ItemBlogPost";
+import EditableStateContext from "./editables/EditableStateContext";
 
 class Blog extends Page {
+  static contextType = EditableStateContext
   constructor(props){
     super(props)
+    this.handleBlogPostsLoadMore = this.handleBlogPostsLoadMore.bind(this)
   }
 
   componentDidMount() {
@@ -22,8 +27,41 @@ class Blog extends Page {
     
   }
 
-  render() {
+  blogPostsRef = blogPostsList => {
+    this.blogPostsList = blogPostsList
+    
+  }
+
+  handleBlogPostsLoadMore = e => {
+    if(this.blogPostsList && !this.state.blogPostsLoading) {
+      this.setState({blogPostsLoading: true})
+      this.blogPostsList.more(info => {
+        //onLoaded
+        this.setState({
+          blogPostsLoading: false,
+          blogPostsHasNext: info.has_next,
+          blogPostsHasPrev: info.has_prev
+        })
+      }, error => {
+        //onFailed
+        this.setState({blogPostsLoading: false})
+      })
+    }
+  }
+
+  buildBlogPostsItem = (item, index, onBuildItemName, refGetter) => {
     return (
+      <ItemBlogPost 
+        key={index}
+        index={index}
+        page={item}
+        onBuildItemName={onBuildItemName}
+        refGetter={refGetter} />
+    )
+  }
+
+  render() {
+    return super.render(
       <>
         <Helmet>
           <title>{lastValueOrThis(this.state.page, {get: () => {return ""}}).get("title")}</title>
@@ -65,9 +103,32 @@ class Blog extends Page {
           <NavBar />
           <section className="row blog-thread">
             <div className="col-sm-9">
-              <div className="blog-list"></div>
+              <ListEditable 
+                  requestPageMetasOnNewItem={false}
+                  role={ROLES.mod}
+                  className="blog-list"
+                  name={"site_content_blog_posts"}
+                  onBuildItemName={(index, name) => {
+                    return `site_content_blog_post_${index}${name}`
+                  }}
+                  readableName="Blog posts"
+                  itemReadableName="Blog post"
+                  {...this.state.listElementsProps}
+                  rowsPerPage={ROWS_PER_LIST}
+                  privateRef={this.blogPostsRef}
+                  onItem={this.buildBlogPostsItem}
+                  itemDraggable={true}
+                  onItemsLoaded = {
+                    info => {
+                    this.setState({
+                      blogPostsHasNext: info.has_next
+                    })}
+                  }
+              />
               <div className="load-more">
-                <button className="load-more">Load More</button>
+                <button onClick={this.handleBlogPostsLoadMore} className={"load-more " + (this.state.blogPostsLoading? "loading " : "") + (this.state.blogPostsHasNext? "" : "d-none")}>
+                  <span>Load More</span>
+                </button>
               </div>
             </div>
             <div className="col-sm-3 about-blog">

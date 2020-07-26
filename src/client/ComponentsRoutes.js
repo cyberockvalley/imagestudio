@@ -5,7 +5,6 @@ import Contact from './components/Contact'
 import Blog from './components/Blog'
 import About from './components/About'
 import Reviews from './components/Reviews'
-import SingleBlogPost from './components/SingleBlogPost'
 import Videos from './components/Videos'
 import WeddingPhotos from './components/WeddingPhotos'
 import WeddingStories from './components/WeddingStories'
@@ -17,6 +16,8 @@ import AdminHome from './components/admin/AdminHome'
 import SingleBlogSpool from './components/SingleBlogSpool'
 import SingleStorySpool from './components/SingleStorySpool'
 import SingleProductSpool from './components/SingleProductSpool'
+import { PAGE_404 } from '../both/Constants'
+import Error404 from './components/errors/Error404'
 
 const $ = require('jquery')
 
@@ -26,15 +27,19 @@ class ComponentsRoutes extends React.Component {
   }
 
   componentDidMount() {
-    var sticky = $(".navbar-static-top")[0].offsetHeight
-    // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
-    $(window).on("scroll", e => {
-      if (window.pageYOffset > sticky) {
-        $(".navbar-static-top")[0].classList.add("fixed-top");
-      } else {
-        $(".navbar-static-top")[0].classList.remove("fixed-top");
-      }
-    })
+    var sticky = $(".navbar-static-top")
+    if(sticky && sticky[0]) {
+      sticky = sticky[0].offsetHeight
+      // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+      $(window).on("scroll", e => {
+        if (window.pageYOffset > sticky) {
+          $(".navbar-static-top")[0].classList.add("fixed-top");
+        } else {
+          $(".navbar-static-top")[0].classList.remove("fixed-top");
+        }
+      })
+    }
+    
   }
 
   render() {
@@ -84,6 +89,9 @@ class ComponentsRoutes extends React.Component {
         />
         <Route exact path="/product/:title" 
           render={(propz) => <SingleProductSpool {...propz} data={this.props.initialData} />}
+        />
+        <Route exact path={PAGE_404} 
+          render={(propz) => <Error404 {...propz} data={this.props.initialData} />}
         />
       </Switch>
     )

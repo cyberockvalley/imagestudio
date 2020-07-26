@@ -27,12 +27,11 @@ class SingleStoryThread extends Page {
 
     
   }
-
-  formatDate = date => {
+  
+  getDate = () => {
     //"dddd, mmmm dS, yyyy, h:MM:ss TT" => Saturday, June 9th, 2007, 5:46:21 PM
     //September 1, 2019 22:00
-    return dateFormat(date, "mmmm d, yyyy HH:MM")
-
+    return this.state.page && this.state.page.get? dateFormat(this.state.page.get("createdAt"), "mmmm d, yyyy HH:MM") : ""
   }
 
   increaseLikes = () => {
@@ -74,7 +73,7 @@ class SingleStoryThread extends Page {
         }
         <section className="story-title">
           <a href="/blog/this-story-title">{this.state.page? this.state.page.get("title") : ""}</a>
-          <div>{this.state.page? this.formatDate(this.state.page.get("createdAt")) : ""}</div>
+          <div>{this.getDate()}</div>
         </section>
         <section className="blog-content">
           <TextEditable isHtml 

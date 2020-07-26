@@ -4,7 +4,6 @@ let Editor
 import { isClient } from "../../../../both/Functions"
 import '../../../res/css/react-draft.css'
 import WordProcessorSettings from "./WordProcessorSettings";
-import Image from "./buttons/image/index";
 import ImageGrid from "./buttons/imagegrid/index";
 import Language from "./buttons/language";
 import translationsMap from "./translations";
@@ -13,33 +12,9 @@ import { gridImageDecorator } from "./entities/decorators";
 class WordProcessor extends React.Component {
 	constructor(props) {
 		super(props);
-		if(isClient()) {
-            const headerOne = '';
-            const blocksFromHTML = convertFromHTML(headerOne)
-            const state = ContentState.createFromBlockArray(
-              blocksFromHTML.contentBlocks,
-              blocksFromHTML.entityMap
-            )
-            this.state = {
-			  editorState: EditorState.createEmpty(),//EditorState.createWithContent(state)
-			  language: WordProcessorSettings.ToolBar.language.options[
-				  WordProcessorSettings.ToolBar.language.defaultIndex
-			  ],
-			  readOnly: false
-            }
-      
-          } else {
-            this.state = {
-				editorState: EditorState.createEmpty(),
-			  	language: WordProcessorSettings.ToolBar.language.options[
-					WordProcessorSettings.ToolBar.language.defaultIndex
-				],
-				readOnly: false
-            }
-		}
 		this.state = {
 			editorState: EditorState.createEmpty(),
-			  language: WordProcessorSettings.ToolBar.language.options[
+			language: WordProcessorSettings.ToolBar.language.options[
 				WordProcessorSettings.ToolBar.language.defaultIndex
 			],
 			readOnly: false
@@ -51,7 +26,6 @@ class WordProcessor extends React.Component {
 	}
 
 	getTranslations = key => {
-		console.log("getTrans", key, translationsMap[key])
 		return translationsMap[key]
 	}
 
@@ -71,13 +45,36 @@ class WordProcessor extends React.Component {
 	getEditorState = () => {
 		return this.state.editorState
 	}
+
+	removeNullStyles = styles => {
+		var returnValue = []
+		for(var i = 0; i < styles.length; i++) {
+			if(Array.isArray(styles[i]) && styles[i].length > 0) {
+				returnValue.push(this.removeNullStyles(styles[i]))
+
+			} else {
+				if(styles[i]) returnValue.push(styles[i])
+			}
+			
+		}
+		return returnValue
+	}
+
+	getRaw = () => {
+		var raw = this.props.rawContent
+		raw.blocks.forEach(block => {
+			if(block.inlineStyleRanges && block.inlineStyleRanges.length > 0) {
+				block.inlineStyleRanges = this.removeNullStyles(block.inlineStyleRanges)
+			}
+		})
+		return raw
+	}
     
     componentDidMount() {
 		Editor = require('react-draft-wysiwyg').Editor
 		var initialState;
 		if(this.props.rawContent) {
-			console.log("rawContent", "wordProcessor", this.props.rawContent)
-			initialState = EditorState.createWithContent(convertFromRaw(this.props.rawContent))
+			initialState = EditorState.createWithContent(convertFromRaw(this.getRaw()))
 
 		} else {
 			initialState = EditorState.createEmpty()
@@ -111,17 +108,12 @@ class WordProcessor extends React.Component {
 					}
 				}}
 				toolbarCustomButtons={[
-					<Image 
-						icon={WordProcessorSettings.ToolBar.image.icon} 
+					<ImageGrid 
+						icon={WordProcessorSettings.ToolBar.image_grid.icon} 
 						onMediaLibrary={this.props.imageMediaLibraryHandler}
 						onUpload={this.props.uploadHandler}
 						imageFromPageHandler={this.props.imageFromPageHandler}
 						alt={this.props.imageAlt} />,
-					<ImageGrid 
-						icon={WordProcessorSettings.ToolBar.image_grid.icon} 
-						onMediaLibrary={this.getImageMediaLibrary}
-						onUpload={this.handleImageUpload}
-						alt={this.props.imageAlt} />, 
 					<Language 
 						currentLanguage={this.state.language} 
 						onLanguageChange={this.handleLanguageChange}

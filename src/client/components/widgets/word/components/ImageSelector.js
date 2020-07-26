@@ -80,11 +80,13 @@ class ImageSelector extends React.Component {
             var urlImages = this.state.url_images
             urlImages.push({
                 url: this.state.insert_url,
-                justAdded: true
+                justAdded: true,
+                url_loading: false
             })
             this.setState({
                 url_images: urlImages, 
-                insert_url_has_error: false
+                insert_url_has_error: false,
+                url_loading: false
             })
         }
     }
@@ -105,13 +107,15 @@ class ImageSelector extends React.Component {
                 })
                 this.setState({
                     url_images: urlImages, 
-                    insert_url_has_error: false
+                    insert_url_has_error: false,
+                    url_loading: false
                 })
             })
             .catch(e => {
                 console.log("getImageFromPage", "error2", e)
                 this.setState({ 
-                    insert_url_has_error: true
+                    insert_url_has_error: true,
+                    url_loading: false
                 })
             })
             
