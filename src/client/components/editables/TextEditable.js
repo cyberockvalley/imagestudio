@@ -6,6 +6,8 @@ import { isObject } from "../../../both/Functions";
 import { customDraftToHtml } from "../widgets/word/entities/functions";
 import Axios from "axios";
 import { BASE_URL, API_SECONDARY_ROOT_DIR, WEB_PAGE_IMAGES_ENDPOINT } from "../../../both/Constants";
+import ModalView from "../widgets/ModalView";
+import IframeView from "../widgets/IframeView";
 
 class TextEditable extends Editable {
     constructor(props) {
@@ -236,8 +238,17 @@ class TextEditable extends Editable {
 		)
     }
 
+    getIframeSource = () => {
+        return this.Element && this.haveReadPermission()? "https://www.youtube.com/embed/" + this.Element.get("data") : null
+    }
+    getIframePlayListId = () => {
+        return this.Element && this.haveReadPermission()? this.Element.get("data") : null
+    }
+
     render() {
         this.init()
+        const iframeSrc = this.getIframeSource()
+        const iframePlayListId = this.getIframePlayListId()
         return(
             <>
                 {
@@ -254,25 +265,28 @@ class TextEditable extends Editable {
                                     onChange={this.handleEditorChange}
                                     placeholder={this.props.placeholder || `${this.keyToText()}...`}
                                 />
-                                :
+                            ://else(this.props.isHtml)
                                 <textarea id={this.props.id? this.props.id : ""} className={this.props.class? this.props.class : ""} onClick={this.handleEditClick} 
                                     placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()}>
                                     {this.getText()}
                                 </textarea>
-                            :
+                        ://else(this.props.is_input_text)
                             <input id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} type="text" value={this.getText()} onClick={this.handleEditClick} 
                             placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()} />
-                        :
-                        this.props.isHtml?
-                        <span dangerouslySetInnerHTML={{__html: this.props.onDisplayText? this.props.onDisplayText(this.getEditorDisplayContent()) : this.getEditorDisplayContent()}}></span>
-                        :
-                        <>
-                        {
-                            this.props.enable_line_break?
-                            <span dangerouslySetInnerHTML={{__html: this.props.onDisplayText? this.props.onDisplayText(this.getText()) : this.getText()}}></span>
-                            : <>{this.props.onDisplayText? this.props.onDisplayText(this.getText()) : this.getText()}</>
-                        }
-                        </>
+                    ://else (this.props.edit && this.haveWritePermission())
+                        this.props.isIframe?
+                            <IframeView {...this.props.iframeOptions} iframeSrc={iframeSrc} playListId={iframePlayListId} />
+                        ://else(this.props.isIframe)
+                            this.props.isHtml?
+                                <span dangerouslySetInnerHTML={{__html: this.props.onDisplayText? this.props.onDisplayText(this.getEditorDisplayContent()) : this.getEditorDisplayContent()}}></span>
+                            ://else(this.props.isHtml)
+                                <>
+                                {
+                                    this.props.enable_line_break?
+                                    <span dangerouslySetInnerHTML={{__html: this.props.onDisplayText? this.props.onDisplayText(this.getText()) : this.getText()}}></span>
+                                    : <>{this.props.onDisplayText? this.props.onDisplayText(this.getText()) : this.getText()}</>
+                                }
+                                </>
                 }
             </>
         )

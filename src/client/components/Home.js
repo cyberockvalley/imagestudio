@@ -95,7 +95,6 @@ class Home extends Page {
           />
         <NavBar />
         <HeaderVideoBanner 
-            videoEditableProps={this.state.videoElementsProps}
             textEditableProps={this.state.textElementsProps} />
         <div className="flo-block__container">
           <div className="flo-image-block-1 flo-image-block-1--244">

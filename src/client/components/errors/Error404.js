@@ -1,12 +1,12 @@
 import React from 'react'
 import './error.css'
 
-import { gsap } from "gsap/all"
+//import { gsap } from "gsap/all"
 import { Link } from 'react-router-dom';
 
 class Error404 extends React.Component {
 
-    componentDidMount() {
+    componentDidMount() {/*
         gsap.set("svg", { visibility: "visible" });
         gsap.to("#headStripe", {
         y: 0.5,
@@ -85,7 +85,7 @@ class Error404 extends React.Component {
         repeat: -1,
         repeatDelay: 8,
         delay: 2
-        });
+        });*/
 
         const burger = document.querySelector('.burger');
         const nav = document.querySelector('nav');

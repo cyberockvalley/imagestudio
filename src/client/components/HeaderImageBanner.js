@@ -9,29 +9,6 @@ class HeaderImageBanner extends React.Component {
   }
   
 
-  getBannerName() {
-    var name = ""
-    if(this.props.path) {
-      if(this.props.path.startsWith("/photo")) {
-        name = "site_info_wedding_stories_header_image"
-  
-      } else if(this.props.path.startsWith("/portfolio")) {
-        name = "site_info_wedding_photos_header_image"
-  
-      } else if(this.props.path.startsWith("/videos/music")) {
-        name = "site_info_music_video_header_image"
-        
-      } else if(this.props.path.startsWith("/videos/commercial")) {
-        name = "site_info_commercial_video_header_image"
-        
-      } else if(this.props.path.startsWith("/videos")) {
-        name = "site_info_wedding_video_header_image"
-        
-      }
-    }
-    return name
-  }
-
   render() {
     return (
       <section
@@ -50,8 +27,8 @@ class HeaderImageBanner extends React.Component {
             backgroundColor: "#000",
             overflow: "hidden"
           }}
-          name={this.getBannerName()}
-          link={this.getBannerName()}
+          name={this.props.name}
+          link={this.props.name}
           {...this.props.imageEditableProps}
           spinnerWidth={100}
           spinnerHeight={100}

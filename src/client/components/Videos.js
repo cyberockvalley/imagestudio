@@ -7,11 +7,42 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
+import EditableStateContext from "./editables/EditableStateContext";
+import ItemVideo from "./items/ItemVideo";
+import ListEditable from "./editables/ListEditable";
+
+const VIDEO_TYPES = {
+  "videos": {
+    list_name: "site_content_wedding_videos",
+    list_item_name: "site_content_wedding_video",
+    list_readable_name: "Wedding videos",
+    list_item_readable_name: "Wedding video",
+    banner_name: "wedding_videos_header_banner"
+  },
+  "videosmusic": {
+    list_name: "site_content_music_videos",
+    list_item_name: "site_content_music_video",
+    list_readable_name: "Music videos",
+    list_item_readable_name: "Music video",
+    banner_name: "music_videos_header_banner"
+  },
+  "videoscommercial": {
+    list_name: "site_content_commercial_videos",
+    list_item_name: "site_content_commercial_video",
+    list_readable_name: "Commercial videos",
+    list_item_readable_name: "Commercial video",
+    banner_name: "commercial_videos_header_banner"
+  }
+}
 
 class Videos extends Page {
+  static contextType = EditableStateContext
   constructor(props){
     super(props)
+    
+    this.handleVideosLoadMore = this.handleVideosLoadMore.bind(this)
+    console.log("PATH_B", this.props.match, this.getVideoKey())
   }
 
   componentDidMount() {
@@ -19,11 +50,67 @@ class Videos extends Page {
       no_video: true
     })
 
+    console.log("PATH", this.props.match)
+  }
+
+  videosRef = videosList => {
+    this.videosList = videosList
     
   }
 
-  render() {
+  handleVideosLoadMore = e => {
+    if(this.videosList && !this.state.videosLoading) {
+      this.setState({videosLoading: true})
+      this.videosList.more(info => {
+        //onLoaded
+        this.setState({
+          videosLoading: false,
+          videosHasNext: info.has_next,
+          videosHasPrev: info.has_prev
+        })
+      }, error => {
+        //onFailed
+        this.setState({videosLoading: false})
+      })
+    }
+  }
+
+  buildVideosItem = (item, index, onBuildItemName, refGetter) => {
     return (
+      <ItemVideo 
+        key={index}
+        index={index}
+        page={item}
+        onBuildItemName={onBuildItemName}
+        refGetter={refGetter} />
+    )
+  }
+
+  getVideoKey = () => {
+    return this.props.match.url.replace(/\//g, "").toLowerCase()
+  }
+  getListName = () => {
+    return VIDEO_TYPES[this.getVideoKey()].list_name
+  }
+
+  getListItemName = () => {
+    return VIDEO_TYPES[this.getVideoKey()].list_item_name
+  }
+
+  getListReadableName = () => {
+    return VIDEO_TYPES[this.getVideoKey()].list_readable_name
+  }
+
+  getListItemReadableName = () => {
+    return VIDEO_TYPES[this.getVideoKey()].list_item_readable_name
+  }
+
+  getBannerName = () => {
+    return VIDEO_TYPES[this.getVideoKey()].banner_name
+  }
+
+  render() {
+    return super.render(
       <>
         <Helmet>
           <title>{lastValueOrThis(this.state.page, {get: () => {return ""}}).get("title")}</title>
@@ -64,11 +151,34 @@ class Videos extends Page {
             textEditableProps={this.state.textElementsProps} />
           <NavBar />
           <HeaderImageBanner  
-              path={this.props.location.pathname}
+              name={this.getBannerName()}
               imageEditableProps={this.state.imageElementsProps} />
-          <section className="row videos"></section>
+          <ListEditable 
+              requestPageMetasOnNewItem={false}
+              role={ROLES.mod}
+              className="row videos"
+              name={this.getListName()}
+              onBuildItemName={(index, name) => {
+                return `${this.getListItemName()}_${index}${name}`
+              }}
+              readableName={this.getListReadableName()}
+              itemReadableName={this.getListItemReadableName()}
+              {...this.state.listElementsProps}
+              rowsPerPage={5}
+              privateRef={this.videosRef}
+              onItem={this.buildVideosItem}
+              itemDraggable={true}
+              onItemsLoaded = {
+                info => {
+                this.setState({
+                  videosHasNext: info.has_next
+                })}
+              }
+            />
           <div className="load-more">
-            <button className="load-more">Load More</button>
+            <button onClick={this.handleVideosLoadMore} className={"load-more " + (this.state.videosLoading? "loading " : "") + (this.state.videosHasNext? "" : "d-none")}>
+              <span>Load More</span>
+            </button>
           </div>
           <FooterContactUs
             edit={this.state.edit}

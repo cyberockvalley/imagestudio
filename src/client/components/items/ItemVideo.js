@@ -1,72 +1,113 @@
 import React from "react";
+import EditableStateContext from "../editables/EditableStateContext";
+import Item from "./Item";
+import TextEditable from "../editables/TextEditable";
+import ImageEditable from "../editables/ImageEditable";
+import { ROLES } from "../../../both/Constants";
+import { IFRAME_STYLES } from "../widgets/IframeView";
 
-class ItemVideo extends React.Component {
+class ItemVideo extends Item {
+  static contextType = EditableStateContext
+  constructor(props, context) {
+    super(props, context)
+    
+  }
+
+  componentDidMount() {
+    this.setState({pageOptions: this.pageOptions})
+    super.componentDidMount()
+  }
+
+  pageOptions = {
+    no_text: true, 
+    no_video: true, 
+    no_iframe: true, 
+    no_list: true
+  }
+
+  toggleIframeModal = () => {
+    this.setState({toggleIframeModal: !this.state.toggleIframeModal})
+  }
+
   render() {
-    return (
+    return super.render( 
       <div className="col-sm-6 col-md-4">
-        <div className="d-block d-sm-none">Video Title</div>
+        <div className={`d-block ${this.context.edit? '' : 'd-sm-none'}`}>
+          <TextEditable 
+            isString
+            role={ROLES.mod}
+            name="title"
+            id={this.props.onBuildItemName(this.props.index, "title")}
+            placeholder="Enter title..."
+            {...this.state.textElementsProps}
+            edit={this.context.edit} 
+            is_input_text />
+        </div>
+        <div style={!this.context.edit && this.state.toggleIframeModal? styles.youtubeVisible : styles.youtubeInVisible}>
+            <TextEditable 
+              isIframe
+              iframeOptions={{
+                autoPlay: true,
+                showIframe: !this.context.edit && this.state.toggleIframeModal,
+                iframeStyle: IFRAME_STYLES.inline
+              }}
+              role={ROLES.mod}
+              name="iframe_src"
+              id={this.props.onBuildItemName(this.props.index, "iframe_src")}
+              placeholder="Enter youtube video id..."
+              {...this.state.textElementsProps}
+              edit={this.context.edit} 
+              is_input_text />
+        </div>
         <div
           style={{
             height: "165px",
             width: "100%",
-            display: "flex",
+            display: !this.context.edit && this.state.toggleIframeModal? "none" : "flex",
+            flexDirection: "column",
             justifycontent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            position: "relative"
           }}
         >
-          <img
-            src="${image}"
-            style={{
-              height: "100%",
-              width: "100%"
-            }}
-          />
-          <div className="btn-center play-button">
-            <i className="fa fa-play d-block d-sm-none" />
-            <svg
-              className="d-none d-sm-block"
-              viewBox="0 0 40 40"
-              fill="currentColor"
-              width={40}
-              height={40}
-            >
-              <defs>
-                <path
-                  d="M20,37.8378378 C29.8515658,37.8378378 37.8378378,29.8515658 37.8378378,20 C37.8378378,10.1484342 29.8515658,2.16216216 20,2.16216216 C10.1484342,2.16216216 2.16216216,10.1484342 2.16216216,20 C2.16216216,29.8515658 10.1484342,37.8378378 20,37.8378378 Z M20,40 C8.954305,40 0,31.045695 0,20 C0,8.954305 8.954305,0 20,0 C31.045695,0 40,8.954305 40,20 C40,31.045695 31.045695,40 20,40 Z M26.594595,19.6756755 L15.1351351,12.972973 L15.1351351,26.378378 L26.594595,19.6756755 Z"
-                  id="path-play"
-                />
-              </defs>
-              <g
-                id="play-button"
-                stroke="none"
-                fill="none"
-                strokeWidth={1}
-                fillRule="evenodd"
-              >
-                <g
-                  id="Awesome-Icons---slider-+-grid"
-                  transform="translate(-768 -876)"
-                >
-                  <g id="Icons/play" transform="translate(768 876)">
-                    <g id="play">
-                      <mask id="mask-play" fill="currentColor">
-                        <use xlinkHref="#path-play" />
-                      </mask>
-                      <use
-                        id="Mask"
-                        fill="currentColor"
-                        fillRule="nonzero"
-                        xlinkHref="#path-play"
-                      />
-                    </g>
-                  </g>
-                </g>
-              </g>
-            </svg>
+          <div style={{
+            position: "relative", width: "100%", height: "100%"
+            }}>
+            <ImageEditable 
+              name="photo"
+              id={this.props.onBuildItemName(this.props.index, "photo")}
+              {...this.state.imageElementsProps}
+              edit={this.context.edit}
+              spinnerWidth={50}
+              spinnerHeight={50}
+              spinnerThickness={7}
+              spinnerRunnerColor="#f33"
+              style={{
+                width: "100%",
+                minHeight: "100%"
+              }}
+              emptyWidth="100%"
+              emptyHeight="100%"
+              add_overlay={!this.state.page || this.context.edit} />
+            <div className="btn-center play-button" onClick={this.toggleIframeModal}>
+              <i className="fa fa-play d-block d-sm-none" />
+              <i className="fa fa-2x fa-play-circle-o d-none d-sm-block" />
+            </div>
           </div>
         </div>
       </div>
     );
+  }
+}
+
+const styles = {
+  youtubeVisible: {
+    position: "relative",
+    width: "100%", height: "165px",
+    background: "#000"
+  },
+  youtubeInVisible: {
+    width: "100%"
   }
 }
 

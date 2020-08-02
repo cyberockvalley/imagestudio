@@ -969,7 +969,7 @@ a:link, a:visited, a:active {
 		padding: 60px 65px;
 	}
 	.get-in-touch{
-		width: 30%;
+		width: 50%;
 	}
 }
 .insta-carousel-symbol {
@@ -1292,6 +1292,14 @@ a:link, a:visited, a:active {
 .team-photos > div{
 	padding: 0px !important;
 	margin: 0px !important;
+}
+.iframe-responsive {
+	width: 100%;
+	height: 100%;
+}
+.videos img {
+	width: 100% !important;
+	height: 100% !important;
 }
 .videos > div{
 	padding: 3px;
@@ -2398,21 +2406,21 @@ button.load-more:hover {
 	width: 100%;
 	height: auto;
 }
-.movies > div > div {
+.movies > div > div.movie-info {
 	width: 100%;height:100%;background:rgba(0,0,0,.6);
 	opacity: 0;
 }
-.movies > div:hover > div {
+.movies > div:hover > div.movie-info {
 	opacity: 1;
 }
-.movies > div:hover > img {
+.movies > div:hover .movie-img {
 	transform: scale(1.2);
 	-webkit-transition: -webkit-transform 10s cubic-bezier(0.16, 0.48, 0.21, 0.67);
 	-moz-transition: transform 10s cubic-bezier(0.16, 0.48, 0.21, 0.67);
 	-o-transition: transform 10s cubic-bezier(0.16, 0.48, 0.21, 0.67);
 	transition: transform 10s cubic-bezier(0.16, 0.48, 0.21, 0.67);
 }
-.movies > div > div .caption-body {
+.movies > div > div.movie-info .caption-body {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -2422,7 +2430,7 @@ button.load-more:hover {
 	width: 100%;
 	height: 100%;
 }
-.movies > div > div .caption-desc {
+.movies > div > div.movie-info .caption-desc {
 	color: #fff;
 	font-size: 11px;
 	text-transform: uppercase;
@@ -2430,7 +2438,7 @@ button.load-more:hover {
 	font-size: 12px;
 	color: #aaa;
 }
-.movies > div > div .caption-title {
+.movies > div > div.movie-info .caption-title {
 	color: #fff !important;
 	font-size: 13px;
 	font-weight: 400;
@@ -2443,16 +2451,16 @@ button.load-more:hover {
     font-size: 14px;
     font-family: "Lato", sans-serif;
 }
-.movies > div > div .link-captions {
+.movies > div > div.movie-info .link-captions {
 	padding-left: 0;
 	margin: 0 0 20px;
 	list-style: none;
 	text-align: center;
 }
-.movies > div > div a {
+.movies > div > div.movie-info a {
 	color: #fff;
 }
-.movies > div > div a:hover {
+.movies > div > div.movie-info a:hover {
 	color: #e67e22;
 }
 .movie-more-about-us {
@@ -2468,9 +2476,11 @@ button.load-more:hover {
 .movie-more-about-us a:hover {
 	color: #787878
 }
+.movie-small-picture img {height: 100% !important;}
 .movie-big-picture-box {
 	height: 300px;
 }
+
 .movie-big-picture {
 	background-repeat: no-repeat;
 	background-size: auto 100%;
@@ -2491,9 +2501,9 @@ button.load-more:hover {
 	.movie-big-picture {
 		margin-top: 50px;
 	}
-	.movie-big-picture-box {
+	.movie-big-picture-box {margin-bottom: 30px;}
+	.movie-big-picture-box, .movie-big-picture-box img {
 		height: 500px;
-		margin-bottom: 30px;
 	}
 }
 .reviews > * {
@@ -2558,3 +2568,5 @@ h3.miracle-body {
 	width: 100% !important;
 }
 .modal-container > * {z-index: 10000 !important;}
+.white {color: #fff !important}
+.black {color: #000 !important}

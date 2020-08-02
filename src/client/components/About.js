@@ -62,7 +62,7 @@ class About extends Page {
             onCancelEdit={this.handleCancelEdit}
             textEditableProps={this.state.textElementsProps} />
           <NavBar />
-          <section className="team-page-header">
+          <section className="team-page-header" style={{marginTop: 50}}>
             <h3>
               <TextEditable 
                     name={"site_info_site_name_spaced"}

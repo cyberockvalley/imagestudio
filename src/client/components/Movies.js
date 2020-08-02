@@ -6,13 +6,19 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
 import ImageEditable from "./editables/ImageEditable";
+import EditableStateContext from "./editables/EditableStateContext";
+import ItemMovie from "./items/ItemMovie";
+import ListEditable from "./editables/ListEditable";
 
 class Movies extends Page {
+  static contextType = EditableStateContext
   constructor(props){
     super(props)
+    
+    this.handleMoviesLoadMore = this.handleMoviesLoadMore.bind(this)
   }
 
   componentDidMount() {
@@ -23,8 +29,41 @@ class Movies extends Page {
     
   }
 
-  render() {
+  moviesRef = moviesList => {
+    this.moviesList = moviesList
+    
+  }
+
+  handleMoviesLoadMore = e => {
+    if(this.moviesList && !this.state.moviesLoading) {
+      this.setState({moviesLoading: true})
+      this.moviesList.more(info => {
+        //onLoaded
+        this.setState({
+          moviesLoading: false,
+          moviesHasNext: info.has_next,
+          moviesHasPrev: info.has_prev
+        })
+      }, error => {
+        //onFailed
+        this.setState({moviesLoading: false})
+      })
+    }
+  }
+
+  buildMoviesItem = (item, index, onBuildItemName, refGetter) => {
     return (
+      <ItemMovie 
+        key={index}
+        index={index}
+        page={item}
+        onBuildItemName={onBuildItemName}
+        refGetter={refGetter} />
+    )
+  }
+
+  render() {
+    return super.render(
       <>
         <Helmet>
           <title>{lastValueOrThis(this.state.page, {get: () => {return ""}}).get("title")}</title>
@@ -78,20 +117,16 @@ class Movies extends Page {
                 </div>
               </div>
               <div className="col-12 col-md-9 movie-big-picture-box">
-                <ImageEditable
-                  className="movie-big-picture"
-                  name="site_info_movies_top_left_background_image"
-                  {...this.state.imageElementsProps}
-                  spinnerWidth={100}
-                  spinnerHeight={100}
-                  spinnerThickness={7}
-                  spinnerRunnerColor="#f33" />{/*
                 <div
-                  className="movie-big-picture"
-                  style={{
-                    backgroundImage: "url(images/768x432.png)"
-                  }}
-                />*/}
+                  className="movie-big-picture">
+                    <ImageEditable
+                      name="site_info_movies_top_left_background_image"
+                      {...this.state.imageElementsProps}
+                      spinnerWidth={100}
+                      spinnerHeight={100}
+                      spinnerThickness={7}
+                      spinnerRunnerColor="#f33" />
+                </div>
               </div>
               <div className="d-md-none col-12 col-md-3 flex-column">
                 <div />
@@ -99,32 +134,22 @@ class Movies extends Page {
                   <a href>More about our work</a>
                 </div>
               </div>
-              <ImageEditable
-                className="d-none d-md-block"
-                id="introVideoMobile"
-                style={{
-                  position: "absolute",
-                  top: 50,
-                  left: "50px",
-                  width: "35%",
-                  height: "80%"
-                }}
-                name="site_info_movies_top_left_image"
-                {...this.state.imageElementsProps}
-                spinnerWidth={100}
-                spinnerHeight={100}
-                spinnerThickness={7}
-                spinnerRunnerColor="#f33" />{/*
-              <img
-                className="d-none d-md-block"
+              <div
+                className="d-none d-md-block movie-small-picture"
                 style={{
                   position: "absolute",
                   left: "50px",
                   width: "35%",
                   height: "80%"
-                }}
-                src="images/4-Mark-and-Sarah-Wedding-in-Umbria-Paola-Simonelli-italian-wedding-photographer-wedding-in-Italy-4333-760x510.jpg"
-              />*/}
+                }}>
+                  <ImageEditable
+                    name="site_info_movies_top_left_image"
+                    {...this.state.imageElementsProps}
+                    spinnerWidth={100}
+                    spinnerHeight={100}
+                    spinnerThickness={7}
+                    spinnerRunnerColor="#f33" />
+              </div>
             </section>
           </div>
           <div
@@ -134,7 +159,33 @@ class Movies extends Page {
               padding: "15px"
             }}
           >
-            <section className="row col-12 movies w-margin-auto"></section>
+            <ListEditable 
+              requestPageMetasOnNewItem={false}
+              role={ROLES.mod}
+              className="row col-12 movies w-margin-auto"
+              name="movies"
+              onBuildItemName={(index, name) => {
+                return `movies_${index}${name}`
+              }}
+              readableName="Movies"
+              itemReadableName="Movie"
+              {...this.state.listElementsProps}
+              rowsPerPage={5}
+              privateRef={this.moviesRef}
+              onItem={this.buildMoviesItem}
+              itemDraggable={true}
+              onItemsLoaded = {
+                info => {
+                this.setState({
+                  moviesHasNext: info.has_next
+                })}
+              }
+            />
+            <div className="load-more">
+              <button onClick={this.handleMoviesLoadMore} className={"load-more " + (this.state.moviesLoading? "loading " : "") + (this.state.moviesHasNext? "" : "d-none")}>
+                <span>Load More</span>
+              </button>
+            </div>
           </div>
           <section className="about-us movie-about-us">
             <h2>

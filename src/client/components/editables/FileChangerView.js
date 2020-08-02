@@ -112,7 +112,7 @@ class FileChangerView extends React.Component {
                                 this.props.active?
                                 <div style={{
                                     zIndex: 2000,
-                                    width: "100%", position: "absolute", top: "80%",
+                                    width: "100%", position: "absolute", top: "50%",
                                     display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"
                                     }}>
                                     {

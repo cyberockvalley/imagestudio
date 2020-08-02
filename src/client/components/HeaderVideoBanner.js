@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
-import VideoEditable from "./editables/VideoEditable";
 import EditableStateContext from "./editables/EditableStateContext";
-import { lastValueOrThis } from "../../both/Functions";
-import FilmRollerAnimation from "./animations/FilmRollerAnimation";
+import TextEditable from "./editables/TextEditable";
+import { IFRAME_STYLES } from "./widgets/IframeView";
 
 class HeaderVideoBanner extends React.Component {
   static contextType = EditableStateContext
@@ -14,9 +13,35 @@ class HeaderVideoBanner extends React.Component {
       <section
         id="intro"
         style={{
-          overflow: "hidden"
+          position: "relative",
+          overflow: "hidden",
+          marginTop: this.context.edit? "80px" : "0px"
         }}
       >
+        <TextEditable 
+          isIframe
+          iframeOptions={{
+            showIframe: !this.context.edit,
+            iframeStyle: IFRAME_STYLES.inline,
+            autoPlay: true,
+            disableRel: true,
+            disableControls: true,
+            disableKb: true,
+            disableLogo: true,
+            disableFullscreen: true,
+            hideInfo: true,
+            loop: true,
+            mute: true,
+            containerStyle: styles.inlineContainer,
+            style: styles.iframe
+          }}
+          id="introIframeMobile"
+          name="site_info_header_iframe"
+          placeholder="Enter youtube video id..."
+          {...this.props.textEditableProps}
+          is_input_text />
+          <div style={this.context.edit? {display: "none"} : styles.overlay}></div>
+          {/*
         <VideoEditable
           id="introVideoMobile"
           style={{
@@ -46,9 +71,39 @@ class HeaderVideoBanner extends React.Component {
               bottom_text="Studio" />
           } 
           showInfo
-          add_overlay/>
+        add_overlay/>*/}
       </section>
     );
+  }
+}
+
+const styles = {
+  inlineContainer: {/*
+    position: "relative",
+    width: "100%",
+    height: 0,
+    paddingBottom: "56.25%"*/
+  },
+  iframe: {/*
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: "100%",
+    width: "100%"*/
+    position: "relative",
+    height: "90vh",
+    width: "100%"
+  },
+  overlay: {
+    position: "absolute",
+    backgroundPosition: "center center",
+    backgroundRepeat: "no-repeat",
+    height: "90vh",
+    width: "100%",
+    backgroundColor: "#000",
+    overflow: "hidden",
+    opacity: 0.5,
+    top: 0
   }
 }
 

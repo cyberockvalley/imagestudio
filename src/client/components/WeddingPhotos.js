@@ -106,7 +106,7 @@ class WeddingPhotos extends Page {
             textEditableProps={this.state.textElementsProps} />
           <NavBar />
           <HeaderImageBanner 
-            path={this.props.location.pathname}
+            name="site_info_wedding_photos_header_image"
             imageEditableProps={this.state.imageElementsProps} />
           <ListEditable 
               requestPageMetasOnNewItem={false}

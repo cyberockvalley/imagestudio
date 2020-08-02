@@ -283,8 +283,8 @@ class Page extends React.Component {
                 this.setState({page: page})
             }
             
-            if(!this.state.page ) {
-                this.props.history.push(PAGE_404)
+            if(!this.state.page) {
+                //this.props.history.push(PAGE_404)
             }
             
             //expose title to edit
