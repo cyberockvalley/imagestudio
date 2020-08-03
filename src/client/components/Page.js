@@ -156,6 +156,7 @@ class Page extends React.Component {
                     page.set("slug", slugify(page.get("title")))
                     this.setState({page: page})
                 }
+                if(!page.get("title") && page.get("title").length == 0) page.set("title", "Empty")
                 page.save()
             }
 
@@ -175,6 +176,7 @@ class Page extends React.Component {
                         page.set("slug", slugify(page.get("title")))
                         this.setState({page: page})
                     }
+                    if(!page.get("title") && page.get("title").length == 0) page.set("title", "Empty")
                     page.save()
                 }
 

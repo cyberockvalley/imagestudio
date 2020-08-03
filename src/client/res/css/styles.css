@@ -2194,7 +2194,7 @@ hr.title_break {
 	box-sizing: content-box;
 	padding: 0px !important;
 }
-.effect > img {
+.effect > .clip {
     position: absolute;
     top: 0;
 	display: block;

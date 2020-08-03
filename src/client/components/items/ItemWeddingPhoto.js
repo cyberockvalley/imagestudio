@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { lastValueOrThis, isNullOrEmpty } from "../../../both/Functions";
 import ImageEditable from "../editables/ImageEditable";
 import EditableStateContext from "../editables/EditableStateContext";

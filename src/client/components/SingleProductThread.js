@@ -11,6 +11,9 @@ import TextEditable from "./editables/TextEditable";
 import PageReaction from "./widgets/PageReaction";
 import { Link } from "react-router-dom";
 import {SHOP_SECTION_ONE_KEY, SHOP_SECTION_TWO_KEY} from "./Shop"
+import ImageEditable from "./editables/ImageEditable";
+import ListEditable from "./editables/ListEditable";
+import ItemEffectExample from "./items/ItemEffectExample";
 
 class SingleProductThread extends Page {
   static contextType = EditableStateContext
@@ -29,6 +32,10 @@ class SingleProductThread extends Page {
     
   }
 
+  getSlug = () => {
+    return this.props.match.params.title
+  }
+
   formatDate = date => {
     //"dddd, mmmm dS, yyyy, h:MM:ss TT" => Saturday, June 9th, 2007, 5:46:21 PM
     //September 1, 2019 22:00
@@ -38,6 +45,39 @@ class SingleProductThread extends Page {
 
   increaseLikes = () => {
     this.setState({likes: this.state.likes + 1})
+  }
+
+  effectExamplesRef = effectExamplesList => {
+    this.effectExamplesList = effectExamplesList
+    
+  }
+
+  handleEffectExamplesLoadMore = e => {
+    if(this.effectExamplesList && !this.state.effectExamplesLoading) {
+      this.setState({effectExamplesLoading: true})
+      this.effectExamplesList.more(info => {
+        //onLoaded
+        this.setState({
+          effectExamplesLoading: false,
+          effectExamplesHasNext: info.has_next,
+          effectExamplesHasPrev: info.has_prev
+        })
+      }, error => {
+        //onFailed
+        this.setState({effectExamplesLoading: false})
+      })
+    }
+  }
+
+  buildEffectExamplesItem = (item, index, onBuildItemName, refGetter) => {
+    return (
+      <ItemEffectExample 
+        key={index}
+        index={index}
+        page={item}
+        onBuildItemName={onBuildItemName}
+        refGetter={refGetter} />
+    )
   }
 
   render() {
@@ -198,11 +238,12 @@ class SingleProductThread extends Page {
                 <div className="license-section">
                   <div className="license-heading flex-row flex-justify-between flex-align-center">
                     <div>
-                      <span>License Type</span>
+                      <span>License Type </span>
                       <a
                         href="https://creativemarket.com/licenses/general"
                         target="_blank"
                         rel="noreferrer"
+                        className="d-none"
                       >
                         What are these?
                       </a>
@@ -307,8 +348,43 @@ class SingleProductThread extends Page {
             </div>
           </section>
         </div>
+        <ListEditable 
+          requestPageMetasOnNewItem={false}
+          role={ROLES.mod}
+          className="effects-layout row"
+          name={`site_content_product_${this.getSlug()}_effects`}
+          onBuildItemName={(index, name) => {
+            return `site_content_product_${this.getSlug()}_effects_${index}${name}`
+          }}
+          readableName="Effect examples"
+          itemReadableName="Effect example"
+          {...this.state.listElementsProps}
+          rowsPerPage={5}
+          privateRef={this.effectExamplesRef}
+          onItem={this.buildEffectExamplesItem}
+          itemDraggable={true}
+          onItemsLoaded = {
+            info => {
+            this.setState({
+              effectExamplesHasNext: info.has_next
+            })}
+          }
+        />
+        <div className="load-more">
+          <button onClick={this.handleEffectsLoadMore} className={"load-more " + (this.state.effectsLoading? "loading " : "") + (this.state.effectsHasNext? "" : "d-none")}>
+            <span>Load More</span>
+          </button>
+        </div>
+        {/*
         <section className="effects-layout row">
           <div className="effect col-11 col-md-8 effect-height-1">
+            <ImageEditable 
+              role={ROLES.mod}
+              name="global_heading"
+              placeholder="Global heading..."
+              {...this.props.spoolElementsProps.texts}
+              edit={this.props.edit} 
+              is_input_text />
             <img
               src="/imagestudio/images/effect-ice-mountain.jpg"
               style={{
@@ -331,16 +407,25 @@ class SingleProductThread extends Page {
               <span className="right-arrow fa fa-arrow-right" />
             </div>
           </div>
-        </section>
+            </section>*/}
         <section className="product-video-view">
           <div className="col-12 col-sm-9 col-md-8">
-            <h2>Great for any video style</h2>
+            <h2>
+              <TextEditable 
+                role={ROLES.mod}
+                name="global_heading"
+                placeholder="Global heading..."
+                {...this.props.spoolElementsProps.texts}
+                edit={this.props.edit} 
+                is_input_text />
+            </h2>
             <p>
-              We create and sell great tools for video production in color
-              grading, sound design as well as video transitions area. Aim of
-              these tools is to save you time and improve your editing
-              experience. We have spend countless hours creating all these
-              products - so that you do not have to.
+              <TextEditable 
+                role={ROLES.mod}
+                name="global_description"
+                placeholder="Global description..."
+                {...this.props.spoolElementsProps.texts}
+                edit={this.props.edit} />
             </p>
           </div>
           <div className="effect col-11 effect-height-2">

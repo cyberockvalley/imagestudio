@@ -36,16 +36,33 @@ class SingleProductSpool extends Page {
   }
 
   render() {
-    return (
+    return super.render(
       <div>
-        <Header />
+        <Header 
+          edit={this.state.edit}
+          user={this.state.user}
+          userRole={this.state.userRole}
+          onEditOrSaveButtonClicked={this.editOrSaveSpool}
+          onCancelEdit={this.handleCancelEdit}
+          textEditableProps={this.state.textElementsProps} />
         <NavBar />
         <SingleProductThread {...this.props}  
           edit={this.state.edit}
           spoolAttributes={this.state.elementsAttributes}
+          spoolElementsProps={{
+            texts: this.state.textElementsProps
+          }}
           threadAdder={this.addThread} />
-        <FooterContactUs />
-        <Footer />
+        <FooterContactUs
+          edit={this.state.edit}
+          user={this.state.user}
+          userRole={this.state.userRole}
+          textEditableProps={this.state.textElementsProps} />
+        <Footer
+          edit={this.state.edit}
+          user={this.state.user}
+          userRole={this.state.userRole}
+          textEditableProps={this.state.textElementsProps} />
       </div>
     );
   }

@@ -75,6 +75,7 @@ class ImageEditable extends FileEditable {
     render() {
         this.init()
         console.log("UploadTracker", "ImageEditable", this.props.link, this.props.id)
+        const style = this.getStyle()
         return (
             <FileChangerView
                 key={this.props.key}
@@ -90,7 +91,8 @@ class ImageEditable extends FileEditable {
                 loading={this.state.loading}
                 error={this.state.error}
                 onFile={this.handleFile}
-                style={this.getStyle()}>
+                style={style}
+                {...this.props.nativeProps}>
 
                 {
                     this.props.add_overlay?
