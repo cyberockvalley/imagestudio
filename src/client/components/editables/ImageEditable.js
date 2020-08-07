@@ -34,7 +34,6 @@ class ImageEditable extends FileEditable {
 
     componentDidMount() {
         super.componentDidMount()
-        if(this.props.refSetter) this.props.refSetter(this)
         this.ElementClass = ParseClasses.ImageElement
         this.FileDataClass = ParseClasses.ImageData
     }
@@ -101,6 +100,10 @@ class ImageEditable extends FileEditable {
                 <picture
                  key={this.state.fileShades && this.state.fileShades.length > 0? this.state.fileShades[0].src : 0} 
                  style={!this.haveReadPermission()? imageHide : styles.image}>
+                     {
+                         this.state.fileShades.length == 0 && this.props.placeholder?
+                         <img src={this.props.placeholder} /> : null
+                     }
                     {
                         this.state.fileShades.map((imageData, index) => {
                             return(<img key={index} src={imageData.src} type={imageData.mime} 

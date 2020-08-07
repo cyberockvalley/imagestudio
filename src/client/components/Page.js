@@ -83,9 +83,12 @@ class Page extends React.Component {
 
     
     editors = []
-
-    setEditorRef = editor => {
-        if(!this.editors.includes(editor)) this.editors.push(editor)
+    editorsMap = {}
+    setEditorRef = (editor, name) => {
+        if(!this.editors.includes(editor)) {
+            this.editors.push(editor)
+            this.editorsMap[name] = editor
+        }
     }
 
     getElementGroup = element => {

@@ -4,7 +4,7 @@ import HeaderImageBanner from "./HeaderImageBanner";
 import { Helmet } from 'react-helmet'
 import Page from "./Page";
 import EditableStateContext from "./editables/EditableStateContext";
-import { lastValueOrThis, truncText, slugify } from "../../both/Functions";
+import { lastValueOrThis, truncText, slugify, isClient } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
 import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
@@ -14,21 +14,34 @@ import {SHOP_SECTION_ONE_KEY, SHOP_SECTION_TWO_KEY} from "./Shop"
 import ImageEditable from "./editables/ImageEditable";
 import ListEditable from "./editables/ListEditable";
 import ItemEffectExample from "./items/ItemEffectExample";
+import { IFRAME_STYLES } from "./widgets/IframeView";
+import ItemMansoryComment from './items/ItemMansoryComment'
 
+export const getCart = () => {
+  if(!isClient()) return {}
+  var cart = window.localStorage.getItem("cart")
+  return cart? JSON.parse(cart) : {}
+}
+
+export const LICENSES = {
+  personal: 0,
+  commercial : 1
+}
 class SingleProductThread extends Page {
   static contextType = EditableStateContext
   constructor(props) {
     super(props)
+    this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this)
   }
 
   componentDidMount() {
-    this.setState({likes: 0})
+    this.initCart()
+    this.setState({inCart: this.inCart(), likes: 0})
     if(this.props.threadAdder) this.props.threadAdder(this)
     console.log("SingleProductThread", this.props.match.params.title, this.props)
     this.loadPage([SHOP_SECTION_ONE_KEY, SHOP_SECTION_TWO_KEY], {
       slug: this.props.match.params.title
     })
-
     
   }
 
@@ -78,6 +91,145 @@ class SingleProductThread extends Page {
         onBuildItemName={onBuildItemName}
         refGetter={refGetter} />
     )
+  }
+
+  toggleIframeModal = () => {
+    console.log("toggleIframeModal", !this.state.toggleIframeModal)
+    this.setState({toggleIframeModal: !this.state.toggleIframeModal})
+  }
+  
+
+  initCart = () => {
+    var cart = getCart()
+    this.setState({
+      product: cart[this.getId()]? cart[this.getId()] : this.getInitCartProduct()
+    })
+  }
+
+  updateCart = () => {
+    var cart = getCart()
+    cart[this.getId()] = this.state.product
+    window.localStorage.setItem("cart", JSON.stringify(cart))
+    if(this.props.onCartUpdate) this.props.onCartUpdate()
+  }
+
+  getInitCartProduct = () => {
+    var id = this.getId();
+    var name = "ddd";
+    var license = LICENSES.personal;
+    var price = 45;
+    var seats = 1;
+    return {
+      id: id,
+      name: name,
+      license_type: license,
+      price: price,
+      seats: seats
+    }
+  }
+
+  toggleCart = () => {
+    if(this.inCart()) {
+      this.removeFromCart()
+
+    } else {
+      this.addToCart()
+    }
+  }
+
+  addToCart = () => {
+    this.updateCart()
+    this.setState({inCart: true})
+  }
+
+  removeFromCart = () => {
+    var cart = getCart()
+    delete cart[this.getId()]
+    window.localStorage.setItem("cart", JSON.stringify(cart))
+    this.setState({inCart: false})
+    if(this.props.onCartUpdate) this.props.onCartUpdate()
+  }
+
+  buy = () => {
+    this.props.history.push("/shop/cart")
+  }
+
+  inCart = () => {
+    var cart = getCart()
+    console.log("inCart", cart && cart.hasOwnProperty(this.getId()), cart)
+    return cart && cart.hasOwnProperty(this.getId())
+  }
+
+  increaseSeat = () => {
+    var product = this.state.product
+    product.seats++
+    this.setState({product: product})
+    if(this.inCart()) this.updateCart()
+  }
+
+  decreaseSeat = () => {
+    var product = this.state.product
+    if(product.seats - 1 > 0) {
+      product.seats--
+      this.setState({product: product})
+      if(this.inCart()) this.updateCart()
+    }
+  }
+
+  getId = () => {
+    return "aa"
+  }
+
+  handleCheckBoxChange = e => {
+    var product = this.state.product
+    var type = parseInt(e.target.getAttribute("dataType"))
+    console.log("DATA_TYPE", type)
+    if(type == product.license_type) return
+    product.license_type = type
+    this.setState({product: product})
+    if(this.inCart()) this.updateCart()
+  }
+
+  commentsRef = commentsList => {
+    this.commentsList = commentsList
+    
+  }
+
+  handleCommentsLoadMore = e => {
+    if(this.commentsList && !this.state.commentsLoading) {
+      this.setState({commentsLoading: true})
+      this.commentsList.more(info => {
+        //onLoaded
+        this.setState({
+          commentsLoading: false,
+          commentsHasNext: info.has_next,
+          commentsHasPrev: info.has_prev
+        })
+      }, error => {
+        //onFailed
+        this.setState({commentsLoading: false})
+      })
+    }
+  }
+
+  buildCommentsItem = (item, index, onBuildItemName, refGetter, edit) => {
+    return (
+      <ItemMansoryComment
+        key={index}
+        index={index}
+        page={item}
+        onBuildItemName={onBuildItemName}
+        refGetter={refGetter}
+        edit={edit} />
+    )
+  }
+
+  toggleAddComment = () => {
+    //var addComment = this.state.addComment? false : true
+    //this.state.addComment = addComment
+    //this.setState({addComment: addComment})
+    //if(addComment) 
+    this.commentsList.addNew(null, true)
   }
 
   render() {
@@ -159,22 +311,71 @@ class SingleProductThread extends Page {
         </section>
         <div className="row">
           <section className="row product-view col-11">
-            <div className="col-12 col-md-8">
-              <img
-                src="/imagestudio/images/single-product-image.jpg"
-                style={{
-                  maxHeight: "600px"
-                }}
-              />
+            <div className="col-12 col-md-8" style={{
+                  height: "600px"
+                }}>
+              <ImageEditable
+                    isPointer
+                    role={ROLES.mod}
+                    name="featured_image"
+                    {...this.state.imageElementsProps}
+                    edit={this.context.edit}
+                    spinnerWidth={50}
+                    spinnerHeight={50}
+                    spinnerThickness={7}
+                    spinnerRunnerColor="#f33"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      minHeight: "100%",
+                      position: "absolute",
+                      top: 0,
+                      left: 0
+                    }}
+                    add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
+                  />
+                  {/*
               <div className="row product-thumbs">
                 <div className="col-2 product-thumb">
-                  <img src="/imagestudio/images/thum-1.jpg" />
+                <ImageEditable
+                    isPointer
+                    role={ROLES.mod}
+                    name="featured_image"
+                    {...this.state.imageElementsProps}
+                    edit={this.context.edit}
+                    spinnerWidth={50}
+                    spinnerHeight={50}
+                    spinnerThickness={7}
+                    spinnerRunnerColor="#f33"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      minHeight: "100%",
+                      position: "absolute",
+                      top: 0,
+                      left: 0
+                    }}
+                    add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
+                  />
                 </div>
                 <div className="col-2 product-thumb">
-                  <img
-                    className="active"
-                    src="/imagestudio/images/thum-1.jpg"
-                  />
+                  <ImageEditable 
+                      name="video_overlay"
+                      id="video_overlay"
+                      {...this.state.imageElementsProps}
+                      edit={this.context.edit}
+                      spinnerWidth={50}
+                      spinnerHeight={50}
+                      spinnerThickness={7}
+                      spinnerRunnerColor="#f33"
+                      className="active"
+                      style={{
+                        height: "100%",
+                        width: "100%"
+                      }}
+                      emptyWidth="100%"
+                      emptyHeight="100%"
+                      add_overlay={this.context.edit? true : false} />
                 </div>
                 <div className="col-2 product-thumb">
                   <img src="/imagestudio/images/thum-1.jpg" />
@@ -189,6 +390,7 @@ class SingleProductThread extends Page {
                   <img src="/imagestudio/images/thum-1.jpg" />
                 </div>
               </div>
+              */}
             </div>
             <div className="col-12 col-md-4 product-details-and-actions">
               <div className="product-details">
@@ -250,14 +452,16 @@ class SingleProductThread extends Page {
                     </div>
                     <div className="sp-quantity">
                       <button
-                        disabled="disabled"
+                        onClick={this.decreaseSeat}
+                        disabled={!this.state.product || this.state.product.seats == 1? true : false}
                         aria-label="Decrease seat Quantity"
                         data-cypress="quantity-selector-decrease"
                         value="dec"
                         className="sp-quantity__button sp-quantity__button--decrease"
                       />
-                      <span className="sp-quantity__label">1 seat</span>
+                      <span className="sp-quantity__label">{this.state.product && this.state.product.seats > 1? this.state.product.seats + " seats" :  "1 seat"}</span>
                       <button
+                        onClick={this.increaseSeat}
                         aria-label="Increase seat Quantity"
                         data-cypress="quantity-selector-increase"
                         value="inc"
@@ -271,7 +475,9 @@ class SingleProductThread extends Page {
                       id="sp-radio-37801"
                       type="radio"
                       className="sp-radio-button__input"
-                      defaultValue={7}
+                      dataType={LICENSES.personal}
+                      onChange={this.handleCheckBoxChange}
+                      checked={!this.state.product? false : this.state.product.license_type == LICENSES.personal}
                     />
                     <label
                       htmlFor="sp-radio-37801"
@@ -282,7 +488,16 @@ class SingleProductThread extends Page {
                           <div>
                             <span className="license-title">Personal</span>
                           </div>
-                          <div className="license-price">$49</div>
+                          <div className="license-price">
+                            $
+                            <TextEditable 
+                              role={ROLES.mod}
+                              name="price"
+                              placeholder="Price..."
+                              {...this.state.textElementsProps}
+                              edit={this.props.edit} 
+                              is_input_text />
+                          </div>
                         </div>
                       </div>
                     </label>
@@ -293,7 +508,9 @@ class SingleProductThread extends Page {
                       id="sp-radio-16738"
                       type="radio"
                       className="sp-radio-button__input"
-                      defaultValue={8}
+                      dataType={LICENSES.commercial}
+                      onChange={this.handleCheckBoxChange}
+                      checked={!this.state.product? false : this.state.product.license_type == LICENSES.commercial}
                     />
                     <label
                       htmlFor="sp-radio-16738"
@@ -307,7 +524,15 @@ class SingleProductThread extends Page {
                               recommended
                             </span>
                           </div>
-                          <div className="license-price">$59</div>
+                          <div className="license-price">
+                            $
+                            <TextEditable 
+                              role={ROLES.mod}
+                              name="price_commercial"
+                              placeholder="Commercial Price..."
+                              {...this.state.textElementsProps}
+                              edit={this.props.edit}
+                              is_input_text /></div>
                         </div>
                       </div>
                     </label>
@@ -315,8 +540,8 @@ class SingleProductThread extends Page {
                 </div>
               </div>
               <div className="product-buttons flex-column flex-justify-between align-items-center">
-                <button className="primary">Add to cart</button>
-                <button className="secondary">Buy it now</button>
+                <button className="primary" onClick={this.toggleCart}>{this.state.inCart? "Remove from" : "Add to"} cart</button>
+                <button className="secondary" onClick={this.buy}>Buy it now</button>
                 <h3
                   style={{
                     fontSize: "18px",
@@ -375,39 +600,6 @@ class SingleProductThread extends Page {
             <span>Load More</span>
           </button>
         </div>
-        {/*
-        <section className="effects-layout row">
-          <div className="effect col-11 col-md-8 effect-height-1">
-            <ImageEditable 
-              role={ROLES.mod}
-              name="global_heading"
-              placeholder="Global heading..."
-              {...this.props.spoolElementsProps.texts}
-              edit={this.props.edit} 
-              is_input_text />
-            <img
-              src="/imagestudio/images/effect-ice-mountain.jpg"
-              style={{
-                clipPath: "polygon(0 0, 50% 0, 50% 100%, 0 100%)"
-              }}
-            />
-            <img
-              src="/imagestudio/images/effect-ice-mountain-after.jpg"
-              style={{
-                clipPath: "polygon(50% 0, 100% 0, 100% 100%, 50% 100%)"
-              }}
-            />
-            <div
-              className="slider"
-              style={{
-                left: "50%"
-              }}
-            >
-              <span className="left-arrow fa fa-arrow-left" />
-              <span className="right-arrow fa fa-arrow-right" />
-            </div>
-          </div>
-            </section>*/}
         <section className="product-video-view">
           <div className="col-12 col-sm-9 col-md-8">
             <h2>
@@ -429,62 +621,68 @@ class SingleProductThread extends Page {
             </p>
           </div>
           <div className="effect col-11 effect-height-2">
-            <img
-              src="/imagestudio/images/effect-ice-mountain.jpg"
-              style={{
-                clipPath: "polygon(0 0, 50% 0, 50% 100%, 0 100%)"
-              }}
-            />
-            <img
-              src="/imagestudio/images/effect-ice-mountain-after.jpg"
-              style={{
-                clipPath: "polygon(50% 0, 100% 0, 100% 100%, 50% 100%)"
-              }}
-            />
+            <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
+              <TextEditable 
+                isIframe
+                iframeOptions={{
+                  autoPlay: false,
+                  showIframe: !this.context.edit && this.state.toggleIframeModal,
+                  iframeStyle: IFRAME_STYLES.modal,
+                  onModalClose: this.toggleIframeModal
+                }}
+                role={ROLES.mod}
+                name="video_iframe_src"
+                id="video_iframe_src"
+                placeholder="Enter youtube video id..."
+                {...this.state.textElementsProps}
+                edit={this.context.edit} 
+                is_input_text />
+              <ImageEditable 
+                name="video_overlay"
+                id="video_overlay"
+                {...this.state.imageElementsProps}
+                edit={this.context.edit}
+                spinnerWidth={50}
+                spinnerHeight={50}
+                spinnerThickness={7}
+                spinnerRunnerColor="#f33"
+                style={{
+                  height: "100%",
+                  width: "100%"
+                }}
+                emptyWidth="100%"
+                emptyHeight="100%"
+                add_overlay={true} />
+            </div>
             <div
-              className="btn-center"
+              onClick={this.toggleIframeModal}
+              className="btn-center action"
               style={{
                 color: "#fff",
                 background: "#d8232f",
                 borderRadius: "50%",
                 width: "60px",
-                height: "60px"
-              }}
-            ></div>
-            <div
-              className="btn-center"
-              style={{
-                color: "#fff"
+                height: "60px",
+                zIndex: 1
               }}
             >
-              <i
-                className="fa fa-2x fa-play"
+              <div
+                className="btn-center"
                 style={{
-                  marginLeft: "7px"
+                  color: "#fff"
                 }}
-              />
-            </div>
-            <div
-              data-toggle="modal"
-              data-target="#videoModal"
-              className="btn-center"
-              style={{
-                zIndex: 5,
-                color: "#fff",
-                background: "transparent",
-                borderRadius: "50%",
-                width: "60px",
-                height: "60px"
-              }}
-            ></div>
-            <div id="videoModal" className="modal fade" role="dialog">
-              <div className="modal-dialog">
-                <div className="modal-content">{}</div>
+              >
+                <i
+                  className="fa fa-2x fa-play"
+                  style={{
+                    marginLeft: "7px"
+                  }}
+                />
               </div>
             </div>
           </div>
         </section>
-        <section className="product-reviews col-12 col-md-11">
+        <section id="reviews_comments" className="product-reviews col-12 col-md-11">
           <div
             className="flex-row flex-justify-between reviews-header"
             style={{
@@ -509,14 +707,40 @@ class SingleProductThread extends Page {
               <span className="summary-text">85 Reviews</span>
             </div>
             <div>
-              <button className="btn load-more">Write a review</button>
+              <button className="btn load-more" onClick={this.toggleAddComment}>Write a review</button>
             </div>
           </div>
-          <div className="masonry masonry-col-2 masonry-col-sm-3 masonry-col-md-4 masonry-gap-10" />
+          <ListEditable 
+              requestPageMetasOnNewItem={false}
+              className="masonry masonry-col-2 masonry-col-sm-3 masonry-col-md-4 masonry-gap-10"
+              role={ROLES.anonymous}
+              name={`anonymous_comments_${this.getSlug()}`}
+              onBuildItemName={(index, name) => {
+                return `anonymous_comment_${this.getSlug()}_${index}${name}`
+              }}
+              readableName="Reviews"
+              itemReadableName="Review"
+              {...this.state.listElementsProps}
+              rowsPerPage={5}
+              privateRef={this.commentsRef}
+              onItem={this.buildCommentsItem}
+              onItemsLoaded = {
+                info => {
+                this.setState({
+                  commentsHasNext: info.has_next
+                })}
+              }
+              hideInfo
+              hideAddButton
+          />
+          <div className="flex-row flex-justify-around">
+            <div className="load-more">
+              <button onClick={this.handleCommentsLoadMore} className={"load-more " + (this.state.commentsLoading? "loading " : "") + (this.state.commentsHasNext? "" : "d-none")}>
+                <span>Show more reviews</span>
+              </button>
+            </div>
+          </div>
         </section>
-        <div className="flex-row flex-justify-around">
-          <button className="btn load-more">Show more reviews</button>
-        </div>
       </>
     );
   }

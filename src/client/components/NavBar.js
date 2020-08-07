@@ -1,7 +1,29 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { getCart } from "./SingleProductThread";
 
 class NavBar extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {cartTotal: 0}
+  }
+
+  componentDidMount() {
+    this.updateCartTotal()
+    if(this.props.refSetter) this.props.refSetter(this)
+  }
+
+  updateCartTotal = () => {
+    var cart = getCart()
+    var total = 0
+    for (const [key, value] of Object.entries(cart)) {
+      total += value.seats
+    }
+    this.setState({cartTotal: total})
+
+  }
+
   render() {
     return (
       <section id="navigation">
@@ -200,6 +222,23 @@ class NavBar extends React.Component {
                       Contact
                     </Link>
                   </li>
+                  {
+                    this.props.showCart?
+                      <li
+                      id="menu-item-4594"
+                      className="nav-item menu-item menu-item-type-post_type menu-item-object-page menu-item-4594"
+                    >
+                      <Link
+                        title="Shopping Cart"
+                        to="/shop/cart/"
+                        className="nav-link"
+                      >
+                        <span style={{fontWeight: 700}}>{this.state.cartTotal} </span>
+                        <span className="fa fa-shopping-basket"></span>
+                      </Link>
+                    </li>
+                    : null
+                  }
                 </ul>
               </div>
             </nav>

@@ -2180,7 +2180,7 @@ hr.title_break {
 	border-radius: 5px;
 	border: 3px solid transparent;
 }
-.product-thumb img.active {
+.product-thumb *.active {
 	border: 3px solid #69803a;
 }
 .effects-layout {
@@ -2364,8 +2364,6 @@ button.load-more:hover {
 .masonry-comment {
 	width: 100% !important;
 	height: auto !important;
-	display: flex;
-	flex-direction: column;
 	font-size: 14px;
 	line-height: 19px;
 	font-family: "Poppins", sans-serif;
@@ -2374,7 +2372,7 @@ button.load-more:hover {
 }
 .masonry-comment > * {
 	width: 100% !important;
-	height: auto !important;
+	height: auto;
 	border: none !important;
 	margin: 0px 0px 10px !important;
 }

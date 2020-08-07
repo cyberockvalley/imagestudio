@@ -35,7 +35,6 @@ class VideoEditable extends FileEditable {
         super.componentDidMount()
         //https://www.youtube.com/embed/qHVahh3dwK4
         //https://www.youtube.com/get_video_info?video_id=qHVahh3dwK4
-        if(this.props.refSetter) this.props.refSetter(this)
         this.ElementClass = ParseClasses.VideoElement
         this.FileDataClass = ParseClasses.VideoData
     }

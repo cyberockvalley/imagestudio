@@ -23,12 +23,25 @@ class ItemEffectExample extends Item {
     no_list: true
   }
 
-  handleMouseDown = e => {
-    this.updateSlider(e.pageX)
+  getContainer = () => {
+    return $(`.${this.props.onBuildItemName(this.props.index, "class")}`)[0]
   }
 
-  updateSlider = xPos => {
-    const container = $(`.${this.props.onBuildItemName(this.props.index, "class")}`)[0]
+  handleMouseDown = e => {
+    e.preventDefault()
+    this.updateSlider(e)
+    window.addEventListener('mousemove', this.updateSlider)
+    window.addEventListener('mouseup', this.stopSlider)
+  }
+
+  stopSlider = e => {
+    window.removeEventListener('mousemove', this.updateSlider)
+  }
+
+  updateSlider = e => {
+    if(this.context.edit) return
+    const xPos = e.pageX
+    const container = this.getContainer()
     var offsetX = container.offsetLeft
     var width = container.clientWidth
     var sliderPercentage = roundTo(((xPos - offsetX) / width) * 100, 1)
@@ -36,6 +49,13 @@ class ItemEffectExample extends Item {
     console.log("handleMouseDown", "offsetX", offsetX)
     console.log("handleMouseDown", "clientWidth", width)
     console.log("handleMouseDown", "sliderPercentage", sliderPercentage)
+    if(sliderPercentage < 0) {
+      sliderPercentage = 0
+
+    } else if(sliderPercentage > 100) {
+      sliderPercentage = 100
+    }
+    
     this.setState({sliderXpos: sliderPercentage})
   }
 
@@ -52,7 +72,7 @@ class ItemEffectExample extends Item {
       <div className={`effect col-11 col-md-8 effect-height-1 ${this.props.onBuildItemName(this.props.index, "class")}`} 
       style={this.context.edit? {
         display: "flex", flexDirection: "row"
-      } : {}} {...this.getEvents()}>
+      } : {}} {...(this.context.edit? null : {onMouseDown: this.handleMouseDown})}>
         <ImageEditable 
           name="photo1"
           id={this.props.onBuildItemName(this.props.index, "photo1")}
@@ -95,8 +115,8 @@ class ItemEffectExample extends Item {
             left: `${this.state.sliderXpos}%`
           }}
         >
-          <span className="left-arrow fa fa-arrow-left" />
-          <span className="right-arrow fa fa-arrow-right" />
+          <span className="left-arrow fa fa-arrow-left d-none" />
+          <span className="right-arrow fa fa-arrow-right d-none" />
         </div>
       </div>
     );

@@ -35,6 +35,14 @@ class SingleProductSpool extends Page {
     });
   }
 
+  setNavRef = nav => {
+    this.navBar = nav
+  }
+
+  onCartUpdate = () => {
+    this.navBar.updateCartTotal()
+  }
+
   render() {
     return super.render(
       <div>
@@ -45,14 +53,15 @@ class SingleProductSpool extends Page {
           onEditOrSaveButtonClicked={this.editOrSaveSpool}
           onCancelEdit={this.handleCancelEdit}
           textEditableProps={this.state.textElementsProps} />
-        <NavBar />
+        <NavBar refSetter={this.setNavRef} showCart/>
         <SingleProductThread {...this.props}  
           edit={this.state.edit}
           spoolAttributes={this.state.elementsAttributes}
           spoolElementsProps={{
             texts: this.state.textElementsProps
           }}
-          threadAdder={this.addThread} />
+          threadAdder={this.addThread}
+          onCartUpdate={this.onCartUpdate} />
         <FooterContactUs
           edit={this.state.edit}
           user={this.state.user}

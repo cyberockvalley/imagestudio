@@ -1,6 +1,7 @@
 import React from 'react'
 import ParseClient, { ParseClasses, handleParseError } from '../../../both/Parse'
 import { ACL } from 'parse'
+import { ROLES } from '../../../both/Constants'
 
 export const EMPTY_TEXT_ELEMENT_DATA = {data: "", tags: ""}
 class Editable extends React.Component {
@@ -65,7 +66,8 @@ class Editable extends React.Component {
     }
 
     //haveReadPermission(this.props.user, this.props.userRole, this.Element.get("ACL"))
-    haveWritePermission = () => {if(this.props.user) return true
+    haveWritePermission = () => { return true
+        if((this.componentKey.startsWith("anonymous") || this.props.role == ROLES.anonymous) && !this.Element) return true
         var ACL = !this.Element || !this.notAnObject()? this.guessedACL : this.Element.get("ACL")
         var permitted = !ACL || (
             ACL.getPublicWriteAccess() ||  
@@ -87,7 +89,12 @@ class Editable extends React.Component {
     }
 
     componentDidMount() {
+        if(this.props.refSetter) this.props.refSetter(this, this.props.name)
         this.guessedACL = this.guessACL()
+    }
+
+    isValid = () => {
+        return this.props.validityChecker? this.props.validityChecker(this.state.data) : true
     }
 
     getRoleAcl = role => {
@@ -119,12 +126,12 @@ class Editable extends React.Component {
                 if(ParseClient.User.current()) {
                     //give the public read access and the user both read and write access
                     ACL = new ParseClient.ACL(ParseClient.User.current())
-                    ACL.setPublicReadAccess(true)
+                    ACL.setPublicReadAccess(this.props.notReadable? false : true)
 
                 } else {
                     //give no one read or write access
                     ACL = new ParseClient.ACL()
-                    ACL.setPublicReadAccess(true)
+                    ACL.setPublicReadAccess(this.props.notReadable? false : true)
                     ACL.setPublicWriteAccess(false)
                 }
             }

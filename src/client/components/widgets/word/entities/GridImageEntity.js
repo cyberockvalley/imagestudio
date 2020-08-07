@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames';
-import '../../../../res/css/react-draft.css'
+import '../../../../../static/css/react-draft.css'
 import { EditorState } from 'draft-js';
 import ImageSelector from '../components/ImageSelector';
 import ImageArchitect from '../components/ImageArchitect';

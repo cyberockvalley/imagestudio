@@ -16,7 +16,7 @@ class FileChangerView extends React.Component {
         }
     }
 
-    rootClass = this.props.id? this.props.id.replace(/-/, "_") : ""
+    rootClass = this.props.id? (this.props.id.replace(/-/, "_")) + "_id" : ""
 
     elementClass = this.props.className? " " + this.props.className : ""
 

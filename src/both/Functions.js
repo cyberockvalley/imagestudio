@@ -74,6 +74,11 @@ export const roundTo = (n, digits) => {
     return n;
 }
 
+export const isValidEmail = email => {
+    console.log("isValidEmail", email, /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+    return email? /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) : false
+}
+
 export const isFloat = num => {
     return (num + "").includes(".") || (num + "").includes(",")
 }

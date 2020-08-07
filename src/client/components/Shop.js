@@ -112,7 +112,7 @@ class Shop extends Page {
             onEditOrSaveButtonClicked={this.handleEditOrSaveButtonClick}
             onCancelEdit={this.handleCancelEdit}
             textEditableProps={this.state.textElementsProps} />
-          <NavBar />
+          <NavBar showCart/>
           <section className="row">
             <div className="shop-view col-12 col-sm-9 col-md-8">
               <div>

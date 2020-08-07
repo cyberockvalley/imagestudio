@@ -1,6 +1,6 @@
 import React from 'react'
 import Option from '../components/Option'
-import '../../../../res/css/react-draft.css'
+import '../../../../../static/css/react-draft.css'
 
 class ImageEditBar extends React.Component {
     constructor(props) {

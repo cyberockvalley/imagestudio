@@ -8,7 +8,7 @@ export default () => {
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta http-equiv="content-type" content="text/html">
             <meta name="theme-color" content="#d6a047" />
-            <link rel="icon" href="/client/res/favicon.ico" type="image/x-icon">
+            <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
             <title>404 - Page Not Found</title>
         </head>
         <body>

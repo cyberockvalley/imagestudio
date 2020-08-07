@@ -10,12 +10,12 @@ export default (helmet, initialData, body) => {
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta http-equiv="content-type" content="text/html">
             <meta name="theme-color" content="#d6a047" />
-            <link rel="icon" href="/client/res/favicon.ico" type="image/x-icon">
+            <link rel="icon" href="/client/favicon.ico" type="image/x-icon">
 
             <link rel='stylesheet' id='bootstrap-min-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?ver=5.4.1' type='text/css' media='all'/>
             <link rel='stylesheet' id='font-awesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.1' type='text/css' media='all'/>
             
-            <link rel="stylesheet" href="/client/res/css/styles.css">
+            <link rel="stylesheet" href="/client/css/styles.css">
             ${helmet.title.toString()}
             ${helmet.meta.toString()}
             ${helmet.link.toString()}

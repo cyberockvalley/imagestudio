@@ -14,12 +14,10 @@ class IframeView extends React.Component {
     }
 
     componentDidMount() {
-        console.log("IFRAME_SRC", this.props.iframeSrc)
         this.setState({iframeSrc: this.props.iframeSrc})
     }
 
     handleModalClose = () => {
-        console.log("toggleIframeModal", 1, this.props.onIframeModalClose)
         if(this.props.onModalClose) this.props.onModalClose()
     }
 
@@ -60,7 +58,7 @@ class IframeView extends React.Component {
                 <ModalView open={true} onClose={this.handleModalClose}>
                     <div style={styles.modalContainer}>
                         <div style={styles.modalLeftWidget}>
-                            <span className="fa fa-3x fa-arrow-circle-left action white" onClick={this.handlePrev}></span>
+                            <span className={`fa fa-3x fa-arrow-circle-left action white ${this.props.onModalPrev? "" : "d-none"}`} onClick={this.handlePrev}></span>
                         </div>
                         <div style={styles.modalCenterWidget}>
                             <div style={styles.modalIframe}>
@@ -69,7 +67,7 @@ class IframeView extends React.Component {
                         </div>
                         <div style={styles.modalRightWidget}>
                             <span className="fa fa-3x fa-times-circle action white" onClick={this.handleModalClose}></span>
-                            <span className="fa fa-3x fa-arrow-circle-right action white" onClick={this.handleNext}></span>
+                            <span className={`fa fa-3x fa-arrow-circle-right action white ${this.props.onModalNext? "" : "d-none"}`} onClick={this.handleNext}></span>
                             <span className="fa fa-3x fa-times-circle action white" style={{visibility: "hidden"}}></span>
                         </div>
                     </div>
@@ -88,6 +86,12 @@ class IframeView extends React.Component {
 }
 
 const styles = {
+    modalContainer: {
+        display: "flex",
+        flexDirection: "row",
+        width: "100%",
+        height: "100%"
+    },
     modalLeftWidget: {
         padding: "15px",
         display: "flex",

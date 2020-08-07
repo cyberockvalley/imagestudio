@@ -179,7 +179,6 @@ class TextEditable extends Editable {
 
     componentDidMount() {
         super.componentDidMount()
-        if(this.props.refSetter) this.props.refSetter(this)
         this.setState({data: "", tags: ""})
         this.ElementClass = ParseClasses.TextElement
     }
@@ -249,6 +248,7 @@ class TextEditable extends Editable {
         this.init()
         const iframeSrc = this.getIframeSource()
         const iframePlayListId = this.getIframePlayListId()
+        if(!this.props.edit && this.props.notReadable) return null
         return(
             <>
                 {

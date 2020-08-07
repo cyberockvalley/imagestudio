@@ -68,9 +68,11 @@ class ListEditable extends Editable {
         }
     }
 
-    addNew = (meta) => {
+    addNew = (meta, singleEdit) => {
         var items = this.state.items
         var page = new ParseClasses.Page()
+        page.singleEdit = singleEdit
+
         page.set("key", this.componentKey)
         page.set("local_key", this.props.onBuildItemName(items.length, ""))
         page.set("title", meta && meta.title? meta.title : "")
@@ -86,6 +88,7 @@ class ListEditable extends Editable {
     }
 
     handleAddClick = () => {
+        //if(!this.props.edit || !this.haveWritePermission()) return
         if(!this.props.requestPageMetasOnNewItem) {
             this.addNew()
 
@@ -125,7 +128,6 @@ class ListEditable extends Editable {
 
     componentDidMount() {
         super.componentDidMount()
-        if(this.props.refSetter) this.props.refSetter(this)
         if(this.props.privateRef) {
             this.props.privateRef(this, this.componentKey)
         }
@@ -253,7 +255,7 @@ class ListEditable extends Editable {
         return(
             <>
                 {
-                    this.props.edit && this.haveWritePermission()?
+                    this.props.edit && this.haveWritePermission() && !this.props.hideInfo?
                     <div style={styles.listHeaderContainer}>
                         <h2 style={styles.listHeader} onClick={this.props.onEditOrSaveButtonClicked}>
                             {
@@ -269,14 +271,14 @@ class ListEditable extends Editable {
                         this.state.items.map((page, index) => {
                             return this.props.onItem(page, index, this.props.onBuildItemName, (ref) => {
                                 this.pageRefs.push(ref)
-                            })
+                            }, this.props.edit && this.haveWritePermission() || page.singleEdit)
                         })
                         :
                         <></>
                     }
                 </section>
                 {
-                    this.props.edit && this.haveWritePermission()?
+                    this.props.edit && this.haveWritePermission() && !this.props.hideAddButton?
                     <div style={styles.addButtonContainer}>
                         <button style={styles.addButton} onClick={this.handleAddClick}>
                             <span>

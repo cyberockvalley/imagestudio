@@ -26,7 +26,6 @@ class ItemMovie extends Item {
   }
 
   toggleIframeModal = () => {
-    console.log("toggleIframeModal", this.state.toggleIframeModal)
     this.setState({toggleIframeModal: !this.state.toggleIframeModal})
   }
 
@@ -91,7 +90,7 @@ class ItemMovie extends Item {
                 autoPlay: false,
                 showIframe: !this.context.edit && this.state.toggleIframeModal,
                 iframeStyle: IFRAME_STYLES.modal,
-                onIframeModalClose: this.toggleIframeModal
+                onModalClose: this.toggleIframeModal
               }}
               role={ROLES.mod}
               name="iframe_src"

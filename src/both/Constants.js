@@ -8,8 +8,10 @@ export const API_SECONDARY_ROOT_DIR = "api_secondary/v1/"
 export const WEB_PAGE_IMAGES_ENDPOINT = "get_page_images"
 export const ROLES = {
     admins: "admins",
-    mod: "moderators"
+    mod: "moderators",
+    anonymous: "anonymous"
 }
+export const EMPTY_PROFILE_PHOTO = "/client/images/no-profile-photo.jpg"
 export const ROWS_PER_LIST = 5
 export const FACE_BOOK_APP_ID = "582589769123729"
 export const GOOGLE_CAPTCHA_SITE_KEY = "6Lf-CrUZAAAAAE_seI5UFs3sJ3x5Gd8VKd3IeWeo"

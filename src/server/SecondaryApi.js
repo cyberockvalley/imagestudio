@@ -1,6 +1,5 @@
 import { WEB_PAGE_IMAGES_ENDPOINT } from "../both/Constants"
 import Axios from "axios"
-import da from "../client/components/widgets/word/translations/da"
 
 const express = require("express")
 const SecondaryApi = express.Router()
