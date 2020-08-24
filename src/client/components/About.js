@@ -5,10 +5,15 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES, ROWS_PER_LIST } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
+import ListEditable from "./editables/ListEditable";
+import ItemTeamMember from "./items/ItemTeamMember";
+import EditableStateContext from "./editables/EditableStateContext";
+import { Link } from "react-router-dom";
 
 class About extends Page {
+  static contextType = EditableStateContext
   constructor(props){
     super(props)
   }
@@ -21,8 +26,19 @@ class About extends Page {
     
   }
 
-  render() {
+  buildWeddingStoriesItem = (item, index, onBuildItemName, refGetter) => {
     return (
+      <ItemTeamMember
+        key={index}
+        index={index}
+        page={item}
+        onBuildItemName={onBuildItemName}
+        refGetter={refGetter} />
+    )
+  }
+
+  render() {
+    return super.render(
       <>
         <Helmet>
           <title>{lastValueOrThis(this.state.page, {get: () => {return ""}}).get("title")}</title>
@@ -54,7 +70,7 @@ class About extends Page {
           <meta name="twitter:site" content="@CSS" />
         </Helmet>
         <>
-          <Header  
+          <Header history={this.props.history} 
             edit={this.state.edit}
             user={this.state.user}
             userRole={this.state.userRole}
@@ -74,31 +90,41 @@ class About extends Page {
                       {...this.state.textElementsProps} />
             </h3>
           </section>
-          <section className="row team-photos"></section>
+          <ListEditable 
+              requestPageMetasOnNewItem={false}
+              role={ROLES.admins}
+              className="row team-photos"
+              name={"site_info_team_members"}
+              onBuildItemName={(index, name) => {
+                return `site_info_team_members_${index}${name}`
+              }}
+              readableName="Team members"
+              itemReadableName="Team member"
+              {...this.state.listElementsProps}
+              rowsPerPage={8}
+              onItem={this.buildWeddingStoriesItem}
+              itemDraggable={true}
+          />
           <section className="about-us">
-            <h2>
-              <TextEditable 
-                    name={"site_info_about_page_about_us_header_text"}
-                    {...this.state.textElementsProps} />
-            </h2>
-            <p>
-              <TextEditable 
-                style={{minHeight: 300}}
-                name={"site_info_about_us_body_text"}
-                {...this.state.textElementsProps}
-                is_html
-                enable_line_break />
-            </p>
+            <TextEditable isHtml 
+              editorImageAlt="About ImageStudio.com"
+              role={ROLES.mod}
+              name="site_info_about_us_body"
+              {...this.state.textElementsProps}
+              style={{
+                width: "100%",
+                minHeight: "300px"
+              }} />
             <div
               style={{
                 marginTop: "70px"
               }}
             >
-              <a className="call-to-action">
+              <Link to="/contact" className="call-to-action">
                 <TextEditable 
                   name={"site_info_about_page_call_to_action"}
                   {...this.state.textElementsProps} is_input_text />
-              </a>
+              </Link>
             </div>
           </section>
           <Footer

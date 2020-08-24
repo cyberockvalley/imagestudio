@@ -75,7 +75,7 @@ class ImageEditable extends FileEditable {
         this.init()
         console.log("UploadTracker", "ImageEditable", this.props.link, this.props.id)
         const style = this.getStyle()
-        return (
+        return super.render(
             <FileChangerView
                 key={this.props.key}
                 className={this.props.className ? this.props.className : ""}
@@ -102,12 +102,12 @@ class ImageEditable extends FileEditable {
                  style={!this.haveReadPermission()? imageHide : styles.image}>
                      {
                          this.state.fileShades.length == 0 && this.props.placeholder?
-                         <img src={this.props.placeholder} /> : null
+                         <img src={this.props.placeholder} style={this.props.imgStyle || this.props.style} /> : null
                      }
                     {
                         this.state.fileShades.map((imageData, index) => {
                             return(<img key={index} src={imageData.src} type={imageData.mime} 
-                            style={this.props.style? this.props.style : {}} />)
+                            style={this.props.imgStyle || this.props.style} />)
                         })
                     }
                 </picture>

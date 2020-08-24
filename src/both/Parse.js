@@ -1,5 +1,5 @@
 import { isClient } from "./Functions"
-import { API_PORT, API_ROOT_DIR, BASE_URL } from "./Constants"
+import { API_PORT, API_ROOT_DIR, BASE_URL, ROLES } from "./Constants"
 
 const ParseClient = require('parse')
 if(!isClient()) {
@@ -12,13 +12,13 @@ ParseClient.initialize('123456A', '123456J')
 ParseClient.serverURL = `${BASE_URL + API_ROOT_DIR}`
 
 //ParseClient.enableEncryptedUser()
-//ParseClient.secret =  'Test secrect Key'
+//ParseClient.secret = "12345"
 
 export const getParseRole = () => {
         return "admins"
 }
 
-export const ParseClasses = {Product: ParseClient.Object.extend("Product"),
+export const ParseClasses = {
     Page: ParseClient.Object.extend("Page"),
     TextElement: ParseClient.Object.extend("TextElement"),
     ImageElement: ParseClient.Object.extend("ImageElement"),
@@ -40,6 +40,22 @@ export const getParseQuery = obj => {
 export const buildElementKey = (username, pageKey, section, keyTitle) => {
         return username + "_" + pageKey + "_" + section + "_" + keyTitle
 }
+
+export const getRoles = () => {
+        return new ParseClient.Query(ParseClient.Role).equalTo('users', ParseClient.User.current()).find()
+}
+
+export const getRolesSync = async () => {
+        var roles = await getRoles()
+        var list = []
+        roles.forEach(role => {
+                list.push(role.get("name"))
+        })
+        if(list.includes(ROLES.admins)) list.push(ROLES.mod)
+        return list
+}
+
+
 export const handleParseError = e => {
     switch(e.code) {
         case PARSE_ERROR_CODES.OtherCause.code:

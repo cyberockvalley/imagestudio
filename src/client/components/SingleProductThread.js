@@ -4,9 +4,9 @@ import HeaderImageBanner from "./HeaderImageBanner";
 import { Helmet } from 'react-helmet'
 import Page from "./Page";
 import EditableStateContext from "./editables/EditableStateContext";
-import { lastValueOrThis, truncText, slugify, isClient } from "../../both/Functions";
+import { lastValueOrThis, truncText, slugify, isClient, roundTo } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES, GOOGLE_CAPTCHA_SITE_KEY, ROWS_PER_LIST } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
 import PageReaction from "./widgets/PageReaction";
 import { Link } from "react-router-dom";
@@ -16,6 +16,7 @@ import ListEditable from "./editables/ListEditable";
 import ItemEffectExample from "./items/ItemEffectExample";
 import { IFRAME_STYLES } from "./widgets/IframeView";
 import ItemMansoryComment from './items/ItemMansoryComment'
+import ParseClient from "../../both/Parse";
 
 export const getCart = () => {
   if(!isClient()) return {}
@@ -34,15 +35,32 @@ class SingleProductThread extends Page {
     this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this)
   }
 
-  componentDidMount() {
+  onPageTextsDataLoaded = () => {
+    console.log("inCart", "onPageDataLoaded", 1)
     this.initCart()
-    this.setState({inCart: this.inCart(), likes: 0})
+    this.setState({inCart: this.inCart()})
+    console.log("inCart", "onPageDataLoaded", 2)
+  }
+
+  componentDidMount() {
+    this.setState({likes: 0, botKey: GOOGLE_CAPTCHA_SITE_KEY})
     if(this.props.threadAdder) this.props.threadAdder(this)
     console.log("SingleProductThread", this.props.match.params.title, this.props)
     this.loadPage([SHOP_SECTION_ONE_KEY, SHOP_SECTION_TWO_KEY], {
       slug: this.props.match.params.title
     })
-    
+
+    ParseClient.Cloud.run('getLikes', {key: `anonymous_comments_${this.getSlug()}`})
+    .then(response => {
+        console.log("getLikes", "Data", response)
+        this.setState({
+          likes: response.count
+        })
+    })
+    .catch(e => {
+        console.log("getLikes", "Error", e)
+        handleParseError(e)
+    })
   }
 
   getSlug = () => {
@@ -57,7 +75,9 @@ class SingleProductThread extends Page {
   }
 
   increaseLikes = () => {
-    this.setState({likes: this.state.likes + 1})
+    var page = this.state.page
+    page.get("likes")? page.set("likes", page.get("likes") + 1):  page.set("likes", 1)
+    this.setState({page: page})
   }
 
   effectExamplesRef = effectExamplesList => {
@@ -102,30 +122,19 @@ class SingleProductThread extends Page {
   initCart = () => {
     var cart = getCart()
     this.setState({
-      product: cart[this.getId()]? cart[this.getId()] : this.getInitCartProduct()
+      product: cart[this.getId()]? cart[this.getId()] : this.getProduct()
     })
+  }
+
+  getId = () => {
+    return this.state.page? this.state.page.id : ""
   }
 
   updateCart = () => {
     var cart = getCart()
-    cart[this.getId()] = this.state.product
+    cart[this.getId()] = this.state.product? this.state.product : this.getProduct()
     window.localStorage.setItem("cart", JSON.stringify(cart))
     if(this.props.onCartUpdate) this.props.onCartUpdate()
-  }
-
-  getInitCartProduct = () => {
-    var id = this.getId();
-    var name = "ddd";
-    var license = LICENSES.personal;
-    var price = 45;
-    var seats = 1;
-    return {
-      id: id,
-      name: name,
-      license_type: license,
-      price: price,
-      seats: seats
-    }
   }
 
   toggleCart = () => {
@@ -137,9 +146,22 @@ class SingleProductThread extends Page {
     }
   }
 
+  buy = () => {
+    if(!this.inCart()) {
+      this.addToCart()
+    }
+    this.props.history.push("/shop/cart")
+  }
+
   addToCart = () => {
     this.updateCart()
-    this.setState({inCart: true})
+    if(this.state.product) {
+      this.setState({inCart: true})
+
+    } else {
+      this.setState({inCart: true, product: this.getProduct()})
+    }
+    
   }
 
   removeFromCart = () => {
@@ -150,42 +172,62 @@ class SingleProductThread extends Page {
     if(this.props.onCartUpdate) this.props.onCartUpdate()
   }
 
-  buy = () => {
-    this.props.history.push("/shop/cart")
+  getPrice = (license) => {
+    if(this.state.elementsAttributes) {
+      console.log("getPrice", this.state.elementsAttributes)
+      if(license == LICENSES.personal) return parseInt(this.state.elementsAttributes.price? this.state.elementsAttributes.price.data : 0)
+      if(license == LICENSES.commercial) return parseInt(this.state.elementsAttributes.price_commercial? this.state.elementsAttributes.price_commercial.data : 0)
+    }
+    return 0
+  }
+
+  getThumb = () => {
+    return isClient() && this.state.elementsAttributes && this.state.elementsAttributes.featured_image? $("img")[0].getAttribute("src") : ""
+  }
+
+  getProduct = () => {
+    var product =  {
+      sku: this.getId(),
+      name: this.state.page? this.state.page.get("title") : "",
+      license_type: LICENSES.personal,
+      price: this.getPrice(LICENSES.personal),
+      currency: "USD",
+      quantity: 1,
+      thumb: this.getThumb()
+    }
+
+    return product
   }
 
   inCart = () => {
     var cart = getCart()
-    console.log("inCart", cart && cart.hasOwnProperty(this.getId()), cart)
+    console.log("inCart", cart && cart.hasOwnProperty(this.getId()), cart, this.getId())
     return cart && cart.hasOwnProperty(this.getId())
   }
 
   increaseSeat = () => {
-    var product = this.state.product
-    product.seats++
+    var product = this.state.product? this.state.product : this.getProduct()
+    product.quantity++
     this.setState({product: product})
     if(this.inCart()) this.updateCart()
   }
 
   decreaseSeat = () => {
-    var product = this.state.product
-    if(product.seats - 1 > 0) {
-      product.seats--
+    var product = this.state.product? this.state.product : this.getProduct()
+    if(product.quantity - 1 > 0) {
+      product.quantity--
       this.setState({product: product})
       if(this.inCart()) this.updateCart()
     }
   }
 
-  getId = () => {
-    return "aa"
-  }
-
   handleCheckBoxChange = e => {
-    var product = this.state.product
+    var product = this.state.product? this.state.product : this.getProduct()
     var type = parseInt(e.target.getAttribute("dataType"))
     console.log("DATA_TYPE", type)
     if(type == product.license_type) return
     product.license_type = type
+    product.price = this.getPrice(type)
     this.setState({product: product})
     if(this.inCart()) this.updateCart()
   }
@@ -220,8 +262,14 @@ class SingleProductThread extends Page {
         page={item}
         onBuildItemName={onBuildItemName}
         refGetter={refGetter}
-        edit={edit} />
+        edit={edit}
+        focus={focus}
+        getParentId={() =>  { return this.state.page? this.state.page.id : 0 }} />
     )
+  }
+
+  commentsNameBuilder = (index, name) => {
+    return `anonymous_comment_${this.getSlug()}_${index}${name}`
   }
 
   toggleAddComment = () => {
@@ -232,7 +280,17 @@ class SingleProductThread extends Page {
     this.commentsList.addNew(null, true)
   }
 
+  getAvgRatings = () => {
+    return !this.state.page || !this.state.page.get("ratings_sum")? 0 : Math.round(this.state.page.get("ratings_sum") / this.state.page.get("ratings_count"))
+  }
+
+  getReviews = () => {
+    return this.state.page && this.state.page.get("ratings_count")? this.state.page.get("ratings_count") : 0
+  }
+
   render() {
+    const reviews = this.getReviews()
+    const ratings = this.getAvgRatings()
     return super.render(
       <>
         <Helmet>
@@ -305,7 +363,7 @@ class SingleProductThread extends Page {
                 <i className="fa fa-heart" />
               </a>
             </PageReaction>
-            <span>{this.state.likes}</span>
+            <span>{this.state.page && this.state.page.get("likes")? this.state.page.get("likes") : 0}</span>
             <span>likes</span>
           </div>
         </section>
@@ -334,63 +392,6 @@ class SingleProductThread extends Page {
                     }}
                     add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
                   />
-                  {/*
-              <div className="row product-thumbs">
-                <div className="col-2 product-thumb">
-                <ImageEditable
-                    isPointer
-                    role={ROLES.mod}
-                    name="featured_image"
-                    {...this.state.imageElementsProps}
-                    edit={this.context.edit}
-                    spinnerWidth={50}
-                    spinnerHeight={50}
-                    spinnerThickness={7}
-                    spinnerRunnerColor="#f33"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      minHeight: "100%",
-                      position: "absolute",
-                      top: 0,
-                      left: 0
-                    }}
-                    add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
-                  />
-                </div>
-                <div className="col-2 product-thumb">
-                  <ImageEditable 
-                      name="video_overlay"
-                      id="video_overlay"
-                      {...this.state.imageElementsProps}
-                      edit={this.context.edit}
-                      spinnerWidth={50}
-                      spinnerHeight={50}
-                      spinnerThickness={7}
-                      spinnerRunnerColor="#f33"
-                      className="active"
-                      style={{
-                        height: "100%",
-                        width: "100%"
-                      }}
-                      emptyWidth="100%"
-                      emptyHeight="100%"
-                      add_overlay={this.context.edit? true : false} />
-                </div>
-                <div className="col-2 product-thumb">
-                  <img src="/imagestudio/images/thum-1.jpg" />
-                </div>
-                <div className="col-2 product-thumb">
-                  <img src="/imagestudio/images/thum-1.jpg" />
-                </div>
-                <div className="col-2 product-thumb">
-                  <img src="/imagestudio/images/thum-1.jpg" />
-                </div>
-                <div className="col-2 product-thumb">
-                  <img src="/imagestudio/images/thum-1.jpg" />
-                </div>
-              </div>
-              */}
             </div>
             <div className="col-12 col-md-4 product-details-and-actions">
               <div className="product-details">
@@ -400,11 +401,13 @@ class SingleProductThread extends Page {
                     id="purchase_flow_rating"
                     className="star-rating readonly small"
                   >
-                    <span className="star svg-star-full" />
-                    <span className="star svg-star-full" />
-                    <span className="star svg-star-full" />
-                    <span className="star svg-star-empty" />
-                    <span className="star svg-star-empty" />
+                    {
+                      [1,2,3,4,5].map((value, index) => {
+                        return <i className={`star  
+                        ${ratings - value < 0? "svg-star-empty" : "svg-star-full"}`} 
+                        />
+                      })
+                    }
                     <a
                       id="purchase_go_to_reviews"
                       className="product-rating-count"
@@ -412,7 +415,7 @@ class SingleProductThread extends Page {
                       data-module="Purchase"
                       data-track
                     >
-                      2 Reviews
+                      {reviews} {reviews > 0? "Reviews" : "Review"}
                     </a>
                   </div>
                 </div>
@@ -441,25 +444,24 @@ class SingleProductThread extends Page {
                   <div className="license-heading flex-row flex-justify-between flex-align-center">
                     <div>
                       <span>License Type </span>
-                      <a
-                        href="https://creativemarket.com/licenses/general"
+                      <Link
+                        to="/shop/license"
                         target="_blank"
                         rel="noreferrer"
-                        className="d-none"
                       >
                         What are these?
-                      </a>
+                      </Link>
                     </div>
                     <div className="sp-quantity">
                       <button
                         onClick={this.decreaseSeat}
-                        disabled={!this.state.product || this.state.product.seats == 1? true : false}
+                        disabled={!this.state.product || this.state.product.quantity == 1? true : false}
                         aria-label="Decrease seat Quantity"
                         data-cypress="quantity-selector-decrease"
                         value="dec"
                         className="sp-quantity__button sp-quantity__button--decrease"
                       />
-                      <span className="sp-quantity__label">{this.state.product && this.state.product.seats > 1? this.state.product.seats + " seats" :  "1 seat"}</span>
+                      <span className="sp-quantity__label">{this.state.product && this.state.product.quantity > 1? this.state.product.quantity + " seats" :  "1 seat"}</span>
                       <button
                         onClick={this.increaseSeat}
                         aria-label="Increase seat Quantity"
@@ -557,16 +559,16 @@ class SingleProductThread extends Page {
                 </h3>
                 <div className="payment-methods flex-row flex-justify-around">
                   <div>
-                    <img src="/imagestudio/images/mastercard_card.svg" />
+                    <img src="/client/images/master_card.png" />
                   </div>
                   <div>
-                    <img src="/imagestudio/images/visa_card.svg" />
+                    <img src="/client/images/visa_card.png" />
                   </div>
                   <div>
-                    <img src="/imagestudio/images/american_express_card.svg" />
+                    <img src="/client/images/american_express_card.png" />
                   </div>
                   <div>
-                    <img src="/imagestudio/images/paypal_card.svg" />
+                    <img src="/client/images/paypal_card.png" />
                   </div>
                 </div>
               </div>
@@ -584,7 +586,7 @@ class SingleProductThread extends Page {
           readableName="Effect examples"
           itemReadableName="Effect example"
           {...this.state.listElementsProps}
-          rowsPerPage={5}
+          rowsPerPage={ROWS_PER_LIST}
           privateRef={this.effectExamplesRef}
           onItem={this.buildEffectExamplesItem}
           itemDraggable={true}
@@ -695,33 +697,34 @@ class SingleProductThread extends Page {
                   margin: "0 10px 10px 0",
                   display: "inline-block"
                 }}
-                title="4.9"
-                className="stars"
+                title={ratings}
+                className={`stars `}
               >
-                <i className="fa star text-large loox-star fa-star" />
-                <i className="fa star text-large loox-star fa-star" />
-                <i className="fa star text-large loox-star fa-star" />
-                <i className="fa star text-large loox-star fa-star" />
-                <i className="fa star text-large loox-star fa-star" />
+                {
+                  [1,2,3,4,5].map((value, index) => {
+                    return <i className={`fa star text-large loox-star 
+                    ${ratings - value < 0? "fa-star-o" : "fa-star"}`} 
+                     ></i>
+                  })
+                }
               </span>
-              <span className="summary-text">85 Reviews</span>
+              <span className="summary-text">{ reviews } {reviews > 0? "Reviews" : "Review"}</span>
             </div>
             <div>
               <button className="btn load-more" onClick={this.toggleAddComment}>Write a review</button>
             </div>
           </div>
           <ListEditable 
+              latestUp
               requestPageMetasOnNewItem={false}
               className="masonry masonry-col-2 masonry-col-sm-3 masonry-col-md-4 masonry-gap-10"
               role={ROLES.anonymous}
               name={`anonymous_comments_${this.getSlug()}`}
-              onBuildItemName={(index, name) => {
-                return `anonymous_comment_${this.getSlug()}_${index}${name}`
-              }}
+              onBuildItemName={this.commentsNameBuilder}
               readableName="Reviews"
               itemReadableName="Review"
               {...this.state.listElementsProps}
-              rowsPerPage={5}
+              rowsPerPage={ROWS_PER_LIST}
               privateRef={this.commentsRef}
               onItem={this.buildCommentsItem}
               onItemsLoaded = {
@@ -730,6 +733,7 @@ class SingleProductThread extends Page {
                   commentsHasNext: info.has_next
                 })}
               }
+              focusOnAdd
               hideInfo
               hideAddButton
           />

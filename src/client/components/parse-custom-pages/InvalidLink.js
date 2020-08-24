@@ -19,7 +19,7 @@ class InvalidLink extends React.Component {
     render() {
         return (
             <div>
-                <Header {...this.props}/>
+                <Header history={this.props.history}{...this.props}/>
                 <div style={Styles.container}>
                     <div>
                         {this.state.loading? "Loading..." : ""}

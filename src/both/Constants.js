@@ -15,3 +15,8 @@ export const EMPTY_PROFILE_PHOTO = "/client/images/no-profile-photo.jpg"
 export const ROWS_PER_LIST = 5
 export const FACE_BOOK_APP_ID = "582589769123729"
 export const GOOGLE_CAPTCHA_SITE_KEY = "6Lf-CrUZAAAAAE_seI5UFs3sJ3x5Gd8VKd3IeWeo"
+export const SITE_NAME = "Image Studio"
+export const PAGE_TITLE_SEPERATOR = "-"
+export const STORAGE_KEYS = {
+    roles: "roles"
+}

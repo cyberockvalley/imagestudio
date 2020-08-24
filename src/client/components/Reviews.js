@@ -9,7 +9,7 @@ class Reviews extends React.Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header history={this.props.history}/>
         <HeaderImageBanner />
         <NavBar />
         <div className="row">

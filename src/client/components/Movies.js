@@ -6,7 +6,7 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES, ROWS_PER_LIST } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
 import ImageEditable from "./editables/ImageEditable";
 import EditableStateContext from "./editables/EditableStateContext";
@@ -95,7 +95,7 @@ class Movies extends Page {
           <meta name="twitter:site" content="@CSS" />
         </Helmet>
         <>
-          <Header  
+          <Header history={this.props.history} 
             edit={this.state.edit}
             user={this.state.user}
             userRole={this.state.userRole}
@@ -170,7 +170,7 @@ class Movies extends Page {
               readableName="Movies"
               itemReadableName="Movie"
               {...this.state.listElementsProps}
-              rowsPerPage={5}
+              rowsPerPage={ROWS_PER_LIST}
               privateRef={this.moviesRef}
               onItem={this.buildMoviesItem}
               itemDraggable={true}

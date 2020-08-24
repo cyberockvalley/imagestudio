@@ -60,7 +60,7 @@ class TextEditable extends Editable {
     getEditorDisplayContent = () => {
         var data = this.Element && this.haveReadPermission()? this.Element.get("json_data") : this.state.data;
         data = data? customDraftToHtml(data) : ""
-        //console.log("getEd",  this.Element, this.haveReadPermission(), data)
+        console.log("getEd",  this.Element, this.haveReadPermission(), data, this.Element? this.Element.get("json_data") : this.state.data)
         return data
     }
 
@@ -126,12 +126,30 @@ class TextEditable extends Editable {
                     console.log("rawContent", "detailsHasChanged", "isAnObject")
                 }
                 if(this.Element) {
-                    this.Element.save()
+                    if(!this.props.botKey) {
+                        this.Element.save()
+
+                    } else {
+                        this.getBotToken(token => {
+                            this.Element.save(null, {context: {botToken: token}})
+                            
+                        })
+                    }
+                    
                     
                 } else {
                     var element = this.createElement()
+                    if(!this.props.botKey) {
+                        this.props.addHandler(element, "text_elements")
+
+                    } else {
+                        this.getBotToken(token => {
+                            console.log("PageToken", 1, token)
+                            this.props.addHandler(element, "text_elements", null, null, token)
+                            
+                        })
+                    }
                     
-                    this.props.addHandler(element, "text_elements")
                 }
     
             }
@@ -248,8 +266,8 @@ class TextEditable extends Editable {
         this.init()
         const iframeSrc = this.getIframeSource()
         const iframePlayListId = this.getIframePlayListId()
-        if(!this.props.edit && this.props.notReadable) return null
-        return(
+        //if(!this.props.edit && this.props.notReadable) return null
+        return super.render(
             <>
                 {
                     this.props.edit && this.haveWritePermission()?

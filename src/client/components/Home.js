@@ -12,7 +12,7 @@ import Page from "./Page";
 import EditableStateContext from "./editables/EditableStateContext";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
 import ListEditable from "./editables/ListEditable";
 import ItemWeddingPhoto from "./items/ItemWeddingPhoto";
 import InstaGrid from "./widgets/InstaGrid";
@@ -83,7 +83,7 @@ class Home extends Page {
           <meta name="twitter:site" content="@CSS" />
         </Helmet>
       <>
-        <Header 
+        <Header history={this.props.history}
           edit={this.state.edit}
           user={this.state.user}
           userRole={this.state.userRole}
@@ -222,6 +222,20 @@ class Home extends Page {
                       </div>
                     </a>
                   </div>
+                  <h5 style={!this.state.edit? {display: "none"} : {}}>
+                  <TextEditable 
+                    readOnlyBy
+                    role={ROLES.admins}
+                    name={"instagram_id"}
+                    {...this.state.textElementsProps} is_input_text/>
+                  </h5>
+                  <h5 style={!this.state.edit? {display: "none"} : {}}>
+                  <TextEditable 
+                    readOnlyBy
+                    role={ROLES.admins}
+                    name={"instagram_access_token"}
+                    {...this.state.textElementsProps} is_input_text/>
+                  </h5>
                   <InstaGrid account="jlo" numberOfItems={6} />
                 </div>
               </div>

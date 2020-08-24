@@ -6,7 +6,7 @@ import Page from "./Page";
 import EditableStateContext from "./editables/EditableStateContext";
 import { lastValueOrThis, truncText, slugify } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES, ROWS_PER_LIST } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
 import PageReaction from "./widgets/PageReaction";
 import { Link } from "react-router-dom";
@@ -35,7 +35,9 @@ class SingleStoryThread extends Page {
   }
 
   increaseLikes = () => {
-    this.setState({likes: this.state.likes + 1})
+    var page = this.state.page
+    page.get("likes")? page.set("likes", page.get("likes") + 1):  page.set("likes", 1)
+    this.setState({page: page})
   }
 
   render() {
@@ -130,7 +132,7 @@ class SingleStoryThread extends Page {
                 <i className="fa fa-heart" />
               </a>
             </PageReaction>
-            <span>{this.state.likes}</span>
+            <span>{this.state.page && this.state.page.get("likes")? this.state.page.get("likes") : 0}</span>
             <span>likes</span>
           </div>
         </section>

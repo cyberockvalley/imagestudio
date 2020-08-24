@@ -1,7 +1,8 @@
 
 const ToolBar = {
     entities: {
-      imageGrid: 'IMAGE_GRID'
+      imageGrid: 'GRID_IMAGE',
+      imageGrid2: 'IMAGE_GRID'
     },
     options: [
       'inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 

@@ -3,8 +3,9 @@ import ParseClient, { ParseClasses, getParseQuery, handleParseError, getParseRol
 import EditableStateContext from './editables/EditableStateContext'
 import { slugify, isObject } from '../../both/Functions'
 import { PAGE_404 } from '../../both/Constants'
+import Markup from './Markup'
 
-class Page extends React.Component {
+class Page extends Markup {
     constructor(props) {
         super(props)
         this.handleEditOrSaveButtonClick = this.handleEditOrSaveButtonClick.bind(this)
@@ -81,6 +82,9 @@ class Page extends React.Component {
         }
     }
 
+    onPageDataLoaded = () => {}
+    onPageTextsDataLoaded = () => {}
+    onPageFilesDataLoaded = () => {}
     
     editors = []
     editorsMap = {}
@@ -133,10 +137,10 @@ class Page extends React.Component {
         }
     }
 
-    addElement = (element, field, notRelation, notAnObject) => {
+    addElement = (element, field, notRelation, notAnObject, botToken) => {
         var props = this.getElementGroup(element)
         if(props == null) return
-        if(["TextElement", "IframeElement"].includes(element.className)) {
+        if(element.className == "TextElement") {
             props.elements.push(element)
             this.updateElementGroup(element, props)
         }
@@ -160,13 +164,22 @@ class Page extends React.Component {
                     this.setState({page: page})
                 }
                 if(!page.get("title") && page.get("title").length == 0) page.set("title", "Empty")
-                page.save()
+                if(this.props.botKey || this.state.botKey) {
+                    this.getBotToken(token => {
+                        console.log("PageTok", token, this.props.getParentId? this.props.getParentId() : null)
+                        page.save(null, {context: {botToken: token, parentId: this.props.getParentId? this.props.getParentId() : null}})
+                        
+                    })
+
+                } else {
+                    page.save()
+                }
             }
 
         } else {
-            element.save()
+            element.save(null, botToken? {context: {botToken: botToken}} : null)
             .then(elementRes => {
-                if(!["TextElement", "IframeElement"].includes(element.className)) {
+                if(element.className == "TextElement") {
                     props.elements.push(elementRes)
                     this.updateElementGroup(elementRes, props)
                 }
@@ -180,7 +193,16 @@ class Page extends React.Component {
                         this.setState({page: page})
                     }
                     if(!page.get("title") && page.get("title").length == 0) page.set("title", "Empty")
-                    page.save()
+                    if(this.props.botKey || this.state.botKey) {
+                        this.getBotToken(token => {
+                            console.log("PageTok", token, this.props.getParentId? this.props.getParentId() : null)
+                            page.save(null, {context: {botToken: token, parentId: this.props.getParentId? this.props.getParentId() : null}})
+                            
+                        })
+    
+                    } else {
+                        page.save()
+                    }
                 }
 
             })
@@ -287,6 +309,8 @@ class Page extends React.Component {
             if(page) {
                 this.setState({page: page})
             }
+
+            this.onPageDataLoaded()
             
             if(!this.state.page) {
                 //this.props.history.push(PAGE_404)
@@ -341,16 +365,6 @@ class Page extends React.Component {
             if(!options || !options.no_video || !options.video_limit || options.video_limit > 0) {
                 this.loadVideos(options)
             }
-
-            //get and set the iframe elements
-            if(!options || !options.no_iframe || !options.iframe_limit || options.iframe_limit > 0) {
-                this.loadIframes(options)
-            }
-
-            //get and set the list elements
-            if(!options || !options.no_list || !options.list_limit || options.list_limit > 0) {
-                this.loadLists(options)
-            }
             
         })
         .catch(e => {
@@ -371,6 +385,7 @@ class Page extends React.Component {
             var props = this.state.textElementsProps
             props.elements = props.elements.concat(list)
             this.setState({textElementsProps: props})
+            this.onPageTextsDataLoaded()
 
         })
         .catch(e => {
@@ -397,6 +412,7 @@ class Page extends React.Component {
             props.elements = props.elements.concat(list)
             this.setState({imageElementsProps: props})
             console.log("ListItem", "loadImages", "find", this.state.imageElementsProps)
+            this.onPageFilesDataLoaded()
 
         })
         .catch(e => {
@@ -423,47 +439,7 @@ class Page extends React.Component {
             handleParseError(e)
         })
     }
-
-    loadIframes = (options) => {
-        var query = this.state.page.relation("iframe_elements").query()
-        if(options && options.iframe_keys) {
-            query.containedIn("key", options.iframe_keys)
-        }
-        if(options && options.iframe_limit) {
-            query.limit(options.iframe_limit)
-        }
-        query.find()
-        .then(list => {
-            var props = this.state.iframeElementsProps
-            props.elements = props.elements.concat(list)
-            this.setState({iframeElementsProps: props})
-
-        })
-        .catch(e => {
-            handleParseError(e)
-        })
-    }
-/*
-    loadLists = (options) => {
-        var query = this.state.page.relation("list_elements").query()
-        if(options && options.list_keys) {
-            query.containedIn("key", options.list_keys)
-        }
-        if(options && options.list_limit) {
-            query.limit(options.list_limit)
-        }
-        query.find()
-        .then(list => {
-            var props = this.state.listElementsProps
-            props.elements = props.elements.concat(list)
-            this.setState({listElementsProps: props})
-
-        })
-        .catch(e => {
-            handleParseError(e)
-        })
-    }
-*/
+    
     handleEditOrSaveButtonClick = () => {
         if(this.state.edit || (this.context && this.context.edit)) {
             this.switchEditOn(false)
@@ -603,7 +579,8 @@ class Page extends React.Component {
     }
 
     render(child) {
-        return (<EditableStateContext.Provider value={{
+        return super.render(<EditableStateContext.Provider value={{
+            history: this.props.history,
             edit: this.state.edit,
             ...this.state.elementsAttributes,
             textElementsProps: {

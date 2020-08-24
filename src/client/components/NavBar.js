@@ -18,7 +18,7 @@ class NavBar extends React.Component {
     var cart = getCart()
     var total = 0
     for (const [key, value] of Object.entries(cart)) {
-      total += value.seats
+      total += value.quantity
     }
     this.setState({cartTotal: total})
 

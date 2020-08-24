@@ -7,8 +7,8 @@ export const customDraftToHtml = rawContentState => {
 }
 
 const customEntityTransform = (entity, text) => {
-  //console.log("customEntity", entity, text)
-  if (entity.type == WordProcessorSettings.ToolBar.entities.imageGrid) {
+  console.log("customEntity", JSON.stringify(entity), text)
+  if (entity.type == WordProcessorSettings.ToolBar.entities.imageGrid || entity.type == WordProcessorSettings.ToolBar.entities.imageGrid2) {
     const { gridItemsSpacing, alt} = entity.data
     var justify = "center"
     if(entity.data.alignment == "left") {

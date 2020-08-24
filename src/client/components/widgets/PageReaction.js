@@ -33,12 +33,10 @@ class PageReaction extends React.Component {
         })
         .then(response => {
             console.log("pageReactionUpdate", "Data", response)
-            this.recaptcha.reset()
         })
         .catch(e => {
             console.log("pageReactionUpdate", "Error", e)
             handleParseError(e)
-            this.recaptcha.reset()
         })
     }
 

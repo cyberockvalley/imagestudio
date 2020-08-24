@@ -14,7 +14,10 @@ export const gridImageStrategy = (contentBlock, callback, contentState) => {
         const entityKey = character.getEntity()
         return (
           entityKey !== null &&
-          contentState.getEntity(entityKey).getType() === WordProcessorSettings.ToolBar.entities.imageGrid
+          (
+            contentState.getEntity(entityKey).getType() === WordProcessorSettings.ToolBar.entities.imageGrid || 
+            contentState.getEntity(entityKey).getType() === WordProcessorSettings.ToolBar.entities.imageGrid2
+          )
         );
     }, callback)
 }

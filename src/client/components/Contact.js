@@ -1,19 +1,23 @@
 import React from "react";
 import Header from "./Header";
 import NavBar from "./NavBar";
-import FooterContactUs from "./FooterContactUs";
 import Footer from "./Footer";
 import { Helmet } from "react-helmet";
-import { lastValueOrThis, truncText } from "../../both/Functions";
+import { lastValueOrThis, truncText, isValidPhone, isValidEmail } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, GOOGLE_CAPTCHA_SITE_KEY } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
 import ImageEditable from "./editables/ImageEditable";
+import Recaptcha from 'react-google-invisible-recaptcha'
+import ParseClient, { handleParseError } from "../../both/Parse";
 
 class Contact extends Page {
   constructor(props){
     super(props)
+
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   componentDidMount() {
@@ -22,6 +26,76 @@ class Contact extends Page {
     })
 
     
+  }
+
+  handleChange = e => {
+    this.setState({[e.target.name]: e.target.value})
+  }
+
+  handleSubmit = e => {
+    e.preventDefault()
+    this.setState({sendingMail: true, errors: {}})
+    var name = this.state.name
+    var email = this.state.email
+    var phone = this.state.phone
+    var message = this.state.message
+    var hasError = false
+    var errorMessage = {}
+
+    if(!name || name.length == 0) {
+      errorMessage.name = "Please enter your name"; hasError = true
+    }
+
+    if(!email || email.length == 0) {
+        errorMessage.email = "Please enter your email address"; hasError = true
+
+    } else if(!isValidEmail(email)) {
+        errorMessage.email = "Please enter a valid email address"; hasError = true
+    }
+
+    if(phone && phone.length > 0 && !isValidPhone(phone)) {
+      errorMessage.phone = "Please enter a valid phone number"; hasError = true
+    }
+
+    if(!message || message.length == 0) {
+      errorMessage.message = "Please enter your message"; hasError = true
+    }
+
+    if(hasError) {
+        this.setState({errors: errorMessage, sendingMail: false})
+
+    } else {
+      this.recaptcha.execute()
+    }
+    //console.log("contactMail", "handleSubmit", this.state)
+  }
+
+  captchaResolveHandler = () => {
+    //console.log("contactMail", "captchaResolveHandler", this.recaptcha.getResponse())
+    ParseClient.Cloud.run('contactMail', {
+      botToken: this.recaptcha.getResponse(),
+      name: this.state.name,
+      email: this.state.email,
+      phone: this.state.phone,
+      message: this.state.message
+    })
+    .then(response => {
+        //console.log("contactMail", response)
+        if(response.success) {
+          alert("Message sent! We will get back to you through the provided email address.")
+
+        } else {
+          if(response.error) {
+            alert(response.error)
+          }
+        }
+        this.setState({sendingMail: false, errors: response.errors? response.errors : {}})
+    })
+    .catch(e => {
+        console.log("contactMail", "Error", e)
+        this.setState({sendingMail: false})
+        handleParseError(e)
+    })
   }
 
   render() {
@@ -57,7 +131,7 @@ class Contact extends Page {
           <meta name="twitter:site" content="@CSS" />
       </Helmet>
       <>
-        <Header  
+        <Header history={this.props.history} 
           edit={this.state.edit}
           user={this.state.user}
           userRole={this.state.userRole}
@@ -118,34 +192,50 @@ class Contact extends Page {
                   </div>
                 </div>
                 <div className="row">
-                  <form className="contact-form all col-12 w-margin-auto">
+                  <form className="contact-form all col-12 w-margin-auto" onSubmit={this.handleSubmit}>
                     <input
                       type="text"
-                      onchange="this.handleChange"
+                      onChange={this.handleChange}
                       name="name"
                       placeholder="NAME"
                     />
+                    {
+                    this.state.errors && this.state.errors.name? 
+                      <div className="invalid-feedback d-block">{this.state.errors.name}</div> : null
+                    }
                     <input
                       type="text"
-                      onchange="this.handleChange"
+                      onChange={this.handleChange}
                       name="email"
                       placeholder="YOUR EMAIL"
                     />
+                    {
+                    this.state.errors && this.state.errors.email? 
+                      <div className="invalid-feedback d-block">{this.state.errors.email}</div> : null
+                    }
                     <textarea
                       name="message"
+                      onChange={this.handleChange}
                       placeholder="DAY / EVENT / IDEAS..."
-                      defaultValue={""}
-                    />
+                      ></textarea>
+                    {
+                    this.state.errors && this.state.errors.message? 
+                      <div className="invalid-feedback d-block">{this.state.errors.message}</div> : null
+                    }
                     <button
                       type="submit"
                       style={{
                         marginTop: "25px",
                         alignSelf: "center"
                       }}
-                    >
-                      Send Message
+                      disabled={this.state.sendingMail}>
+                        {this.state.sendingMail? <i>Please wait...</i> : "Send Message"}
                     </button>
                   </form>
+                  <Recaptcha
+                    ref={ ref => this.recaptcha = ref }
+                    sitekey={GOOGLE_CAPTCHA_SITE_KEY}
+                    onResolved={ this.captchaResolveHandler } />
                 </div>
               </div>
               <div className="col-sm-5">

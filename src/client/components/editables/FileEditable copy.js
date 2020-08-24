@@ -88,10 +88,6 @@ class FileEditable extends Editable {
         this.updateFile()
     }
 
-    render(child) {
-        return super.render(child)
-    }
-
     updateFile() {
         if(this.Element && this.state.fileShades.length == 0 && !this.state.fileRequested) {
             this.setState({fileRequested: true})
@@ -164,41 +160,15 @@ class FileEditable extends Editable {
                         this.setState({loading: false})
                         element.relation("data").add(fileDataResponse)
                         if(this.Element) {
-                            if(!this.props.botKey) {
-                                //this.props.changeHandler(this.ElementIndex, fileDataResponse)
-                                element.save()
-        
-                            } else {
-                                this.getBotToken(token => {
-                                    //this.props.changeHandler(this.ElementIndex, fileDataResponse)
-                                    element.save(null, {context: {botToken: token}})
-                                    
-                                })
-                            }
+                            //this.props.changeHandler(this.ElementIndex, fileDataResponse)
+                            element.save()
             
                         } else {
-                            if(!this.props.botKey) {
-                                if(this.props.isPointer) {
-                                    this.props.addHandler(element, this.componentKey, true)
-    
-                                } else {
-                                    this.props.addHandler(element, this.getRelationName())
-                                }
-        
+                            if(this.props.isPointer) {
+                                this.props.addHandler(element, this.componentKey, true)
+
                             } else {
-                                console.log("botToken", "file", "hasElement", false, "hasBotKey", this.props.botKey)
-                                this.getBotToken(token => {
-                                    console.log("botToken", "file", "hasElement", false, "hasBotKey", true, "token", token)
-                                    if(this.props.isPointer) {
-                                        console.log("botToken", "file", "hasElement", false, "hasBotKey", false, "isPointer", true)
-                                        this.props.addHandler(element, this.componentKey, true, null, token)
-        
-                                    } else {
-                                        console.log("botToken", "file", "hasElement", false, "hasBotKey", false, "isPointer", false)
-                                        this.props.addHandler(element, this.getRelationName(), null, null, token)
-                                    }
-                                    
-                                })
+                                this.props.addHandler(element, this.getRelationName())
                             }
                         }
                     })

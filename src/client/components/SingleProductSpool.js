@@ -46,7 +46,7 @@ class SingleProductSpool extends Page {
   render() {
     return super.render(
       <div>
-        <Header 
+        <Header history={this.props.history}
           edit={this.state.edit}
           user={this.state.user}
           userRole={this.state.userRole}

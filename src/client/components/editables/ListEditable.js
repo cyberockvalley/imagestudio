@@ -8,6 +8,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Pagination from "./Pagination";
+const numberToWords = require('number-to-words')
+import EditableStateContext from "./EditableStateContext";
 
 const PAGINATION = {
     default: -1,
@@ -17,8 +19,9 @@ const PAGINATION = {
 }
 const ROWS_PER_PAGE = 15
 class ListEditable extends Editable {
-    constructor(props) {
-        super(props)
+    static contextType = EditableStateContext
+    constructor(props, context) {
+        super(props, context)
         this.pagination = new Pagination(this.props.rowsPerPage || ROWS_PER_PAGE)
         this.handleEditClick = this.handleEditClick.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -72,9 +75,9 @@ class ListEditable extends Editable {
         var items = this.state.items
         var page = new ParseClasses.Page()
         page.singleEdit = singleEdit
-
+        var index = items.length
         page.set("key", this.componentKey)
-        page.set("local_key", this.props.onBuildItemName(items.length, ""))
+        page.set("local_key", this.props.onBuildItemName(index, ""))
         page.set("title", meta && meta.title? meta.title : "")
         page.set("description", meta && meta.description? meta.description : "")
         page.set("slug", meta && meta.description? meta.description : "")
@@ -85,6 +88,17 @@ class ListEditable extends Editable {
         items.push(page)
         console.log("addNew")
         this.setState({items: items})
+        if(this.props.focusOnAdd) {
+            setTimeout(() => {
+                const element = document.getElementById(encodeURIComponent(this.props.onBuildItemName(numberToWords.toWords(index), "")));
+
+                window.scrollTo({
+                    behavior: element ? "smooth" : "auto",
+                    top: element ? window.scrollY + element.getBoundingClientRect().top : window.scrollY + 50
+                })
+                //console.log("ADD_NEW", element, element ? window.scrollY + element.getBoundingClientRect().top : 10)
+            }, 0)
+        }
     }
 
     handleAddClick = () => {
@@ -171,18 +185,19 @@ class ListEditable extends Editable {
     //pagination methods exposed through the privateRef props END
 
     getPages(paginationType, onLoaded, onFailed) {
-        console.log("List", 1)
         if(!this.state.pagesRequested) {
-            console.log("List", 2)
             this.setState({pagesRequested: true})
-            var pageQuery = getParseQuery(ParseClasses.Page)
-            pageQuery.equalTo("key", this.componentKey)
-            if(this.props.ascend_position) {
-                pageQuery.ascending("position_as_an_item")
-
-            } else if(this.props.descend_position) {
-                pageQuery.descending("position_as_an_item")
-                
+            var pageQuery = getParseQuery(this.props.itemClass || ParseClasses.Page)
+            
+            if(!this.props.itemClass || this.props.itemClass == ParseClasses.Page) {
+                pageQuery.equalTo("key", this.componentKey)
+                if(this.props.ascend_position) {
+                    pageQuery.ascending("position_as_an_item")
+    
+                } else if(this.props.descend_position) {
+                    pageQuery.descending("position_as_an_item")
+                    
+                }
             }
             
             if(this.props.ascend_create) {
@@ -269,7 +284,7 @@ class ListEditable extends Editable {
                     {
                         this.state.items && this.haveReadPermission()?
                         this.state.items.map((page, index) => {
-                            return this.props.onItem(page, index, this.props.onBuildItemName, (ref) => {
+                            return this.props.onItem(page, page.index || index, this.props.onBuildItemName, (ref) => {
                                 this.pageRefs.push(ref)
                             }, this.props.edit && this.haveWritePermission() || page.singleEdit)
                         })

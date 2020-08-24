@@ -93,7 +93,7 @@ class Blog extends Page {
           <meta name="twitter:site" content="@CSS" />
         </Helmet>
         <>
-          <Header  
+          <Header history={this.props.history} 
             edit={this.state.edit}
             user={this.state.user}
             userRole={this.state.userRole}

@@ -78,27 +78,24 @@ class HeaderVideoBanner extends React.Component {
 }
 
 const styles = {
-  inlineContainer: {/*
+  inlineContainer: {
     position: "relative",
     width: "100%",
     height: 0,
-    paddingBottom: "56.25%"*/
+    paddingBottom: "56.25%"
   },
-  iframe: {/*
+  iframe: {
     position: "absolute",
     top: 0,
     left: 0,
     height: "100%",
-    width: "100%"*/
-    position: "relative",
-    height: "90vh",
     width: "100%"
   },
   overlay: {
     position: "absolute",
     backgroundPosition: "center center",
     backgroundRepeat: "no-repeat",
-    height: "90vh",
+    height: "100%",
     width: "100%",
     backgroundColor: "#000",
     overflow: "hidden",

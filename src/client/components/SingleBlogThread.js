@@ -6,7 +6,7 @@ import Page from "./Page";
 import EditableStateContext from "./editables/EditableStateContext";
 import { lastValueOrThis, truncText, slugify } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES, ROWS_PER_LIST } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
 import PageReaction from "./widgets/PageReaction";
 import { Link } from "react-router-dom";

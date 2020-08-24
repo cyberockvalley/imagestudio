@@ -1,3 +1,5 @@
+import { isArray } from "jquery"
+
 export const isNullOrEmpty = value => {
     return !value || value.length == 0
 }
@@ -74,11 +76,6 @@ export const roundTo = (n, digits) => {
     return n;
 }
 
-export const isValidEmail = email => {
-    console.log("isValidEmail", email, /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
-    return email? /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) : false
-}
-
 export const isFloat = num => {
     return (num + "").includes(".") || (num + "").includes(",")
 }
@@ -114,4 +111,36 @@ export const slugify = (string, lang) => {
       .replace(/-+$/, '') // Trim - from end of text
 
     return slug
+}
+
+export const saveToLocalStorage = (key, value) => {
+    if(isClient) {
+        window.localStorage.setItem(key, isArray(value) || isObject(value)? JSON.stringify(value) : value)
+    }
+}
+
+export const getFromLocalStorage = (key, def) => {
+    var value = isClient()? window.localStorage.getItem(key) : def
+    if(!value && def) return def
+    return typeof value == "string" && (value.includes("{") || value.includes("["))? JSON.parse(value) : value
+}
+
+export const isValidEmail = email => {
+    console.log("isValidEmail", email, /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+    return email? /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) : false
+}
+
+export const isValidPhone = phone => {
+    if(!phone) return false
+    return true
+}
+
+export const escapeHtml = (unsafe) => {
+    if(!unsafe) return unsafe
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
 }

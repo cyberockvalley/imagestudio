@@ -67,7 +67,7 @@ class ItemWeddingStory extends Item {
                 emptyHeight="400px"
                 add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
               />
-              <div className="fade-box fade-in-down" style={{zIndex:1}}>
+              <div className="fade-box fade-in-down" style={{zIndex:1, top: this.context.edit? "20%" : "50%"}}>
                 <h2 className="story-title">
                   <TextEditable 
                     isString
@@ -78,6 +78,16 @@ class ItemWeddingStory extends Item {
                     {...this.state.textElementsProps}
                     edit={this.context.edit} 
                     is_input_text />
+                </h2>
+                <h2 className="story-title" style={{display: this.context.edit? "block" : "none"}}>
+                  <TextEditable 
+                    isString
+                    role={ROLES.mod}
+                    name="description"
+                    id={this.props.onBuildItemName(this.props.index, "description")}
+                    placeholder="Enter Story description..."
+                    {...this.state.textElementsProps}
+                    edit={this.context.edit} />
                 </h2>
               </div>
             </a>

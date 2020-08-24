@@ -8,7 +8,6 @@ import Reviews from './components/Reviews'
 import Videos from './components/Videos'
 import WeddingPhotos from './components/WeddingPhotos'
 import WeddingStories from './components/WeddingStories'
-import SingleWeddingStory from './components/SingleWeddingStory'
 import Shop from './components/Shop'
 import Movies from './components/Movies'
 import FileUpload from './components/admin/FileUpload'
@@ -18,6 +17,10 @@ import SingleStorySpool from './components/SingleStorySpool'
 import SingleProductSpool from './components/SingleProductSpool'
 import { PAGE_404 } from '../both/Constants'
 import Error404 from './components/errors/Error404'
+import Cart from './components/Cart'
+import LicenseInfo from './components/LicenseInfo'
+import Register from './components/admin/Register'
+import Login from './components/admin/Login'
 
 const $ = require('jquery')
 
@@ -81,6 +84,12 @@ class ComponentsRoutes extends React.Component {
         <Route exact path="/admin" 
           render={(propz) => <AdminHome {...propz} data={this.props.initialData} />}
         />
+        <Route exact path="/admin/up" 
+          render={(propz) => <Register {...propz} data={this.props.initialData} />}
+        />
+        <Route exact path="/admin/in" 
+          render={(propz) => <Login {...propz} data={this.props.initialData} />}
+        />
         <Route exact path="/upload-test" 
           render={(propz) => <FileUpload {...propz} data={this.props.initialData} />}
         />
@@ -89,6 +98,12 @@ class ComponentsRoutes extends React.Component {
         />
         <Route exact path="/product/:title" 
           render={(propz) => <SingleProductSpool {...propz} data={this.props.initialData} />}
+        />
+        <Route exact path={"/shop/cart"} 
+          render={(propz) => <Cart {...propz} data={this.props.initialData} />}
+        />
+        <Route exact path={"/shop/license"} 
+          render={(propz) => <LicenseInfo {...propz} data={this.props.initialData} />}
         />
         <Route exact path={PAGE_404} 
           render={(propz) => <Error404 {...propz} data={this.props.initialData} />}

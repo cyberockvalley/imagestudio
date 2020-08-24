@@ -15,7 +15,7 @@ import SecondaryApi from './SecondaryApi'
 var express = require("express")
 var path = require("path")
 var logger = require("morgan")
-var ParseServer = require("parse-server").ParseServer
+var ParseServer = require('parse-server').ParseServer
 var ParseDashboard = require("parse-dashboard")
 const dotenv = require("dotenv")
 const dotenvConfig = dotenv.config({path: "env/.env"})
@@ -94,18 +94,17 @@ var api = new ParseServer({
     // Set the mount path as it is in serverURL
     publicServerURL: `${BASE_URL + API_ROOT_DIR}`,
     // Your apps name. This will appear in the subject and body of the emails that are sent.
-    appName: 'Story Stretch',
+    appName: 'Image Studio',
     // The email adapter
     emailAdapter: {
         module: 'parse-server-dedicated-email-adapter',
         options: {
-            host: 'smtp.storystretch.com',
+            host: 'mail.imagestudio.com',
             port: 465,
-            secure: false,
+            secure: true,
             // The address that your emails come from
-            email: 'support@storystretch.com',
-            // Your domain from mailgun.com
-            password: 'storystretch.com'
+            email: 'noreply@imagestudio.com',
+            password: process.env.AUTO_MAIL_SERVER_PASSWORD
         }
     },
 

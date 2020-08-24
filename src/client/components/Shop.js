@@ -6,7 +6,7 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES, ROWS_PER_LIST } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
 import ListEditable from "./editables/ListEditable";
@@ -105,7 +105,7 @@ class Shop extends Page {
           <meta name="twitter:site" content="@CSS" />
         </Helmet>
         <>
-          <Header  
+          <Header history={this.props.history} 
             edit={this.state.edit}
             user={this.state.user}
             userRole={this.state.userRole}
@@ -132,7 +132,7 @@ class Shop extends Page {
                   readableName={lastValueOrThis(this.state.elementsAttributes.site_info_section_1_title, EMPTY_TEXT_ELEMENT_DATA).data + " Products"}
                   itemReadableName={lastValueOrThis(this.state.elementsAttributes.site_info_section_1_title, EMPTY_TEXT_ELEMENT_DATA).data + " Product"}
                   {...this.state.listElementsProps}
-                  rowsPerPage={5}
+                  rowsPerPage={ROWS_PER_LIST}
                   privateRef={this.setListRef}
                   onItem={this.buildProductsOneItem}
                   itemDraggable={true}

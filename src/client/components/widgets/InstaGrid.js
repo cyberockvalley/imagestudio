@@ -4,17 +4,17 @@ import ParseClient, { handleParseError } from '../../../both/Parse'
 class InstaGrid extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+            posts: []
+        }
     }
-
-    state = {
-        posts: []
-    }
+    
 
     componentDidMount() {
         ParseClient.Cloud.run('instagramPosts')
         .then(response => {
             console.log("instagramPosts", "Data", response)
-            this.setState({posts: response})
+            if(Array.isArray(response)) this.setState({posts: response})
         })
         .catch(e => {
             console.log("instagramPosts", "Error", e)

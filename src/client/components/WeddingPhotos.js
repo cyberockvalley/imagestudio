@@ -7,7 +7,7 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet";
 import { lastValueOrThis, truncText } from "../../both/Functions";
 import Page from "./Page";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES, ROWS_PER_LIST } from "../../both/Constants";
 import ListEditable from "./editables/ListEditable";
 import EditableStateContext from "./editables/EditableStateContext";
 import ItemWeddingPhoto from "./items/ItemWeddingPhoto";
@@ -97,7 +97,7 @@ class WeddingPhotos extends Page {
           <meta name="twitter:site" content="@CSS" />
         </Helmet>
         <>
-          <Header  
+          <Header history={this.props.history} 
             edit={this.state.edit}
             user={this.state.user}
             userRole={this.state.userRole}
@@ -119,7 +119,7 @@ class WeddingPhotos extends Page {
               readableName="Wedding photos"
               itemReadableName="Wedding photo"
               {...this.state.listElementsProps}
-              rowsPerPage={5}
+              rowsPerPage={ROWS_PER_LIST}
               privateRef={this.weddingPhotosRef}
               onItem={this.buildWeddingPhotosItem}
               itemDraggable={true}
