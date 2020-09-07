@@ -153,7 +153,7 @@ app.use(logger("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-app.use('/client', express.static(path.resolve(__dirname, '../client'), { maxAge: 31557600 }))
+app.use('/client', express.static(path.resolve(__dirname, '../client'), { maxAge: 31557600000 }))
 
 var api = new ParseServer({
     databaseURI: process.env.DATABASE_URL,

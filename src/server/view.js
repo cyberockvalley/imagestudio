@@ -15,12 +15,12 @@ export default (helmet, initialData, body) => {
             <link rel="apple-touch-icon-precomposed" href="/client/images/uploads/2019/07/favicon.ico" />
             <meta name="msapplication-TileImage" content="/client/images/uploads/2019/07/favicon.ico" />
 
-            <link rel='stylesheet' media='print' onload="this.media='all'" id='bootstrap-min-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?ver=5.4.1' type='text/css' media='all'/>
-            <link rel='stylesheet' media="print" onload="this.media='all'" id='font-awesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.1' type='text/css' media='all'/>
+            <link rel='stylesheet' media='print' onload="this.media='all'" id='bootstrap-min-css' href='/client/css/vendor/bootstrap.min.css' type='text/css' media='all'/>
+            <link rel='stylesheet' media="print" onload="this.media='all'" id='font-awesome-css' href='/client/css/vendor/font-awesome.min.css' type='text/css' media='all'/>
             <link rel="stylesheet" media="print" onload="this.media='all'" href="/client/css/styles.min.css">
             <noscript>
-                <link rel='stylesheet' id='bootstrap-min-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?ver=5.4.1' type='text/css' media='all'/>
-                <link rel='stylesheet' id='font-awesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.1' type='text/css' media='all'/>
+                <link rel='stylesheet' id='bootstrap-min-css' href='/client/css/vendor/bootstrap.min.css' type='text/css' media='all'/>
+                <link rel='stylesheet' id='font-awesome-css' href='/client/css/vendor/font-awesome.min.css' type='text/css' media='all'/>
                 <link rel="stylesheet" href="/client/css/styles.min.css">
             </noscript>
             ${helmet.title.toString()}
@@ -39,14 +39,10 @@ export default (helmet, initialData, body) => {
             </div>
             <script src="/client/vendors~index.js"></script>
             <script src="/client/index.js"></script>
-            <!-- Load stylesheets onload -->
-            <script type="text/javascript">
-            </script>
             
-            
-            <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js?ver=3.4.0'></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-            <script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js?ver=4.3.11'></script>
+            <script src="/client/js/popper.min.js"></script>
+            <script type='text/javascript' src='/client/js/bootstrap.min.js'></script>
+
             <!--<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
             <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
             <script>
