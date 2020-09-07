@@ -13,7 +13,7 @@ import EditableStateContext from "./editables/EditableStateContext";
 import ItemWeddingStory from "./items/ItemWeddingStory";
 
 
-import '../../static/css/loading.css'
+import '../../static/css/loading.min.css'
 
 class WeddingStories extends Page {
   static contextType = EditableStateContext

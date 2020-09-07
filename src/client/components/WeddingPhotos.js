@@ -12,8 +12,8 @@ import ListEditable from "./editables/ListEditable";
 import EditableStateContext from "./editables/EditableStateContext";
 import ItemWeddingPhoto from "./items/ItemWeddingPhoto";
 
-import '../../static/css/mansory.css'
-import '../../static/css/loading.css'
+import '../../static/css/mansory.min.css'
+import '../../static/css/loading.min.css'
 
 class WeddingPhotos extends Page {
   static contextType = EditableStateContext

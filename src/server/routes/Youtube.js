@@ -24,7 +24,7 @@ Youtube.get("/:video_id/:filename", (req, res) => {
         } else {
             var url = `http://www.youtube.com/watch?v=${videoId}`
             //console.log('YT:', url, req.query.itag)
-            res.set("max-age", "31557600000")
+            res.set("Cache-Control", "public, max-age=31557600")
             ytdl(url).pipe(res)
         }
     }

@@ -2,7 +2,7 @@ import React from "react";
 import { EditorState, RichUtils, convertFromHTML, ContentState, convertFromRaw, convertToRaw } from "draft-js";
 let Editor
 import { isClient } from "../../../../both/Functions"
-import '../../../../static/css/react-draft.css'
+import '../../../../static/css/react-draft.min.css'
 import WordProcessorSettings from "./WordProcessorSettings";
 import ImageGrid from "./buttons/imagegrid/index";
 import Language from "./buttons/language";

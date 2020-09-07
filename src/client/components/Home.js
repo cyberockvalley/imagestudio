@@ -18,8 +18,8 @@ import ItemWeddingPhoto from "./items/ItemWeddingPhoto";
 import InstaGrid from "./widgets/InstaGrid";
 import ImageEditable from "./editables/ImageEditable";
 
-import '../../static/css/mansory.css'
-import '../../static/css/loading.css'
+import '../../static/css/mansory.min.css'
+import '../../static/css/loading.min.css'
 
 const jQuery = require('jquery')
 
