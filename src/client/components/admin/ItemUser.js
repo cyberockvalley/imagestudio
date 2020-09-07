@@ -57,7 +57,7 @@ class ItemUser extends React.Component {
     }
 
     componentDidMount() {
-        console.log("UserPage", this.props.page, JSON.stringify(this.props.page))
+        //console.log("UserPage", this.props.page, JSON.stringify(this.props.page))
     }
 
     getDate = () => {

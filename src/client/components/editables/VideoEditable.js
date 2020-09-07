@@ -40,7 +40,7 @@ class VideoEditable extends FileEditable {
     }
 
     cancelEdit = () => {
-        console.log("cancelEdit", this.componentKey, this.state)
+        //console.log("cancelEdit", this.componentKey, this.state)
         this.setState({
             data: "",
             tags: ""
@@ -75,7 +75,7 @@ class VideoEditable extends FileEditable {
 
     render() {
         this.init()
-        console.log("VideoEditable", this.state)
+        //console.log("VideoEditable", this.state)
         return (
             <FileChangerView
                 key={this.props.key}

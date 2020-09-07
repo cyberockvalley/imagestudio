@@ -2,7 +2,7 @@ import React from "react";
 import EditableStateContext from "../editables/EditableStateContext";
 import ImageEditable from "../editables/ImageEditable";
 import TextEditable from "../editables/TextEditable";
-import { PAGE_404, ROLES } from "../../../both/Constants";
+import { PAGE_404, ROLES, IMAGE_PICTURE_SOURCE_EXTENSIONS, IMAGE_PROCCESSORS } from "../../../both/Constants";
 import { Link } from "react-router-dom";
 import { truncText } from "../../../both/Functions";
 import Item from "./Item";
@@ -91,6 +91,17 @@ class ItemBlogPost extends Item {
                 emptyWidth="100%"
                 emptyHeight="400px"
                 add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
+                display={{
+                  image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
+                  default: {queries: `w=300`, proccessors: IMAGE_PROCCESSORS},
+                  manifests: [
+                    {at: 300, queries: `w=300`, proccessors: IMAGE_PROCCESSORS},
+                    {at: 400, queries: `w=400`, proccessors: IMAGE_PROCCESSORS},
+                    {at: 500, queries: `w=500`, proccessors: IMAGE_PROCCESSORS},
+                    {at: 600, queries: `w=600`, proccessors: IMAGE_PROCCESSORS},
+                    {at: 700, queries: `w=700`, proccessors: IMAGE_PROCCESSORS}
+                  ]
+                }}
               />
             </a>
           </div>

@@ -10,12 +10,19 @@ export default (helmet, initialData, body) => {
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta http-equiv="content-type" content="text/html">
             <meta name="theme-color" content="#d6a047" />
-            <link rel="icon" href="/client/favicon.ico" type="image/x-icon">
+            <link rel="icon" href="/client/images/uploads/2019/07/favicon.ico" sizes="32x32" />
+            <link rel="icon" href="/client/images/uploads/2019/07/favicon.ico" sizes="192x192" />
+            <link rel="apple-touch-icon-precomposed" href="/client/images/uploads/2019/07/favicon.ico" />
+            <meta name="msapplication-TileImage" content="/client/images/uploads/2019/07/favicon.ico" />
 
-            <link rel='stylesheet' id='bootstrap-min-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?ver=5.4.1' type='text/css' media='all'/>
-            <link rel='stylesheet' id='font-awesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.1' type='text/css' media='all'/>
-            
-            <link rel="stylesheet" href="/client/css/styles.css">
+            <link rel='stylesheet' media='print' onload="this.media='all'" id='bootstrap-min-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?ver=5.4.1' type='text/css' media='all'/>
+            <link rel='stylesheet' media="print" onload="this.media='all'" id='font-awesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.1' type='text/css' media='all'/>
+            <link rel="stylesheet" media="print" onload="this.media='all'" href="/client/css/styles.css">
+            <noscript>
+                <link rel='stylesheet' id='bootstrap-min-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?ver=5.4.1' type='text/css' media='all'/>
+                <link rel='stylesheet' id='font-awesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.1' type='text/css' media='all'/>
+                <link rel="stylesheet" href="/client/css/styles.css">
+            </noscript>
             ${helmet.title.toString()}
             ${helmet.meta.toString()}
             ${helmet.link.toString()}
@@ -45,6 +52,7 @@ export default (helmet, initialData, body) => {
             <script>
                 //AOS.init()
             </script>-->
+            <script src="/client/js/lazysizes.min.js" async=""></script>
         </body>
     </html>
     `

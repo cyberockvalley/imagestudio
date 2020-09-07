@@ -9,8 +9,8 @@ import { GOOGLE_CAPTCHA_SITE_KEY } from "../../both/Constants";
 
 class HomeFooterIntro extends React.Component {
   static contextType = EditableStateContext
-  constructor(props) {
-    super(props)
+  constructor(props, context) {
+    super(props, context)
     this.state = {}
 
     this.handleChange = this.handleChange.bind(this)
@@ -81,7 +81,7 @@ class HomeFooterIntro extends React.Component {
           this.setState({sendingMail: false, errors: response.errors? response.errors : {}})
       })
       .catch(e => {
-          console.log("contactMail", "Error", e)
+          //("contactMail", "Error", e)
           this.setState({sendingMail: false})
           handleParseError(e)
       })
@@ -118,7 +118,7 @@ class HomeFooterIntro extends React.Component {
                       {...this.props.textEditableProps} />
             </div>
             <div className="contact-info">
-              <a href={"mailto:" + (lastValueOrThis(this.context, "site_info_email", EMPTY_TEXT_ELEMENT_DATA).data)}>
+              <a href={"mailtoss:" + (lastValueOrThis(this.context, "site_info_email", EMPTY_TEXT_ELEMENT_DATA).data)}>
                 <span>
                   <TextEditable 
                       name={"site_info_email"}

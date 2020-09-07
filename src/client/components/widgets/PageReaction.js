@@ -25,17 +25,17 @@ class PageReaction extends React.Component {
     }
 
     resolveHandler = () => {
-        console.log("pageReactionUpdate", this.props.info, this.recaptcha.getResponse())
+        //console.log("pageReactionUpdate", this.props.info, this.recaptcha.getResponse())
         ParseClient.Cloud.run('pageReactionUpdate', {
             bot_check_token: this.recaptcha.getResponse(),
             info: this.props.info,
             data: this.props.onData? this.props.onData : null
         })
         .then(response => {
-            console.log("pageReactionUpdate", "Data", response)
+            //console.log("pageReactionUpdate", "Data", response)
         })
         .catch(e => {
-            console.log("pageReactionUpdate", "Error", e)
+            //console.log("pageReactionUpdate", "Error", e)
             handleParseError(e)
         })
     }

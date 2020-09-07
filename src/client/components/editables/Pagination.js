@@ -17,7 +17,8 @@ class Pagination {
     }
 
     reset = () => {
-        this.state = {...REFACTORY}
+        this.state = JSON.parse(JSON.stringify(REFACTORY))
+        //console.log("RESET", "RR", this.state)
     }
 
     
@@ -74,7 +75,7 @@ class Pagination {
             }
             this.state.page += 1
         }
-        console.log("PAGINATION", "update", this.state.page, this.state.lastResultCount, this.state.lastResultExpectedCount - this.state.limit)
+        //console.log("PAGINATION", "update", this.state.page, this.state.lastResultCount, this.state.lastResultExpectedCount - this.state.limit)
         return list
     }
 

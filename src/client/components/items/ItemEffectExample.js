@@ -3,6 +3,7 @@ import { lastValueOrThis, isNullOrEmpty, roundTo } from "../../../both/Functions
 import ImageEditable from "../editables/ImageEditable";
 import EditableStateContext from "../editables/EditableStateContext";
 import Item from "./Item";
+import { IMAGE_PICTURE_SOURCE_EXTENSIONS, IMAGE_PROCCESSORS } from "../../../both/Constants";
 
 class ItemEffectExample extends Item {
   static contextType = EditableStateContext
@@ -45,10 +46,10 @@ class ItemEffectExample extends Item {
     var offsetX = container.offsetLeft
     var width = container.clientWidth
     var sliderPercentage = roundTo(((xPos - offsetX) / width) * 100, 1)
-    console.log("handleMouseDown", "xPos", xPos)
-    console.log("handleMouseDown", "offsetX", offsetX)
-    console.log("handleMouseDown", "clientWidth", width)
-    console.log("handleMouseDown", "sliderPercentage", sliderPercentage)
+    //console.log("handleMouseDown", "xPos", xPos)
+    //console.log("handleMouseDown", "offsetX", offsetX)
+    //console.log("handleMouseDown", "clientWidth", width)
+    //console.log("handleMouseDown", "sliderPercentage", sliderPercentage)
     if(sliderPercentage < 0) {
       sliderPercentage = 0
 
@@ -90,7 +91,17 @@ class ItemEffectExample extends Item {
           }}
           emptyWidth="100%"
           emptyHeight="100%"
-          add_overlay={!this.state.page || !this.state.page.id || this.context.edit} />
+          add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
+          display={{
+            image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
+            default: {queries: `w=300`, proccessors: IMAGE_PROCCESSORS},
+            manifests: [
+              {at: 300, queries: `w=300`, proccessors: IMAGE_PROCCESSORS},
+              {at: 576, queries: `w=576`, proccessors: IMAGE_PROCCESSORS},
+              {at: 768, queries: `w=768`, proccessors: IMAGE_PROCCESSORS},
+              {at: 992, queries: `w=992`, proccessors: IMAGE_PROCCESSORS}
+            ]
+          }} />
         <ImageEditable 
           name="photo2"
           id={this.props.onBuildItemName(this.props.index, "photo2")}
@@ -108,7 +119,17 @@ class ItemEffectExample extends Item {
           }}
           emptyWidth="100%"
           emptyHeight="100%"
-          add_overlay={!this.state.page || !this.state.page.id || this.context.edit} />
+          add_overlay={!this.state.page || !this.state.page.id || this.context.edit} 
+          display={{
+            image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
+            default: {queries: `w=300`, proccessors: IMAGE_PROCCESSORS},
+            manifests: [
+              {at: 300, queries: `w=300`, proccessors: IMAGE_PROCCESSORS},
+              {at: 576, queries: `w=576`, proccessors: IMAGE_PROCCESSORS},
+              {at: 768, queries: `w=768`, proccessors: IMAGE_PROCCESSORS},
+              {at: 992, queries: `w=992`, proccessors: IMAGE_PROCCESSORS}
+            ]
+          }}/>
         <div
           className="slider"
           style={{

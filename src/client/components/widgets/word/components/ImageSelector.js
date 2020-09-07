@@ -112,7 +112,7 @@ class ImageSelector extends React.Component {
                 })
             })
             .catch(e => {
-                console.log("getImageFromPage", "error2", e)
+                //console.log("getImageFromPage", "error2", e)
                 this.setState({ 
                     insert_url_has_error: true,
                     url_loading: false
@@ -140,7 +140,7 @@ class ImageSelector extends React.Component {
     componentDidMount() {
         this.setState({accept: this.props.accept || DEFAULT_MIMES})
         var that = this
-        console.log("ImageSelector", $("#image-selector"))
+        //console.log("ImageSelector", $("#image-selector"))
         $("#image-selector").on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -301,17 +301,17 @@ class ImageSelector extends React.Component {
                                         clickHandler={select => {
                                             var images = this.state.selected_upload_images
                                             if(select) {
-                                                console.log("CheckTest", "BeforeInsert", "fileUpload", this.state.selected_upload_images)
+                                                //console.log("CheckTest", "BeforeInsert", "fileUpload", this.state.selected_upload_images)
                                                 images.push(url)
                                                 this.setState({selected_upload_images: images})
-                                                console.log("CheckTest", "AfterInsert", "fileUpload", this.state.selected_upload_images)
+                                                //console.log("CheckTest", "AfterInsert", "fileUpload", this.state.selected_upload_images)
 
                                             } else {
-                                                console.log("CheckTest", "BeforeRemove", "fileUpload", this.state.selected_upload_images)
+                                                //console.log("CheckTest", "BeforeRemove", "fileUpload", this.state.selected_upload_images)
                                                 var index = images.indexOf(url)
                                                 images.splice(index, 1)
                                                 this.setState({selected_upload_images: images})
-                                                console.log("CheckTest", "AfterRemove", "fileUpload", this.state.selected_upload_images)
+                                                //console.log("CheckTest", "AfterRemove", "fileUpload", this.state.selected_upload_images)
                                             }
                                         }} />
                                 })
@@ -402,17 +402,17 @@ class ImageSelector extends React.Component {
                                         clickHandler={select => {
                                             var images = this.state.selected_url_images
                                             if(select) {
-                                                console.log("CheckTest", "BeforeInsert", "urlInsert", this.state.selected_url_images)
+                                                //console.log("CheckTest", "BeforeInsert", "urlInsert", this.state.selected_url_images)
                                                 images.push(image.url)
                                                 this.setState({selected_url_images: images})
-                                                console.log("CheckTest", "AfterInsert", "urlInsert", this.state.selected_url_images)
+                                                //console.log("CheckTest", "AfterInsert", "urlInsert", this.state.selected_url_images)
 
                                             } else {
-                                                console.log("CheckTest", "BeforeRemove", "urlInsert", this.state.selected_url_images)
+                                                //console.log("CheckTest", "BeforeRemove", "urlInsert", this.state.selected_url_images)
                                                 var index = images.indexOf(image.url)
                                                 images.splice(index, 1)
                                                 this.setState({selected_url_images: images})
-                                                console.log("CheckTest", "AfterRemove", "urlInsert", this.state.selected_url_images)
+                                                //console.log("CheckTest", "AfterRemove", "urlInsert", this.state.selected_url_images)
                                             }
                                         }} />
                                 })

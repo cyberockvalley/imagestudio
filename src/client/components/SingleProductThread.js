@@ -6,7 +6,7 @@ import Page from "./Page";
 import EditableStateContext from "./editables/EditableStateContext";
 import { lastValueOrThis, truncText, slugify, isClient, roundTo } from "../../both/Functions";
 import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
-import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES, GOOGLE_CAPTCHA_SITE_KEY, ROWS_PER_LIST } from "../../both/Constants";
+import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES, GOOGLE_CAPTCHA_SITE_KEY, ROWS_PER_LIST, IMAGE_PICTURE_SOURCE_EXTENSIONS, IMAGE_PROCCESSORS } from "../../both/Constants";
 import TextEditable from "./editables/TextEditable";
 import PageReaction from "./widgets/PageReaction";
 import { Link } from "react-router-dom";
@@ -36,29 +36,29 @@ class SingleProductThread extends Page {
   }
 
   onPageTextsDataLoaded = () => {
-    console.log("inCart", "onPageDataLoaded", 1)
+    //console.log("inCart", "onPageDataLoaded", 1)
     this.initCart()
     this.setState({inCart: this.inCart()})
-    console.log("inCart", "onPageDataLoaded", 2)
+    //console.log("inCart", "onPageDataLoaded", 2)
   }
 
   componentDidMount() {
     this.setState({likes: 0, botKey: GOOGLE_CAPTCHA_SITE_KEY})
     if(this.props.threadAdder) this.props.threadAdder(this)
-    console.log("SingleProductThread", this.props.match.params.title, this.props)
+    //console.log("SingleProductThread", this.props.match.params.title, this.props)
     this.loadPage([SHOP_SECTION_ONE_KEY, SHOP_SECTION_TWO_KEY], {
       slug: this.props.match.params.title
     })
 
     ParseClient.Cloud.run('getLikes', {key: `anonymous_comments_${this.getSlug()}`})
     .then(response => {
-        console.log("getLikes", "Data", response)
+        //console.log("getLikes", "Data", response)
         this.setState({
           likes: response.count
         })
     })
     .catch(e => {
-        console.log("getLikes", "Error", e)
+        //console.log("getLikes", "Error", e)
         handleParseError(e)
     })
   }
@@ -114,7 +114,7 @@ class SingleProductThread extends Page {
   }
 
   toggleIframeModal = () => {
-    console.log("toggleIframeModal", !this.state.toggleIframeModal)
+    //console.log("toggleIframeModal", !this.state.toggleIframeModal)
     this.setState({toggleIframeModal: !this.state.toggleIframeModal})
   }
   
@@ -174,7 +174,7 @@ class SingleProductThread extends Page {
 
   getPrice = (license) => {
     if(this.state.elementsAttributes) {
-      console.log("getPrice", this.state.elementsAttributes)
+      //console.log("getPrice", this.state.elementsAttributes)
       if(license == LICENSES.personal) return parseInt(this.state.elementsAttributes.price? this.state.elementsAttributes.price.data : 0)
       if(license == LICENSES.commercial) return parseInt(this.state.elementsAttributes.price_commercial? this.state.elementsAttributes.price_commercial.data : 0)
     }
@@ -201,7 +201,7 @@ class SingleProductThread extends Page {
 
   inCart = () => {
     var cart = getCart()
-    console.log("inCart", cart && cart.hasOwnProperty(this.getId()), cart, this.getId())
+    //console.log("inCart", cart && cart.hasOwnProperty(this.getId()), cart, this.getId())
     return cart && cart.hasOwnProperty(this.getId())
   }
 
@@ -224,7 +224,7 @@ class SingleProductThread extends Page {
   handleCheckBoxChange = e => {
     var product = this.state.product? this.state.product : this.getProduct()
     var type = parseInt(e.target.getAttribute("dataType"))
-    console.log("DATA_TYPE", type)
+    //console.log("DATA_TYPE", type)
     if(type == product.license_type) return
     product.license_type = type
     product.price = this.getPrice(type)
@@ -310,6 +310,7 @@ class SingleProductThread extends Page {
           <meta property="og:url" content={this.state.page? `${SEO_BASE_URL + this.state.page.get("slug")}` : ""} />
           <meta property="og:site_name" content={this.props.spoolAttributes? this.props.spoolAttributes.site_info_site_name_spaced : ""} />
           <meta property="article:modified_time" content={this.state.page? this.state.page.get("updatedAt") : ""} />
+          {/*
           <meta property="article:section" content="Photography" />
           <meta property="article:tag" content="sharp" />
           <meta property="article:tag" content="nice" />
@@ -317,7 +318,7 @@ class SingleProductThread extends Page {
           <meta name="twitter:card" content="summary" />
           <meta name="twitter:image" content="https://i1.wp.com/css-tricks.com/wp-content/uploads/2019/10/react-helmet.png?ssl=1" />
           <meta name="twitter:creator" content="@CSS" />
-          <meta name="twitter:site" content="@CSS" />
+          <meta name="twitter:site" content="@CSS" />*/}
         </Helmet>
         {/*
           <HeaderImageBanner 
@@ -391,6 +392,15 @@ class SingleProductThread extends Page {
                       left: 0
                     }}
                     add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
+                    display={{
+                      image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
+                      default: {queries: `w=300`, proccessors: IMAGE_PROCCESSORS},
+                      manifests: [
+                        {at: 300, queries: `w=300`, proccessors: IMAGE_PROCCESSORS},
+                        {at: 576, queries: `w=576`, proccessors: IMAGE_PROCCESSORS},
+                        {at: 768, queries: `w=768`, proccessors: IMAGE_PROCCESSORS}
+                      ]
+                    }}
                   />
             </div>
             <div className="col-12 col-md-4 product-details-and-actions">

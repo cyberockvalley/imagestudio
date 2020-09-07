@@ -19,7 +19,7 @@ class HeaderVideoBanner extends React.Component {
         }}
       >
         <TextEditable 
-          isIframe
+          isYoutube
           iframeOptions={{
             showIframe: !this.context.edit,
             iframeStyle: IFRAME_STYLES.inline,
@@ -33,6 +33,7 @@ class HeaderVideoBanner extends React.Component {
             loop: true,
             mute: true,
             containerStyle: styles.inlineContainer,
+            containerClass: "yt-hide-widgets",
             style: styles.iframe
           }}
           id="introIframeMobile"

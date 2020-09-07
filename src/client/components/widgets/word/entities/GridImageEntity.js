@@ -8,6 +8,9 @@ import { getImageSelectorProps, imageModalContainerStyles } from '../buttons/ima
 import ImageEditBar from '../components/ImageEditBar';
 import WordProcessorSettings from '../WordProcessorSettings';
 import ModalView from '../../ModalView';
+import { buildFileTags, getSrc } from '../../../editables/utils/imagefunc';
+import { IMAGE_PICTURE_SOURCE_EXTENSIONS, IMAGE_PROCCESSORS } from '../../../../../both/Constants';
+import { getSize } from './functions';
 
 export const gridImageStrategy = (contentBlock, callback, contentState) => {
     contentBlock.findEntityRanges(character => {
@@ -94,7 +97,7 @@ class GridImageEntity extends React.Component {
         this.state.openModal = true
         this.setState({entityData: entityData, show_architect: true, show_selector: true})
         this.getData().config.updateReadOnly(true)
-        console.log("ImageAdd", this.state.show_selector, this.state.show_architect, this.state.openModal)
+        //console.log("ImageAdd", this.state.show_selector, this.state.show_architect, this.state.openModal)
     }
 
     handleImageSubmit = images => {
@@ -107,15 +110,15 @@ class GridImageEntity extends React.Component {
     }
 
     handleConfigurationChange = entityData => {
-        console.log("configChange", entityData)
+        //console.log("configChange", entityData)
         this.handleModalClose()
         this.update(entityData)
     }
 
     getData = () => {
         const { entityKey, contentState, config } = this.props; 
-        console.log("GIM", config)
-        console.log("GIM", 2, this.props)
+        //console.log("GIM", config)
+        //console.log("GIM", 2, this.props)
 
         return {
             entityKey: entityKey,
@@ -123,6 +126,21 @@ class GridImageEntity extends React.Component {
             contentState: contentState,
             config: config
         }
+    }
+
+    getImageDisplay = (image, containerWidth) => {
+        const display = {
+            image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
+            default: {queries: `w=300`, proccessors: IMAGE_PROCCESSORS},
+            manifests: [
+              {at: 300, queries: `w=${getSize(300, containerWidth, entity.data.width, image.autoWidth, image.width, image.widthType)}`, proccessors: IMAGE_PROCCESSORS},
+              {at: 576, queries: `w=${getSize(576, containerWidth, image.autoWidth, image.width, image.widthType)}`, proccessors: IMAGE_PROCCESSORS},
+              {at: 768, queries: `w=${getSize(768, containerWidth, image.autoWidth, image.width, image.widthType)}`, proccessors: IMAGE_PROCCESSORS},
+              {at: 992, queries: `w=${getSize(992, containerWidth, image.autoWidth, image.width, image.widthType)}`, proccessors: IMAGE_PROCCESSORS},
+              {at: 1200, queries: `w=${getSize(1200, containerWidth, image.autoWidth, image.width, image.widthType)}`, proccessors: IMAGE_PROCCESSORS}
+            ]
+        }
+        return display
     }
 
     render() {
@@ -133,7 +151,7 @@ class GridImageEntity extends React.Component {
             alt,
             images
         } = data.entityData
-        console.log("Arc3", data.entityData)
+        //console.log("Arc3", data.entityData)
         const {
             translations,
             onMediaLibrary,
@@ -167,7 +185,17 @@ class GridImageEntity extends React.Component {
                                         paddingRight: gridItemsSpacing + "px",
                                         paddingBottom: gridItemsSpacing + "px"
                                     }}>
-                                        <img src={image.src} alt={alt} style={{width: "100%", height: "100%"}} />
+                                        <picture style={{width: "100%", height: "100%"}}>
+                                        {
+                                            buildFileTags(image.src, this.getImageDisplay(image, width)).map((value, index) => {
+                                                return value.tag == "source"? 
+                                                <source key={index} data-srcset={value.srcSet} />
+                                                :
+                                                <img alt={alt} className="lazyload" key={index} data-srcset={value.srcSet} data-src={getSrc(image.src, this.getImageDisplay(image).default)} style={{width: "100%", height: "100%"}} />
+                                            })
+                                        }
+                                        <div style={{position: "relative"}}></div>
+                                        </picture>
                                     </div>
                                 ))
                             }

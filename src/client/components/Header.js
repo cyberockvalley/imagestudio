@@ -16,11 +16,11 @@ class Header extends React.Component {
   
   isLogin = () => {
     if(this.props.user) {
-      console.log("logCheck", "isLogIn", this.props.user)
+      //console.log("logCheck", "isLogIn", this.props.user)
       return true
 
     } else {// && this.powerRoles.includes(this.props.userRole)
-      console.log("logCheck", "isLogOut", this.props.user)
+      //console.log("logCheck", "isLogOut", this.props.user)
       return false
     }
   }
@@ -33,8 +33,8 @@ class Header extends React.Component {
   }
 
   componentDidMount() {
-    console.log("HEADER", 1)
-    console.log("HEADER", this.props.textEditableProps)
+    //console.log("HEADER", 1)
+    //console.log("HEADER", this.props.textEditableProps)
     this.setState({mounted: true})
   }
 

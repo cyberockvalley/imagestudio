@@ -101,4 +101,7 @@ const clientConfig = {
   }
 }
 
-module.exports = [serverConfig, clientConfig]
+module.exports = function(api) {
+  if(api) api.cache(true);
+  return [serverConfig, clientConfig]
+}

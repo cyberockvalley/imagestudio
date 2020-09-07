@@ -63,7 +63,7 @@ class ResizableImage extends React.Component {
     }
 
     setAuto = e => {
-        console.log("setAuto", e.target.checked)
+        //console.log("setAuto", e.target.checked)
         this.setState({[e.target.name]: e.target.checked})
     }
 

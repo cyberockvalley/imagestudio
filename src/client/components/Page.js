@@ -96,7 +96,7 @@ class Page extends Markup {
     }
 
     getElementGroup = element => {
-        console.log("getElementGroup", element.className)
+        //console.log("getElementGroup", element.className)
         switch(element.className) {
             case "TextElement":
                 return this.state.textElementsProps
@@ -114,7 +114,7 @@ class Page extends Markup {
     }
 
     updateElementGroup = (element, props) => {
-        console.log("updateElementGroup", element.className)
+        //console.log("updateElementGroup", element.className)
         switch(element.className) {
             case "TextElement":
                 this.setState({textElementsProps: props})
@@ -132,7 +132,7 @@ class Page extends Markup {
                 this.setState({textElementsProps: props})
                 break
             default:
-                console.log("updateElementGroup", "could not detect element group", element)
+                //console.log("updateElementGroup", "could not detect element group", element)
                 return
         }
     }
@@ -166,7 +166,7 @@ class Page extends Markup {
                 if(!page.get("title") && page.get("title").length == 0) page.set("title", "Empty")
                 if(this.props.botKey || this.state.botKey) {
                     this.getBotToken(token => {
-                        console.log("PageTok", token, this.props.getParentId? this.props.getParentId() : null)
+                        //console.log("PageTok", token, this.props.getParentId? this.props.getParentId() : null)
                         page.save(null, {context: {botToken: token, parentId: this.props.getParentId? this.props.getParentId() : null}})
                         
                     })
@@ -195,7 +195,7 @@ class Page extends Markup {
                     if(!page.get("title") && page.get("title").length == 0) page.set("title", "Empty")
                     if(this.props.botKey || this.state.botKey) {
                         this.getBotToken(token => {
-                            console.log("PageTok", token, this.props.getParentId? this.props.getParentId() : null)
+                            //console.log("PageTok", token, this.props.getParentId? this.props.getParentId() : null)
                             page.save(null, {context: {botToken: token, parentId: this.props.getParentId? this.props.getParentId() : null}})
                             
                         })
@@ -207,7 +207,7 @@ class Page extends Markup {
 
             })
             .catch(e => {
-                console.log("addElement", "saveNewError", element.get("key"), e)
+                //console.log("addElement", "saveNewError", element.get("key"), e)
                 handleParseError(e)
 
             })
@@ -269,7 +269,7 @@ class Page extends Markup {
 
     getPage = (key, options) => {
         if(this.state.page) {
-            console.log("getPage", key, this.state.page)
+            //console.log("getPage", key, this.state.page)
             return new Promise((resolve, reject) => {
                 resolve(null)
             })
@@ -393,10 +393,10 @@ class Page extends Markup {
         })
     }
 
-    loadImages = (options) => {console.log("ListItem", "loadImages")
+    loadImages = (options) => {//console.log("ListItem", "loadImages")
         var query = this.state.page.relation("image_elements").query()
         if(options && options.image_keys) {
-            console.log("ListItem", "loadImages", "image_keys", options.image_keys)
+            //console.log("ListItem", "loadImages", "image_keys", options.image_keys)
             query.containedIn("key", options.image_keys)
         }
         if(options && options.image_limit) {
@@ -405,13 +405,13 @@ class Page extends Markup {
         query.find()
         .then(list => {
             if(list.length > 0) {
-                console.log("addElementH", "FeaturedImage", 3, list[0], JSON.stringify(list[0]))
+                //console.log("addElementH", "FeaturedImage", 3, list[0], JSON.stringify(list[0]))
             }
-            console.log("ListItem", "loadImages", "find", list)
+            //console.log("ListItem", "loadImages", "find", list)
             var props = this.state.imageElementsProps
             props.elements = props.elements.concat(list)
             this.setState({imageElementsProps: props})
-            console.log("ListItem", "loadImages", "find", this.state.imageElementsProps)
+            //console.log("ListItem", "loadImages", "find", this.state.imageElementsProps)
             this.onPageFilesDataLoaded()
 
         })
@@ -447,14 +447,14 @@ class Page extends Markup {
             var savablesIds = []
             this.editors.forEach(element => {
                 if(element.props.isString || element.props.isPointer) {
-                    console.log("addElementH", 0, element.componentKey, savablesIds)
+                    //console.log("addElementH", 0, element.componentKey, savablesIds)
                 }
                 //to avoid elments with the same key, which will and should definetly contain the same
                 // value from updating the same field with the same value on the database multiple times, 
                 // a check is necessary to distinctively update the elements
                 if(!savablesIds.includes(element.componentKey)) {
                     if(element.props.isString || element.props.isPointer) {
-                        console.log("addElementH", 2, element.componentKey, savablesIds)
+                        //console.log("addElementH", 2, element.componentKey, savablesIds)
                     }
                     savablesIds.push(element.componentKey)
                     if(element.detailsHasChanged()) {
@@ -514,7 +514,7 @@ class Page extends Markup {
                 tags: props.elements[i].get("tags")
             }
             if(props.elements[i].className == "TextElement") {
-                console.log("saveBa", props.elements)
+                //console.log("saveBa", props.elements)
                 backup[i].json_data = props.elements[i].get("json_data")
             }
         }

@@ -22,7 +22,7 @@ class ListEditable extends Editable {
     static contextType = EditableStateContext
     constructor(props, context) {
         super(props, context)
-        this.pagination = new Pagination(this.props.rowsPerPage || ROWS_PER_PAGE)
+        this.pagination = this.getNewPagination()
         this.handleEditClick = this.handleEditClick.bind(this)
         this.handleChange = this.handleChange.bind(this)
         
@@ -45,6 +45,17 @@ class ListEditable extends Editable {
         padding: this.props.padding? this.props.padding: "3px"
     }
 
+    getNewPagination = () => {
+        return new Pagination(this.props.rowsPerPage || ROWS_PER_PAGE)
+    }
+
+    reset = () => {
+        this.pagination.reset()
+        //console.log("RESET", "PA", this.pagination.state)
+        this.setState({items: []})
+        this.firstLoad()
+    }
+
     getStyle = () => {
         var style = this.props.is_input_text? this.input_text_style : this.text_area_style
         return this.props.style? {
@@ -54,7 +65,7 @@ class ListEditable extends Editable {
     }
 
     cancelEdit = () => {
-        console.log("cancelEdit", this.componentKey, this.state)
+        //console.log("cancelEdit", this.componentKey, this.state)
         this.setState({
             data: "",
             tags: ""
@@ -86,7 +97,7 @@ class ListEditable extends Editable {
         page.setACL(ACL)
 
         items.push(page)
-        console.log("addNew")
+        //console.log("addNew")
         this.setState({items: items})
         if(this.props.focusOnAdd) {
             setTimeout(() => {
@@ -136,7 +147,7 @@ class ListEditable extends Editable {
             })
         }
         this.setState({data: e.target.value})
-        console.log("handleChange", "detailsHasChanged", this.state, !this.Element)
+        //console.log("handleChange", "detailsHasChanged", this.state, !this.Element)
         return this.props.changeHandler(this.ElementIndex, e.target.value)
     }
 
@@ -148,11 +159,15 @@ class ListEditable extends Editable {
         this.setState({data: "", tags: "", items: []})
         this.ElementClass = ParseClasses.ListElement
         
-        this.getPages(PAGINATION.default, this.props.onItemsLoaded, this.props.onItemsLoadError)
+        this.firstLoad()
     }
 
     handleEditClick = e => {
         e.preventDefault()
+    }
+
+    firstLoad = () => {
+        this.getPages(PAGINATION.default, this.props.onItemsLoaded, this.props.onItemsLoadError)
     }
 
     //pagination methods exposed through the privateRef props START
@@ -190,7 +205,7 @@ class ListEditable extends Editable {
             var pageQuery = getParseQuery(this.props.itemClass || ParseClasses.Page)
             
             if(!this.props.itemClass || this.props.itemClass == ParseClasses.Page) {
-                pageQuery.equalTo("key", this.componentKey)
+                pageQuery.equalTo("key", this.props.onGetKey? this.props.onGetKey() : this.componentKey)
                 if(this.props.ascend_position) {
                     pageQuery.ascending("position_as_an_item")
     
@@ -238,7 +253,7 @@ class ListEditable extends Editable {
             pageQuery.find()
             .then(list => {
                 
-        console.log("List", 3, list)
+                //console.log("List", 3, list)
                 if(!this.props.noPagination) {
                     list = this.pagination.update(list)
                 }
@@ -246,7 +261,7 @@ class ListEditable extends Editable {
                     this.setState({items: paginationType == PAGINATION.more? this.state.items.concat(list) : list})
 
                 }
-                console.log("PAGINATION", "itemsCount", this.state.items.length, list, JSON.stringify(list))
+                //console.log("PAGINATION", "itemsCount", this.state.items.length, list, JSON.stringify(list))
                 if(onLoaded) onLoaded({has_prev: this.hasPrev(), has_next: this.hasNext()})
                 this.setState({pagesRequested: false})
             })

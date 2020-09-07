@@ -126,13 +126,21 @@ export const getFromLocalStorage = (key, def) => {
 }
 
 export const isValidEmail = email => {
-    console.log("isValidEmail", email, /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+    //console.log("isValidEmail", email, /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
     return email? /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) : false
 }
 
 export const isValidPhone = phone => {
     if(!phone) return false
     return true
+}
+
+export const fileAndExt = filename => {
+    if(!filename) return ["", ""]
+    var extBoundaryIndex = filename.lastIndexOf(".")
+    var filenamePath = extBoundaryIndex < 0? filename : filename.substring(0, extBoundaryIndex)
+    var ext = extBoundaryIndex < 0? "" : filename.substring(extBoundaryIndex + 1)
+    return [filenamePath, ext]
 }
 
 export const escapeHtml = (unsafe) => {

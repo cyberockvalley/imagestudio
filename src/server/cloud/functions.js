@@ -12,11 +12,11 @@ const sanitizeObject = (object, schema) => {
     var dirtyKeys = object.dirtyKeys()
     for( var key in dirtyKeys ) {
         if( !schema.fields.hasOwnProperty(dirtyKeys[key]) ) {
-            console.log("sanitizeObject1:", 1, dirtyKeys[key])
+            //console.log("sanitizeObject1:", 1, dirtyKeys[key])
             object.unset(dirtyKeys[key])
         }
     }
-    console.log("sanitizeObject1:", 2, JSON.stringify(object))
+    //console.log("sanitizeObject1:", 2, JSON.stringify(object))
 }
 
 const updateCounter = (Parse, className, fields, objectId) => {
@@ -32,14 +32,14 @@ const updateCounter = (Parse, className, fields, objectId) => {
         }
     })
     .catch(e => {
-        console.log("updateCounter:", 3, e)
+        //console.log("updateCounter:", 3, e)
 
     })
 
 }
 
 const isValidEmail = email => {
-    console.log("isValidEmail", email, /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+    //console.log("isValidEmail", email, /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
     return email? /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) : false
 }
 

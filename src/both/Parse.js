@@ -59,223 +59,223 @@ export const getRolesSync = async () => {
 export const handleParseError = e => {
     switch(e.code) {
         case PARSE_ERROR_CODES.OtherCause.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.OtherCause.code + " of " + PARSE_ERROR_CODES.OtherCause.name + " is an " + PARSE_ERROR_CODES.OtherCause.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.OtherCause.code + " of " + PARSE_ERROR_CODES.OtherCause.name + " is an " + PARSE_ERROR_CODES.OtherCause.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InternalServerError.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InternalServerError.code + " of " + PARSE_ERROR_CODES.InternalServerError.name + " is an " + PARSE_ERROR_CODES.InternalServerError.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InternalServerError.code + " of " + PARSE_ERROR_CODES.InternalServerError.name + " is an " + PARSE_ERROR_CODES.InternalServerError.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.ConnectionFailed.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.ConnectionFailed.code + " of " + PARSE_ERROR_CODES.ConnectionFailed.name + " is an " + PARSE_ERROR_CODES.ConnectionFailed.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.ConnectionFailed.code + " of " + PARSE_ERROR_CODES.ConnectionFailed.name + " is an " + PARSE_ERROR_CODES.ConnectionFailed.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.ObjectNotFound.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.ObjectNotFound.code + " of " + PARSE_ERROR_CODES.ObjectNotFound.name + " is an " + PARSE_ERROR_CODES.ObjectNotFound.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.ObjectNotFound.code + " of " + PARSE_ERROR_CODES.ObjectNotFound.name + " is an " + PARSE_ERROR_CODES.ObjectNotFound.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidQuery.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidQuery.code + " of " + PARSE_ERROR_CODES.InvalidQuery.name + " is an " + PARSE_ERROR_CODES.InvalidQuery.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidQuery.code + " of " + PARSE_ERROR_CODES.InvalidQuery.name + " is an " + PARSE_ERROR_CODES.InvalidQuery.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidClassName.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidClassName.code + " of " + PARSE_ERROR_CODES.InvalidClassName.name + " is an " + PARSE_ERROR_CODES.InvalidClassName.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidClassName.code + " of " + PARSE_ERROR_CODES.InvalidClassName.name + " is an " + PARSE_ERROR_CODES.InvalidClassName.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.MissingObjectId.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.MissingObjectId.code + " of " + PARSE_ERROR_CODES.MissingObjectId.name + " is an " + PARSE_ERROR_CODES.MissingObjectId.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.MissingObjectId.code + " of " + PARSE_ERROR_CODES.MissingObjectId.name + " is an " + PARSE_ERROR_CODES.MissingObjectId.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidKeyName.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidKeyName.code + " of " + PARSE_ERROR_CODES.InvalidKeyName.name + " is an " + PARSE_ERROR_CODES.InvalidKeyName.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidKeyName.code + " of " + PARSE_ERROR_CODES.InvalidKeyName.name + " is an " + PARSE_ERROR_CODES.InvalidKeyName.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidPointer.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidPointer.code + " of " + PARSE_ERROR_CODES.InvalidPointer.name + " is an " + PARSE_ERROR_CODES.InvalidPointer.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidPointer.code + " of " + PARSE_ERROR_CODES.InvalidPointer.name + " is an " + PARSE_ERROR_CODES.InvalidPointer.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidJSON.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidJSON.code + " of " + PARSE_ERROR_CODES.InvalidJSON.name + " is an " + PARSE_ERROR_CODES.InvalidJSON.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidJSON.code + " of " + PARSE_ERROR_CODES.InvalidJSON.name + " is an " + PARSE_ERROR_CODES.InvalidJSON.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.CommandUnavailable.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.CommandUnavailable.code + " of " + PARSE_ERROR_CODES.CommandUnavailable.name + " is an " + PARSE_ERROR_CODES.CommandUnavailable.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.CommandUnavailable.code + " of " + PARSE_ERROR_CODES.CommandUnavailable.name + " is an " + PARSE_ERROR_CODES.CommandUnavailable.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.NotInitialized.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.NotInitialized.code + " of " + PARSE_ERROR_CODES.NotInitialized.name + " is an " + PARSE_ERROR_CODES.NotInitialized.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.NotInitialized.code + " of " + PARSE_ERROR_CODES.NotInitialized.name + " is an " + PARSE_ERROR_CODES.NotInitialized.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.IncorrectType.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.IncorrectType.code + " of " + PARSE_ERROR_CODES.IncorrectType.name + " is an " + PARSE_ERROR_CODES.IncorrectType.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.IncorrectType.code + " of " + PARSE_ERROR_CODES.IncorrectType.name + " is an " + PARSE_ERROR_CODES.IncorrectType.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidChannelName.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidChannelName.code + " of " + PARSE_ERROR_CODES.InvalidChannelName.name + " is an " + PARSE_ERROR_CODES.InvalidChannelName.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidChannelName.code + " of " + PARSE_ERROR_CODES.InvalidChannelName.name + " is an " + PARSE_ERROR_CODES.InvalidChannelName.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.PushMisconfigured.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.PushMisconfigured.code + " of " + PARSE_ERROR_CODES.PushMisconfigured.name + " is an " + PARSE_ERROR_CODES.PushMisconfigured.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.PushMisconfigured.code + " of " + PARSE_ERROR_CODES.PushMisconfigured.name + " is an " + PARSE_ERROR_CODES.PushMisconfigured.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.ObjectTooLarge.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.ObjectTooLarge.code + " of " + PARSE_ERROR_CODES.ObjectTooLarge.name + " is an " + PARSE_ERROR_CODES.ObjectTooLarge.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.ObjectTooLarge.code + " of " + PARSE_ERROR_CODES.ObjectTooLarge.name + " is an " + PARSE_ERROR_CODES.ObjectTooLarge.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.OperationForbidden.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.OperationForbidden.code + " of " + PARSE_ERROR_CODES.OperationForbidden.name + " is an " + PARSE_ERROR_CODES.OperationForbidden.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.OperationForbidden.code + " of " + PARSE_ERROR_CODES.OperationForbidden.name + " is an " + PARSE_ERROR_CODES.OperationForbidden.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.CacheMiss.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.CacheMiss.code + " of " + PARSE_ERROR_CODES.CacheMiss.name + " is an " + PARSE_ERROR_CODES.CacheMiss.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.CacheMiss.code + " of " + PARSE_ERROR_CODES.CacheMiss.name + " is an " + PARSE_ERROR_CODES.CacheMiss.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidNestedKey.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidNestedKey.code + " of " + PARSE_ERROR_CODES.InvalidNestedKey.name + " is an " + PARSE_ERROR_CODES.InvalidNestedKey.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidNestedKey.code + " of " + PARSE_ERROR_CODES.InvalidNestedKey.name + " is an " + PARSE_ERROR_CODES.InvalidNestedKey.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidFileName.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidFileName.code + " of " + PARSE_ERROR_CODES.InvalidFileName.name + " is an " + PARSE_ERROR_CODES.InvalidFileName.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidFileName.code + " of " + PARSE_ERROR_CODES.InvalidFileName.name + " is an " + PARSE_ERROR_CODES.InvalidFileName.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidACL.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidACL.code + " of " + PARSE_ERROR_CODES.InvalidACL.name + " is an " + PARSE_ERROR_CODES.InvalidACL.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidACL.code + " of " + PARSE_ERROR_CODES.InvalidACL.name + " is an " + PARSE_ERROR_CODES.InvalidACL.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.Timeout.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.Timeout.code + " of " + PARSE_ERROR_CODES.Timeout.name + " is an " + PARSE_ERROR_CODES.Timeout.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.Timeout.code + " of " + PARSE_ERROR_CODES.Timeout.name + " is an " + PARSE_ERROR_CODES.Timeout.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidEmailAddress.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidEmailAddress.code + " of " + PARSE_ERROR_CODES.InvalidEmailAddress.name + " is an " + PARSE_ERROR_CODES.InvalidEmailAddress.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidEmailAddress.code + " of " + PARSE_ERROR_CODES.InvalidEmailAddress.name + " is an " + PARSE_ERROR_CODES.InvalidEmailAddress.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.DuplicateValue.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.DuplicateValue.code + " of " + PARSE_ERROR_CODES.DuplicateValue.name + " is an " + PARSE_ERROR_CODES.DuplicateValue.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.DuplicateValue.code + " of " + PARSE_ERROR_CODES.DuplicateValue.name + " is an " + PARSE_ERROR_CODES.DuplicateValue.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidRoleName.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidRoleName.code + " of " + PARSE_ERROR_CODES.InvalidRoleName.name + " is an " + PARSE_ERROR_CODES.InvalidRoleName.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidRoleName.code + " of " + PARSE_ERROR_CODES.InvalidRoleName.name + " is an " + PARSE_ERROR_CODES.InvalidRoleName.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.ExceededQuota.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.ExceededQuota.code + " of " + PARSE_ERROR_CODES.ExceededQuota.name + " is an " + PARSE_ERROR_CODES.ExceededQuota.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.ExceededQuota.code + " of " + PARSE_ERROR_CODES.ExceededQuota.name + " is an " + PARSE_ERROR_CODES.ExceededQuota.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.ScriptFailed.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.ScriptFailed.code + " of " + PARSE_ERROR_CODES.ScriptFailed.name + " is an " + PARSE_ERROR_CODES.ScriptFailed.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.ScriptFailed.code + " of " + PARSE_ERROR_CODES.ScriptFailed.name + " is an " + PARSE_ERROR_CODES.ScriptFailed.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.ValidationFailed.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.ValidationFailed.code + " of " + PARSE_ERROR_CODES.ValidationFailed.name + " is an " + PARSE_ERROR_CODES.ValidationFailed.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.ValidationFailed.code + " of " + PARSE_ERROR_CODES.ValidationFailed.name + " is an " + PARSE_ERROR_CODES.ValidationFailed.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.FileDeleteFailed.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.FileDeleteFailed.code + " of " + PARSE_ERROR_CODES.FileDeleteFailed.name + " is an " + PARSE_ERROR_CODES.FileDeleteFailed.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.FileDeleteFailed.code + " of " + PARSE_ERROR_CODES.FileDeleteFailed.name + " is an " + PARSE_ERROR_CODES.FileDeleteFailed.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.RequestLimitExceeded.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.RequestLimitExceeded.code + " of " + PARSE_ERROR_CODES.RequestLimitExceeded.name + " is an " + PARSE_ERROR_CODES.RequestLimitExceeded.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.RequestLimitExceeded.code + " of " + PARSE_ERROR_CODES.RequestLimitExceeded.name + " is an " + PARSE_ERROR_CODES.RequestLimitExceeded.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidEventName.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidEventName.code + " of " + PARSE_ERROR_CODES.InvalidEventName.name + " is an " + PARSE_ERROR_CODES.InvalidEventName.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidEventName.code + " of " + PARSE_ERROR_CODES.InvalidEventName.name + " is an " + PARSE_ERROR_CODES.InvalidEventName.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.UsernameMissing.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.UsernameMissing.code + " of " + PARSE_ERROR_CODES.UsernameMissing.name + " is an " + PARSE_ERROR_CODES.UsernameMissing.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.UsernameMissing.code + " of " + PARSE_ERROR_CODES.UsernameMissing.name + " is an " + PARSE_ERROR_CODES.UsernameMissing.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.PasswordMissing.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.PasswordMissing.code + " of " + PARSE_ERROR_CODES.PasswordMissing.name + " is an " + PARSE_ERROR_CODES.PasswordMissing.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.PasswordMissing.code + " of " + PARSE_ERROR_CODES.PasswordMissing.name + " is an " + PARSE_ERROR_CODES.PasswordMissing.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.UsernameTaken.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.UsernameTaken.code + " of " + PARSE_ERROR_CODES.UsernameTaken.name + " is an " + PARSE_ERROR_CODES.UsernameTaken.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.UsernameTaken.code + " of " + PARSE_ERROR_CODES.UsernameTaken.name + " is an " + PARSE_ERROR_CODES.UsernameTaken.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.EmailTaken.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.EmailTaken.code + " of " + PARSE_ERROR_CODES.EmailTaken.name + " is an " + PARSE_ERROR_CODES.EmailTaken.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.EmailTaken.code + " of " + PARSE_ERROR_CODES.EmailTaken.name + " is an " + PARSE_ERROR_CODES.EmailTaken.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.EmailMissing.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.EmailMissing.code + " of " + PARSE_ERROR_CODES.EmailMissing.name + " is an " + PARSE_ERROR_CODES.EmailMissing.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.EmailMissing.code + " of " + PARSE_ERROR_CODES.EmailMissing.name + " is an " + PARSE_ERROR_CODES.EmailMissing.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.EmailNotFound.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.EmailNotFound.code + " of " + PARSE_ERROR_CODES.EmailNotFound.name + " is an " + PARSE_ERROR_CODES.EmailNotFound.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.EmailNotFound.code + " of " + PARSE_ERROR_CODES.EmailNotFound.name + " is an " + PARSE_ERROR_CODES.EmailNotFound.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.SessionMissing.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.SessionMissing.code + " of " + PARSE_ERROR_CODES.SessionMissing.name + " is an " + PARSE_ERROR_CODES.SessionMissing.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.SessionMissing.code + " of " + PARSE_ERROR_CODES.SessionMissing.name + " is an " + PARSE_ERROR_CODES.SessionMissing.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.MustCreateUserThroughSignup.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.MustCreateUserThroughSignup.code + " of " + PARSE_ERROR_CODES.MustCreateUserThroughSignup.name + " is an " + PARSE_ERROR_CODES.MustCreateUserThroughSignup.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.MustCreateUserThroughSignup.code + " of " + PARSE_ERROR_CODES.MustCreateUserThroughSignup.name + " is an " + PARSE_ERROR_CODES.MustCreateUserThroughSignup.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.AccountAlreadyLinked.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.AccountAlreadyLinked.code + " of " + PARSE_ERROR_CODES.AccountAlreadyLinked.name + " is an " + PARSE_ERROR_CODES.AccountAlreadyLinked.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.AccountAlreadyLinked.code + " of " + PARSE_ERROR_CODES.AccountAlreadyLinked.name + " is an " + PARSE_ERROR_CODES.AccountAlreadyLinked.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidSessionToken.code:
-                        console.log("ERROR " + PARSE_ERROR_CODES.InvalidSessionToken.code + " of " + PARSE_ERROR_CODES.InvalidSessionToken.name + " is an " + PARSE_ERROR_CODES.InvalidSessionToken.description + " => " + e.message);
+                        //console.log("ERROR " + PARSE_ERROR_CODES.InvalidSessionToken.code + " of " + PARSE_ERROR_CODES.InvalidSessionToken.name + " is an " + PARSE_ERROR_CODES.InvalidSessionToken.description + " => " + e.message);
                         ParseClient.User.logOut()
 			break;
 
         
         case PARSE_ERROR_CODES.LinkedIdMissing.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.LinkedIdMissing.code + " of " + PARSE_ERROR_CODES.LinkedIdMissing.name + " is an " + PARSE_ERROR_CODES.LinkedIdMissing.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.LinkedIdMissing.code + " of " + PARSE_ERROR_CODES.LinkedIdMissing.name + " is an " + PARSE_ERROR_CODES.LinkedIdMissing.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.InvalidLinkedSession.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.InvalidLinkedSession.code + " of " + PARSE_ERROR_CODES.InvalidLinkedSession.name + " is an " + PARSE_ERROR_CODES.InvalidLinkedSession.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.InvalidLinkedSession.code + " of " + PARSE_ERROR_CODES.InvalidLinkedSession.name + " is an " + PARSE_ERROR_CODES.InvalidLinkedSession.description + " => " + e.message);
 			break;
 
         
         case PARSE_ERROR_CODES.UnsupportedService.code:
-			console.log("ERROR " + PARSE_ERROR_CODES.UnsupportedService.code + " of " + PARSE_ERROR_CODES.UnsupportedService.name + " is an " + PARSE_ERROR_CODES.UnsupportedService.description + " => " + e.message);
+			//console.log("ERROR " + PARSE_ERROR_CODES.UnsupportedService.code + " of " + PARSE_ERROR_CODES.UnsupportedService.name + " is an " + PARSE_ERROR_CODES.UnsupportedService.description + " => " + e.message);
 			break;
 
     }

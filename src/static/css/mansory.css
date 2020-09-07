@@ -433,7 +433,7 @@
 .instagram-images > div {
   padding: inherit !important;
 }
-.instagram-images > div .data-el {
+.instagram-images > div.data-el {
 	height: 357px;
   opacity: 1;
   display: block;
@@ -442,21 +442,8 @@
   transition: all 0.2s linear;
   cursor: pointer;
 }
-.instagram-images > div .data-el .copy {
-	right: 20px;
-	top: 20px;
-	font-size: 24px;
-  text-shadow: 0 0 8px rgba(0,0,0,.3);
-  height: 1em;
-  position: absolute;
-}
-.instagram-images > div .img-data-el {
-	background-size: cover;
-	background-position: center center;
-	background-repeat: no-repeat;
-}
 @media screen and (min-width: 768px) {
-  .instagram-images > div .data-el {
+  .instagram-images > div.data-el {
     height: 373px !important;
   }
 	.insta-image {

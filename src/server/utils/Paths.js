@@ -12,4 +12,13 @@ const Paths = [
     PAGE_404
 ]
 
+export const FILE_PATHS = [
+    '/client/images/uploads/:year_folder/:month_folder/:filename', 
+    '/client/images/uploads/:filename'
+]
+
+export const DB_FILE_PATHS = [
+    '/parse/files/:appId/:filename', '/parse/files/:appId/metadata/:filename'
+]
+
 export default Paths

@@ -26,7 +26,7 @@ class About extends Page {
     
   }
 
-  buildWeddingStoriesItem = (item, index, onBuildItemName, refGetter) => {
+  buildTeamMembersItem = (item, index, onBuildItemName, refGetter) => {
     return (
       <ItemTeamMember
         key={index}
@@ -102,7 +102,7 @@ class About extends Page {
               itemReadableName="Team member"
               {...this.state.listElementsProps}
               rowsPerPage={8}
-              onItem={this.buildWeddingStoriesItem}
+              onItem={this.buildTeamMembersItem}
               itemDraggable={true}
           />
           <section className="about-us">

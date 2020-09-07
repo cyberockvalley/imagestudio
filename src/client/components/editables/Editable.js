@@ -35,7 +35,8 @@ class Editable extends Markup {
 
 
     keyToText = () => {
-        var text = this.componentKey.replaceAll(this.componentKeyWordSeparator, " ")
+        var regex = new RegExp(this.componentKeyWordSeparator, "g")
+        var text = this.componentKey.replace(regex, " ")
         return text.substring(0, 1).toUpperCase() + text.substring(1)
     }
 
@@ -45,8 +46,8 @@ class Editable extends Markup {
                 var thisElement = this.props.elements[i]
                 
                 if(thisElement.className == "ImageElement") {
-                    console.log("addElement", "FeaturedImage", 4, this.componentKey, this.props.link, thisElement, JSON.stringify(thisElement))
-                    console.log("addElement", "FeaturedImage", 5, this.componentKey, this.props.link, JSON.stringify(thisElement.get("featured_image")))
+                    //console.log("addElement", "FeaturedImage", 4, this.componentKey, this.props.link, thisElement, JSON.stringify(thisElement))
+                    //console.log("addElement", "FeaturedImage", 5, this.componentKey, this.props.link, JSON.stringify(thisElement.get("featured_image")))
                 }
                 if(thisElement.get("key") == this.componentKey) {
                     this.ElementIndex = i;
@@ -82,7 +83,7 @@ class Editable extends Markup {
             getFromLocalStorage(STORAGE_KEYS.roles, []).includes(role || this.props.role) ||
             ACL.getWriteAccess(this.props.user)
         )
-        console.log("WriteAcl3", this.componentKey, permitted)
+        //console.log("WriteAcl3", this.componentKey, permitted)
         return permitted
     }
     

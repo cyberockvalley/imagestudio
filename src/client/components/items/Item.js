@@ -18,7 +18,7 @@ class Item extends Page {
 
   init = (pageOptions) => {
     if((this.state.page && this.state.page.id) || (this.props.page && this.props.page.id)) {
-      console.log("WeTheBest")
+      //console.log("WeTheBest")
       this.loadPage(this.state.page || this.props.page, pageOptions)
 
     } else if(this.props.page && !this.state.page) {
@@ -27,7 +27,7 @@ class Item extends Page {
   }
 
   render(child) {
-    console.log("ITEM", this.state.pageOptions)
+    //console.log("ITEM", this.state.pageOptions)
     return super.render(
       <>
         {child}

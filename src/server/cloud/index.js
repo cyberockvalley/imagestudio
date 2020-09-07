@@ -46,9 +46,9 @@ Parse.Cloud.define('instagramPosts', (req, res) => {
         if(element && Array.isArray(element) && element.length == 2) {
             //fields => id,code,caption,media_type,media_url
             var fields = ["media_type", "media_url", "permalink"]
-            var instaId = element[0].get("key") == "instagram_id"? element[0].get("data") : element[1].get("data")//"17841403997008138"
+            var instaId = element[0].get("key") == "instagram_id"? element[0].get("data") : element[1].get("data")
             var instagramAccessToken = element[0].get("key") == "instagram_access_token"? element[0].get("data") : element[1].get("data")
-            console.log("instagramAccessToken", instagramAccessToken)
+            //console.log("instagramAccessToken", instagramAccessToken)
             return Axios.get( `https://graph.instagram.com/${instaId}/media?limit=6&fields=${fields.join()}&access_token=${instagramAccessToken}`)
             .then(response => {
                 return response.data.data
@@ -119,7 +119,7 @@ Parse.Cloud.define('contactMail', async (req, res) => {
                 password: process.env.AUTO_MAIL_SERVER_PASSWORD
             })
             return mailAdapter.sendMail({
-                from: email,
+                from: 'ImageStudio <contact@imagestudio.com>',
                 to: 'info@imagestudio.com',
                 replyTo: email,
                 subject: "Contact Page Message",
@@ -160,7 +160,7 @@ Parse.Cloud.define("getRatings", (request, response) => {
             for (var i = 0; i < results.length; i++) {
             sum += results[i].get("ratings");
             }
-            console.log("getRatings:", sum, results.length)
+            //console.log("getRatings:", sum, results.length)
             return {sum: sum, count: results.length}
         })
         .catch(e => {
@@ -222,7 +222,7 @@ Parse.Cloud.define('pageReactionUpdate', (req, res) => {
             .then(response => {
                 if(response.data.success && response.data.score > 0.5) {
                     //log action here
-                    console.log("pageReactionUpdate", "PageId", actionInfo.pageId)
+                    //console.log("pageReactionUpdate", "PageId", actionInfo.pageId)
                     cloudFunctions.list.updateCounter(Parse, "Page", {likes: 1}, actionInfo.pageId)
                     return {status: STATUS.success}
 
@@ -308,7 +308,7 @@ var userHasRole = (username, rolename) => {
 }
 
 Parse.Cloud.define('hasRole', (request, response) => {
-    console.log("hasRole", req.user, Parse.User.current())
+    //console.log("hasRole", req.user, Parse.User.current())
     if(!Parse.User.current()){
         response.success(false)
 

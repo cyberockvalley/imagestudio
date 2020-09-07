@@ -28,7 +28,7 @@ class Auth extends React.Component {
 
     handleChange = e => {
         this.setState({[e.target.name]: e.target.value})
-        console.log("onChange", e.target.name+"="+e.target.value, JSON.stringify(this.state))
+        //console.log("onChange", e.target.name+"="+e.target.value, JSON.stringify(this.state))
     }
 
     handleSubmit = e => {

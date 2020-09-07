@@ -42,15 +42,19 @@ class Videos extends Page {
     super(props)
     
     this.handleVideosLoadMore = this.handleVideosLoadMore.bind(this)
-    console.log("PATH_B", this.props.match, this.getVideoKey())
+    //console.log("PATH_B", this.props.match, this.getVideoKey())
   }
 
   componentDidMount() {
+    this.loadCurrentVideos()
+
+    //console.log("PATH", this.props.match)
+  }
+
+  loadCurrentVideos = () => {
     this.loadPage("videos", {
       no_video: true
     })
-
-    console.log("PATH", this.props.match)
   }
 
   videosRef = videosList => {
@@ -58,7 +62,7 @@ class Videos extends Page {
     
   }
 
-  handleVideosLoadMore = e => {
+  handleVideosLoadMore = () => {
     if(this.videosList && !this.state.videosLoading) {
       this.setState({videosLoading: true})
       this.videosList.more(info => {
@@ -109,6 +113,17 @@ class Videos extends Page {
     return VIDEO_TYPES[this.getVideoKey()].banner_name
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      this.onRouteChanged(prevProps.location.pathname, this.props.location.pathname)
+    }
+  }
+
+  onRouteChanged = (prevLocation, newLocation) => {
+    //console.log("RouteChanged", prevLocation, newLocation)
+    //this.videosList.reset()
+  }
+
   render() {
     return super.render(
       <>
@@ -126,7 +141,8 @@ class Videos extends Page {
           <meta property="og:type" content="article" />
           <meta property="og:title" content={lastValueOrThis(this.state.page, {get: () => {return ""}}).get("title")} />
           <meta property="og:description" content={truncText(lastValueOrThis(this.state.page, {get: () => {return ""}}).get("description"), HTML_DESCRIPTION_LENGTH)} />
-          <meta property="og:url" content="https://css-tricks.com/its-all-in-the-head-managing-the-document-head-of-a-react-powered-site-with-react-helmet/" />
+          <meta property="og:url" content={SEO_BASE_URL + "/portfolio"} />
+          {/*
           <meta property="og:site_name" content="CSS-Tricks" />
           <meta property="article:publisher" content="https://www.facebook.com/CSSTricks" />
           <meta property="article:published_time" content="2019-10-30T15:10:50+00:00" />
@@ -139,7 +155,7 @@ class Videos extends Page {
           <meta name="twitter:card" content="summary" />
           <meta name="twitter:image" content="https://i1.wp.com/css-tricks.com/wp-content/uploads/2019/10/react-helmet.png?ssl=1" />
           <meta name="twitter:creator" content="@CSS" />
-          <meta name="twitter:site" content="@CSS" />
+          <meta name="twitter:site" content="@CSS" />*/}
         </Helmet>
         <>
           <Header history={this.props.history} 
@@ -158,6 +174,7 @@ class Videos extends Page {
               role={ROLES.mod}
               className="row videos"
               name={this.getListName()}
+              onGetKey={this.getListName}
               onBuildItemName={(index, name) => {
                 return `${this.getListItemName()}_${index}${name}`
               }}

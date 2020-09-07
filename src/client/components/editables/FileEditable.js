@@ -114,7 +114,7 @@ class FileEditable extends Editable {
         for(var i = 0; i < list.length; i++) {
             var fileData = list[i]
             var url = fileData.get('file').url()
-            console.log("loadImages", "FileEditables", "processData", "listUrl", url)
+            //console.log("loadImages", "FileEditables", "processData", "listUrl", url)
             fileShades.push({
                 src: url,
                 mime: this.getFileDataMime(url),
@@ -132,7 +132,7 @@ class FileEditable extends Editable {
     }
 
     cancelEdit = () => {
-        console.log("cancelEdit", this.componentKey, this.state)
+        //console.log("cancelEdit", this.componentKey, this.state)
         this.setState({
             data: null,
             tags: ""
@@ -143,7 +143,7 @@ class FileEditable extends Editable {
         if(this.detailsHasChanged()) {
             var element = this.getOrCreateEditable()
             var parseFile = this.state.data
-            console.log("FileEditable", 0, element)
+            //console.log("FileEditable", 0, element)
 
             if(this.dataHasChanged()) {
                 this.setState({errorMessage: ""})
@@ -155,9 +155,9 @@ class FileEditable extends Editable {
 
                     fileData.save()
                     .then(fileDataResponse => {
-                        console.log("FileEditable", 1, fileData, fileDataResponse)
+                        //console.log("FileEditable", 1, fileData, fileDataResponse)
                         if(this.state.dataList.length > 0) {
-                            console.log("FileEditable", 2, this.state.dataList)
+                            //console.log("FileEditable", 2, this.state.dataList)
                             element.relation("data").remove(this.state.dataList)
                         }
                         this.processData([fileData])
@@ -186,15 +186,15 @@ class FileEditable extends Editable {
                                 }
         
                             } else {
-                                console.log("botToken", "file", "hasElement", false, "hasBotKey", this.props.botKey)
+                                //console.log("botToken", "file", "hasElement", false, "hasBotKey", this.props.botKey)
                                 this.getBotToken(token => {
-                                    console.log("botToken", "file", "hasElement", false, "hasBotKey", true, "token", token)
+                                    //console.log("botToken", "file", "hasElement", false, "hasBotKey", true, "token", token)
                                     if(this.props.isPointer) {
-                                        console.log("botToken", "file", "hasElement", false, "hasBotKey", false, "isPointer", true)
+                                        //console.log("botToken", "file", "hasElement", false, "hasBotKey", false, "isPointer", true)
                                         this.props.addHandler(element, this.componentKey, true, null, token)
         
                                     } else {
-                                        console.log("botToken", "file", "hasElement", false, "hasBotKey", false, "isPointer", false)
+                                        //console.log("botToken", "file", "hasElement", false, "hasBotKey", false, "isPointer", false)
                                         this.props.addHandler(element, this.getRelationName(), null, null, token)
                                     }
                                     
@@ -235,7 +235,7 @@ class FileEditable extends Editable {
         var parseFile = new ParseClient.File("file", file)
 
         this.setState({data: parseFile})
-        console.log("handleFile", this.state, JSON.stringify(this.state))
+        //console.log("handleFile", this.state, JSON.stringify(this.state))
 
     }
 
@@ -262,12 +262,12 @@ class FileEditable extends Editable {
         return false
     }
     detailsHasChanged() {
-        console.log("detailsHasChanged", this.componentKey, this.props.link, this.dataHasChanged() || this.tagsHaveChanged())
+        //console.log("detailsHasChanged", this.componentKey, this.props.link, this.dataHasChanged() || this.tagsHaveChanged())
         return this.dataHasChanged() || this.tagsHaveChanged()
     }
 
     dataHasChanged() {
-        console.log("detailsHasChanged", 2, this.componentKey, this.props.link, JSON.stringify(this.state.data), JSON.stringify(this.state.initialData))
+        //console.log("detailsHasChanged", 2, this.componentKey, this.props.link, JSON.stringify(this.state.data), JSON.stringify(this.state.initialData))
         return this.state.data && JSON.stringify(this.state.data).length > 0 && JSON.stringify(this.state.data) != JSON.stringify(this.state.initialData)
     }
     tagsHaveChanged() {

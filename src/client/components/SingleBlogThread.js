@@ -20,7 +20,7 @@ class SingleBlogThread extends Page {
   componentDidMount() {
     this.setState({likes: 0})
     if(this.props.threadAdder) this.props.threadAdder(this)
-    console.log("SingleBlogThread", this.props.match.params.title, this.props)
+    //console.log("SingleBlogThread", this.props.match.params.title, this.props)
     this.loadPage(["site_content_blog_posts"], {
       slug: this.props.match.params.title
     })
@@ -79,7 +79,7 @@ class SingleBlogThread extends Page {
           </div>
           <div className="col-12 blog-body">
             <TextEditable isHtml 
-              editorImageAlt={this.state.page? slugify(this.state.page.get("title")).replaceAll("-", " ") : ""}
+              editorImageAlt={this.state.page? slugify(this.state.page.get("title")).replace(/-/g, " ") : ""}
               role={ROLES.mod}
               name="content"
               {...this.state.textElementsProps}

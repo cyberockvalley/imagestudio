@@ -4,7 +4,7 @@ import ImageEditable from "../editables/ImageEditable";
 import EditableStateContext from "../editables/EditableStateContext";
 import Item from "./Item";
 import TextEditable from "../editables/TextEditable";
-import { ROLES, EMPTY_PROFILE_PHOTO, GOOGLE_CAPTCHA_SITE_KEY } from "../../../both/Constants";
+import { ROLES, EMPTY_PROFILE_PHOTO, GOOGLE_CAPTCHA_SITE_KEY, IMAGE_PROCCESSORS, IMAGE_PICTURE_SOURCE_EXTENSIONS } from "../../../both/Constants";
 const dateFormat = require('dateformat')
 const numberToWords = require('number-to-words')
 
@@ -146,6 +146,13 @@ class ItemMansoryComment extends Item {
           }}
           placeholder={EMPTY_PROFILE_PHOTO}
           botKey={GOOGLE_CAPTCHA_SITE_KEY}
+          display={{
+            image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
+            default: {queries: `w=200`, proccessors: IMAGE_PROCCESSORS},
+            manifests: [
+              {at: 200, queries: `w=200`, proccessors: IMAGE_PROCCESSORS}
+            ]
+          }}
         />
         {
           this.state.anonymous_comment_image_error? 

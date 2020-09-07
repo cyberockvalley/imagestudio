@@ -3,7 +3,7 @@ import EditableStateContext from "../editables/EditableStateContext";
 import Item from "./Item";
 import TextEditable from "../editables/TextEditable";
 import ImageEditable from "../editables/ImageEditable";
-import { ROLES } from "../../../both/Constants";
+import { ROLES, IMAGE_PICTURE_SOURCE_EXTENSIONS, IMAGE_PROCCESSORS } from "../../../both/Constants";
 import { IFRAME_STYLES } from "../widgets/IframeView";
 
 class ItemMovie extends Item {
@@ -50,7 +50,14 @@ class ItemMovie extends Item {
             }}
             emptyWidth="100%"
             emptyHeight="100%"
-            add_overlay={!this.state.page || this.context.edit} />
+            add_overlay={!this.state.page || this.context.edit} 
+            display={{
+              image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
+              default: {queries: `w=300`, proccessors: IMAGE_PROCCESSORS},
+              manifests: [
+                {at: 300, queries: `w=300`, proccessors: IMAGE_PROCCESSORS}
+              ]
+            }} />
         </div>
         <div className={this.context.edit? "" : "btn-center movie-info"} style={this.context.edit?styles.btnCenterEdit : styles.btnCenter}>
           <div className="caption-body">

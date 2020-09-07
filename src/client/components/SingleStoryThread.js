@@ -20,7 +20,7 @@ class SingleStoryThread extends Page {
   componentDidMount() {
     this.setState({likes: 0})
     if(this.props.threadAdder) this.props.threadAdder(this)
-    console.log("SingleStoryThread", this.props.match.params.title, this.props)
+    //console.log("SingleStoryThread", this.props.match.params.title, this.props)
     this.loadPage(["site_content_wedding_stories", "site_content_blog_posts"], {
       slug: this.props.match.params.title
     })
@@ -60,6 +60,8 @@ class SingleStoryThread extends Page {
           <meta property="og:url" content={this.state.page? `${SEO_BASE_URL + this.state.page.get("slug")}` : ""} />
           <meta property="og:site_name" content={this.props.spoolAttributes? this.props.spoolAttributes.site_info_site_name_spaced : ""} />
           <meta property="article:modified_time" content={this.state.page? this.state.page.get("updatedAt") : ""} />
+          
+           {/*
           <meta property="article:section" content="Photography" />
           <meta property="article:tag" content="sharp" />
           <meta property="article:tag" content="nice" />
@@ -67,7 +69,7 @@ class SingleStoryThread extends Page {
           <meta name="twitter:card" content="summary" />
           <meta name="twitter:image" content="https://i1.wp.com/css-tricks.com/wp-content/uploads/2019/10/react-helmet.png?ssl=1" />
           <meta name="twitter:creator" content="@CSS" />
-          <meta name="twitter:site" content="@CSS" />
+          <meta name="twitter:site" content="@CSS" />*/}
         </Helmet>
         {/*
           <HeaderImageBanner 
@@ -79,7 +81,7 @@ class SingleStoryThread extends Page {
         </section>
         <section className="blog-content">
           <TextEditable isHtml 
-            editorImageAlt={this.state.page? slugify(this.state.page.get("title")).replaceAll("-", " ") : ""}
+            editorImageAlt={this.state.page? slugify(this.state.page.get("title")).replace(/-/g, " ") : ""}
             role={ROLES.mod}
             name="content"
             {...this.state.textElementsProps}

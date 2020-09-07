@@ -3,7 +3,7 @@ import Item from "./Item";
 import EditableStateContext from "../editables/EditableStateContext";
 import ImageEditable from "../editables/ImageEditable";
 import TextEditable from "../editables/TextEditable";
-import { PAGE_404, ROLES } from "../../../both/Constants";
+import { PAGE_404, ROLES, IMAGE_PICTURE_SOURCE_EXTENSIONS, IMAGE_PROCCESSORS } from "../../../both/Constants";
 
 class ItemWeddingStory extends Item {
   static contextType = EditableStateContext
@@ -63,9 +63,19 @@ class ItemWeddingStory extends Item {
                   width: "100%",
                   minHeight: "100%"
                 }}
+                beforeLoadClasses={`lh300`}
                 emptyWidth="100%"
                 emptyHeight="400px"
                 add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
+                beforeLoadClasses={`lh${["200", "250", "300"][parseInt(Math.random() * 3)]}`}
+                display={{
+                  image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
+                  default: {queries: `w=150`, proccessors: IMAGE_PROCCESSORS},
+                  manifests: [
+                    {at: 150, queries: `w=150`, proccessors: IMAGE_PROCCESSORS},
+                    {at: 400, queries: `w=412`, proccessors: IMAGE_PROCCESSORS}
+                  ]
+                }}
               />
               <div className="fade-box fade-in-down" style={{zIndex:1, top: this.context.edit? "20%" : "50%"}}>
                 <h2 className="story-title">

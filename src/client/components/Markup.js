@@ -8,7 +8,7 @@ class Markup extends React.Component {
     }
     getBotToken = (tokenHandler) => {
         this.botTokenHandler = tokenHandler
-        console.log("pageT", this.props.botKey || this.state.botKey, this.recaptcha)
+        //console.log("pageT", this.props.botKey || this.state.botKey, this.recaptcha)
         this.recaptcha.execute()
     }
 
@@ -17,7 +17,7 @@ class Markup extends React.Component {
     }
 
     refSetter = ref => {
-        console.log("PageTok", "refSetter", this.props.botKey || this.state.botKey, ref)
+        //console.log("PageTok", "refSetter", this.props.botKey || this.state.botKey, ref)
         this.recaptcha = ref
     }
 

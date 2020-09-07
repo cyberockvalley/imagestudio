@@ -45,7 +45,7 @@ class ImageGrid extends React.Component {
     }
 
     handleConfigurationChange = entityData => {
-      console.log("handleConfigurationChange", entityData)
+      //console.log("handleConfigurationChange", entityData)
       const { editorState, onChange } = this.props;
 
       const entityKey = editorState
@@ -71,7 +71,7 @@ class ImageGrid extends React.Component {
     }
 
     handleImageSubmit = imageUrls => {
-      console.log("ImageSubmit", imageUrls)
+      //console.log("ImageSubmit", imageUrls)
       var data = {
         width: 100,
         alignment: "center",

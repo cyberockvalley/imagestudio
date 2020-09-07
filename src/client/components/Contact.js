@@ -11,8 +11,10 @@ import { EMPTY_TEXT_ELEMENT_DATA } from "./editables/Editable";
 import ImageEditable from "./editables/ImageEditable";
 import Recaptcha from 'react-google-invisible-recaptcha'
 import ParseClient, { handleParseError } from "../../both/Parse";
+import EditableStateContext from "./editables/EditableStateContext";
 
 class Contact extends Page {
+  static contextType = EditableStateContext
   constructor(props){
     super(props)
 
@@ -92,14 +94,14 @@ class Contact extends Page {
         this.setState({sendingMail: false, errors: response.errors? response.errors : {}})
     })
     .catch(e => {
-        console.log("contactMail", "Error", e)
+        //console.log("contactMail", "Error", e)
         this.setState({sendingMail: false})
         handleParseError(e)
     })
   }
 
   render() {
-    return (
+    return super.render(
     <>
       <Helmet>
           <title>{lastValueOrThis(this.state.page, {get: () => {return ""}}).get("title")}</title>
@@ -164,7 +166,7 @@ class Contact extends Page {
                   </div>
                   <div className="col-md-6 d-none d-md-block">
                     <div className="contact-info align-items-start">
-                      <a href="mailto:info@imagestudio.com">
+                      <a href={`mailto:${lastValueOrThis(this.state.elementsAttributes.site_info_email, EMPTY_TEXT_ELEMENT_DATA).data}`}>
                         <i className="fa fa-2x fa-at" />
                         <span>
                           <TextEditable 
@@ -172,7 +174,7 @@ class Contact extends Page {
                               {...this.state.textElementsProps} is_input_text/>
                         </span>
                       </a>
-                      <a target="_blank" href={"https://instagram.com/" + (lastValueOrThis(this.context, "site_info_instagram_username", EMPTY_TEXT_ELEMENT_DATA).data)}>
+                      <a target="_blank" href={`https://instagram.com/${lastValueOrThis(this.state.elementsAttributes.site_info_instagram_username, EMPTY_TEXT_ELEMENT_DATA).data}`}>
                         <i className="fa fa-2x fa-instagram" />@
                         <span>
                           <TextEditable 
@@ -180,7 +182,7 @@ class Contact extends Page {
                               {...this.state.textElementsProps} is_input_text/>
                         </span>
                       </a>
-                      <a href={"tel:" + (lastValueOrThis(this.context, "site_info_phone_number", EMPTY_TEXT_ELEMENT_DATA).data)}>
+                      <a href={`tel:${lastValueOrThis(this.state.elementsAttributes.site_info_phone_number, EMPTY_TEXT_ELEMENT_DATA).data}`}>
                         <i className="fa fa-2x fa-phone" />
                         <span>
                           <TextEditable 
@@ -270,7 +272,8 @@ class Contact extends Page {
                 }}
               >
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5938.98072352206!2d12.447683825393748!3d41.903816266880455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132f60660c3e3925%3A0x498c3835506c3c!2s00120%20Vatican%20City!5e0!3m2!1sen!2sng!4v1592743883321!5m2!1sen!2sng"
+                  className="lazyload"
+                  data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5938.98072352206!2d12.447683825393748!3d41.903816266880455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132f60660c3e3925%3A0x498c3835506c3c!2s00120%20Vatican%20City!5e0!3m2!1sen!2sng!4v1592743883321!5m2!1sen!2sng"
                   width="100%"
                   height="100%"
                   frameBorder={0}

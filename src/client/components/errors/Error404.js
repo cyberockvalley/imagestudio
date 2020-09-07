@@ -1,5 +1,5 @@
 import React from 'react'
-import './error.css'
+//import './error.css'
 
 //import { gsap } from "gsap/all"
 import { Link } from 'react-router-dom';

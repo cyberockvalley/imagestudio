@@ -36,7 +36,7 @@ class ItemShopSection1 extends Item {
   }
 
   render() {
-    console.log("Shop4", this.context.edit)
+    //console.log("Shop4", this.context.edit)
     return super.render(
       <div className="col-6 col-md-4">
         <BroadLink 

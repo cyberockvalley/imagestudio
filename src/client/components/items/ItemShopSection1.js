@@ -3,7 +3,7 @@ import Item from "./Item";
 import TextEditable from "../editables/TextEditable";
 import ImageEditable from "../editables/ImageEditable";
 import EditableStateContext from "../editables/EditableStateContext";
-import { PAGE_404, ROLES } from "../../../both/Constants";
+import { PAGE_404, ROLES, IMAGE_PROCCESSORS, IMAGE_PICTURE_SOURCE_EXTENSIONS } from "../../../both/Constants";
 import { Link } from "react-router-dom";
 
 const $ = require('jquery')
@@ -42,7 +42,7 @@ class ItemShopSection1 extends Item {
   }
 
   render() {
-    console.log("UploadTracker", "ShopItem", this.getPageLink(), this.props.index, this.props.onBuildItemName(this.props.index, "featured_image"))
+    //console.log("UploadTracker", "ShopItem", this.getPageLink(), this.props.index, this.props.onBuildItemName(this.props.index, "featured_image"))
     return super.render(
       <div className="col-6 col-sm-4 col-md-3" style={this.context.edit? {border: "1px solid #bcbcbc"} : {}}>
         <a href={!this.context.edit? this.getPageLink()  : "javascript:void(0)"} className="product-card">
@@ -81,6 +81,13 @@ class ItemShopSection1 extends Item {
                       left: 0
                     }}
                     add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
+                    display={{
+                      image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
+                      default: {queries: `w=200`, proccessors: IMAGE_PROCCESSORS},
+                      manifests: [
+                        {at: 200, queries: `w=200`, proccessors: IMAGE_PROCCESSORS}
+                      ]
+                    }}
                   />
                 </div>
               </div>

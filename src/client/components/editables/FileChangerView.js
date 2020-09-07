@@ -44,7 +44,7 @@ class FileChangerView extends React.Component {
     }
 
     handleChange = e => {
-        console.log("UploadTracker", "FileChangeView", "handleChange", this.props.id, this.rootClass, e.target.getAttribute("datacheck"), e.target.files[0])
+        //console.log("UploadTracker", "FileChangeView", "handleChange", this.props.id, this.rootClass, e.target.getAttribute("datacheck"), e.target.files[0])
         this.onFile(e.target.files[0])
     }
 
@@ -58,7 +58,7 @@ class FileChangerView extends React.Component {
         this.setState({accept: this.getAccept()})
         //this.setState({supportDragOver: 'FileReader' in window})
         var that = this
-        console.log("ROOT_CLASS", this.rootClass)
+        //console.log("ROOT_CLASS", this.rootClass)
         $("."+this.rootClass).on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
             e.preventDefault();
             e.stopPropagation();

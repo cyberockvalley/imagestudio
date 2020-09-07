@@ -8,6 +8,7 @@ import Axios from "axios";
 import { BASE_URL, API_SECONDARY_ROOT_DIR, WEB_PAGE_IMAGES_ENDPOINT } from "../../../both/Constants";
 import ModalView from "../widgets/ModalView";
 import IframeView from "../widgets/IframeView";
+import YoutubeView from "./YoutubeView";
 
 class TextEditable extends Editable {
     constructor(props) {
@@ -46,7 +47,7 @@ class TextEditable extends Editable {
         //console.log("getText", this.props.userRole, this.props.user, this.Element? this.Element.get("ACL") : "")
         var text = this.Element && this.haveReadPermission()? this.Element.get("data") : this.state.data;
         if(text && !this.props.edit && this.props.enable_line_break) {
-            text = text.replaceAll("\n", "<br />")
+            text = text.replace(/\n/g, "<br />")
         }
         return text
     }
@@ -60,7 +61,7 @@ class TextEditable extends Editable {
     getEditorDisplayContent = () => {
         var data = this.Element && this.haveReadPermission()? this.Element.get("json_data") : this.state.data;
         data = data? customDraftToHtml(data) : ""
-        console.log("getEd",  this.Element, this.haveReadPermission(), data, this.Element? this.Element.get("json_data") : this.state.data)
+        //console.log("getEd",  this.Element, this.haveReadPermission(), data, this.Element? this.Element.get("json_data") : this.state.data)
         return data
     }
 
@@ -108,22 +109,22 @@ class TextEditable extends Editable {
     }
     save() {
         if(this.componentKey == "content") {
-            console.log("rawContent", "detailsHasChanged", 1)
+            //console.log("rawContent", "detailsHasChanged", 1)
         }
         if(this.detailsHasChanged()) {
             if(this.componentKey == "content") {
-                console.log("rawContent", "detailsHasChanged", true)
+                //console.log("rawContent", "detailsHasChanged", true)
             }
             if(this.notAnObject()) {
                 if(this.componentKey == "content") {
-                    console.log("rawContent", "detailsHasChanged", "notAnObject")
+                    //console.log("rawContent", "detailsHasChanged", "notAnObject")
                 }
                 if(!this.Element) this.Element = this.createElement()
                 this.props.addHandler(this.Element, this.componentKey, true, true)
 
             } else {
                 if(this.componentKey == "content") {
-                    console.log("rawContent", "detailsHasChanged", "isAnObject")
+                    //console.log("rawContent", "detailsHasChanged", "isAnObject")
                 }
                 if(this.Element) {
                     if(!this.props.botKey) {
@@ -144,7 +145,7 @@ class TextEditable extends Editable {
 
                     } else {
                         this.getBotToken(token => {
-                            console.log("PageToken", 1, token)
+                            //console.log("PageToken", 1, token)
                             this.props.addHandler(element, "text_elements", null, null, token)
                             
                         })
@@ -177,7 +178,7 @@ class TextEditable extends Editable {
             })
         }
         this.setState({data: e.target.value})
-        console.log("handleChange", "detailsHasChanged", this.state, !this.Element)
+        //console.log("handleChange", "detailsHasChanged", this.state, !this.Element)
         return this.props.changeHandler(this.ElementIndex, e.target.value)
     }
 
@@ -190,8 +191,8 @@ class TextEditable extends Editable {
         }
         
         this.setState({data: rawContent})
-        console.log("rawContent", "handleEditorChange", rawContent)
-        console.log("handleChange", "detailsHasChanged", this.state, !this.Element)
+        //console.log("rawContent", "handleEditorChange", rawContent)
+        //console.log("handleChange", "detailsHasChanged", this.state, !this.Element)
         return this.props.changeHandler(this.ElementIndex, rawContent, null, this.props.isHtml)
     }
 
@@ -258,6 +259,10 @@ class TextEditable extends Editable {
     getIframeSource = () => {
         return this.Element && this.haveReadPermission()? "https://www.youtube.com/embed/" + this.Element.get("data") : null
     }
+    getYoutubeVideoId = () => {
+        return this.Element && this.haveReadPermission()? this.Element.get("data") : null
+    }
+
     getIframePlayListId = () => {
         return this.Element && this.haveReadPermission()? this.Element.get("data") : null
     }
@@ -266,6 +271,7 @@ class TextEditable extends Editable {
         this.init()
         const iframeSrc = this.getIframeSource()
         const iframePlayListId = this.getIframePlayListId()
+        const youtubeVideoId = this.getYoutubeVideoId()
         //if(!this.props.edit && this.props.notReadable) return null
         return super.render(
             <>
@@ -292,8 +298,11 @@ class TextEditable extends Editable {
                             <input id={this.props.id? this.props.id : ""} class={this.props.class? this.props.class : ""} type="text" value={this.getText()} onClick={this.handleEditClick} 
                             placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()} />
                     ://else (this.props.edit && this.haveWritePermission())
-                        this.props.isIframe?
+                        this.props.isIframe || this.props.isYoutube?
+                            this.props.isIframe?
                             <IframeView {...this.props.iframeOptions} iframeSrc={iframeSrc} playListId={iframePlayListId} />
+                            :
+                            <YoutubeView videoId={youtubeVideoId} {...this.props.iframeOptions} />
                         ://else(this.props.isIframe)
                             this.props.isHtml?
                                 <span dangerouslySetInnerHTML={{__html: this.props.onDisplayText? this.props.onDisplayText(this.getEditorDisplayContent()) : this.getEditorDisplayContent()}}></span>

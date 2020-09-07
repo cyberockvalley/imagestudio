@@ -21,7 +21,7 @@ export const getRowNeighbours = (matrixArea, itemIndex, maxRowWidth, onItemWidth
         // currentRowWidth
         var itemWidth = onItemWidth(i)
         var newRowWidth = currentRowWidth + itemWidth
-        console.log("onImageResize", "currentW", currentRowWidth, "itemWidth", itemWidth, "newW", newRowWidth)
+        //console.log("onImageResize", "currentW", currentRowWidth, "itemWidth", itemWidth, "newW", newRowWidth)
         if(i != itemIndex) neigbours.push(i)
         if(Math.round(newRowWidth) < maxRowWidth) {
             //if we get here, then it means the element at i has not broken to the next row,
@@ -41,7 +41,7 @@ export const getRowNeighbours = (matrixArea, itemIndex, maxRowWidth, onItemWidth
 
             } else {
                 //Yes! Finally. Good morning my neigbours!
-                console.log("onImageResize", "getRowNeighbours", neigbours)
+                //("onImageResize", "getRowNeighbours", neigbours)
                 return neigbours
             }
         }

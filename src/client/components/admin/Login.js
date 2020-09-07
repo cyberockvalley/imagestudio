@@ -51,7 +51,7 @@ class Login extends Page {
             .then(async user => {
                 var roles = await getRolesSync()
                 saveToLocalStorage(STORAGE_KEYS.roles, roles)
-                console.log("ROLES", roles)
+                //console.log("ROLES", roles)
                 this.setState({loading: false})
                 this.props.history.push(roles.includes(ROLES.mod)? "/admin" : "/")
             })

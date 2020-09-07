@@ -3,6 +3,7 @@ import ParseClient, { ParseClasses } from '../../../both/Parse';
 import TextEditable from './TextEditable';
 import FileChangerView from './FileChangerView';
 import FileEditable from './FileEditable';
+import { buildFileTags, getSrc } from './utils/imagefunc';
 
 class ImageEditable extends FileEditable {
     constructor(props) {
@@ -70,10 +71,10 @@ class ImageEditable extends FileEditable {
     getRelationName() {
         return "image_elements"
     }
-
+    
     render() {
         this.init()
-        console.log("UploadTracker", "ImageEditable", this.props.link, this.props.id)
+        //console.log("UploadTracker", "ImageEditable", this.props.link, this.props.id)
         const style = this.getStyle()
         return super.render(
             <FileChangerView
@@ -102,14 +103,23 @@ class ImageEditable extends FileEditable {
                  style={!this.haveReadPermission()? imageHide : styles.image}>
                      {
                          this.state.fileShades.length == 0 && this.props.placeholder?
-                         <img src={this.props.placeholder} style={this.props.imgStyle || this.props.style} /> : null
+                         <img className={`lazyload ${this.props.beforeLoadClasses? this.props.beforeLoadClasses : ""}`} data-src={this.props.placeholder} style={this.props.imgStyle || this.props.style} /> : null
                      }
                     {
-                        this.state.fileShades.map((imageData, index) => {
-                            return(<img key={index} src={imageData.src} type={imageData.mime} 
-                            style={this.props.imgStyle || this.props.style} />)
-                        })
+                        this.state.fileShades.length > 0?
+                        <>
+                            {
+                                buildFileTags(this.state.fileShades[0].src, this.props.display).map((value, index) => {
+                                    return value.tag == "source"? 
+                                    <source key={index} data-srcset={value.srcSet} />
+                                    :
+                                    <img className={`lazyload ${this.props.beforeLoadClasses? this.props.beforeLoadClasses : ""}`} key={index} data-srcset={value.srcSet} data-src={!this.props.display? this.props.display : getSrc(this.state.fileShades[0].src, this.props.display.default)} style={this.props.imgStyle || this.props.style} />
+                                })
+                            }
+                        </>
+                            : null
                     }
+                    <div style={{position: "relative"}}></div>
                 </picture>
                 
                 {

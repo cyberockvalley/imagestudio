@@ -2,7 +2,7 @@ import React from "react";
 import ImageEditable from "../editables/ImageEditable";
 import EditableStateContext from "../editables/EditableStateContext";
 import Item from "./Item";
-import { ROLES, EMPTY_PROFILE_PHOTO } from "../../../both/Constants";
+import { ROLES, EMPTY_PROFILE_PHOTO, IMAGE_PROCCESSORS, IMAGE_PICTURE_SOURCE_EXTENSIONS } from "../../../both/Constants";
 import TextEditable from "../editables/TextEditable";
 
 class ItemTeamMember extends Item {
@@ -73,6 +73,13 @@ class ItemTeamMember extends Item {
               }}
               add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
               placeholder={EMPTY_PROFILE_PHOTO}
+              display={{
+                image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
+                default: {queries: `w=200`, proccessors: IMAGE_PROCCESSORS},
+                manifests: [
+                  {at: 200, queries: `w=200`, proccessors: IMAGE_PROCCESSORS}
+                ]
+              }}
             />
           </div>
         </div>

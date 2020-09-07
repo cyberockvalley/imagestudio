@@ -21,6 +21,8 @@ import Cart from './components/Cart'
 import LicenseInfo from './components/LicenseInfo'
 import Register from './components/admin/Register'
 import Login from './components/admin/Login'
+import VideosCommercial from './components/VideoCommercial'
+import VideosMusic from './components/VideoMusic'
 
 const $ = require('jquery')
 
@@ -66,8 +68,14 @@ class ComponentsRoutes extends React.Component {
         <Route exact path="/reviews" 
           render={(propz) => <Reviews {...propz} data={this.props.initialData} />}
         />
-        <Route exact path="/videos(|/music|/commercial)" 
+        <Route exact path="/videos/" 
           render={(propz) => <Videos {...propz} data={this.props.initialData} />}
+        />
+        <Route exact path="/videos/music/" 
+          render={(propz) => <VideosMusic {...propz} data={this.props.initialData} />}
+        />
+        <Route exact path="/videos/commercial/" 
+          render={(propz) => <VideosCommercial {...propz} data={this.props.initialData} />}
         />
         <Route exact path="/portfolio" 
           render={(propz) => <WeddingPhotos {...propz} data={this.props.initialData} />}

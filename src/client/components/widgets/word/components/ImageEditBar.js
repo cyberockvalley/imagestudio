@@ -9,7 +9,7 @@ class ImageEditBar extends React.Component {
     }
 
     componentDidMount() {
-        console.log("Arc2", this.props)
+        //console.log("Arc2", this.props)
         this.setState({width: this.props.width || 100})
     }
 
