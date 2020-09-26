@@ -3,7 +3,11 @@ import { EXAMPLE_MODE_TRUE } from "../Constants"
 //import Hydrate from 'hydrate'
 
 //const hydrate = new Hydrate()
-
+/*
+#main-navigaton .navbar {
+	display: flex;
+	justify-content: end;
+}*/
 export default (helmet, state, body) => {
     return `
     <!DOCTYPE html>

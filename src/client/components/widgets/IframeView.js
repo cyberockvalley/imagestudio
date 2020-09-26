@@ -76,7 +76,7 @@ class IframeView extends React.Component {
             }
             {
                 this.props.iframeStyle == IFRAME_STYLES.inline?
-                <div className={`aaaa ${this.props.containerClass || ""}`} style={this.props.containerStyle? this.props.containerStyle: {}}>
+                <div className={`${this.props.containerClass || ""}`} style={this.props.containerStyle? this.props.containerStyle: {}}>
                     <iframe className={`lazyload iframe-responsive`} width="100%" height="100%" data-src={`${iframeSrc}?mute=${this.props.mute? 1 : 0}&autoplay=${this.props.autoPlay? 1 : 0}&playsinline=${this.props.autoPlay? 1 : 0}&showinfo=${this.props.hideInfo? 0 : 1}&rel=${this.props.disableRel? 0 : 1}&controls=${this.props.disableControls? 0 : 1}&loop=${this.props.loop? 1 : 0}&disablekb=${this.props.disableKb? 1 : 0}&modestbranding=${this.props.disableLogo? 1 : 0}&fs=${this.props.disableFullscreen? 0 : 1}${this.props.loop? "&playlist=" + this.props.playListId : ""}`} frameborder="0" style={this.props.style? this.props.style : {}} allowFullScreen></iframe>
                 </div>
                 : null

@@ -1,22 +1,24 @@
 import React from 'react'
+import { isClient } from '../../../both/Functions'
 
 const $ = require('jquery')
+
+export const iOS = () => {
+    if(!isClient()) return false
+    return [
+      'iPad Simulator',
+      'iPhone Simulator',
+      'iPod Simulator',
+      'iPad',
+      'iPhone',
+      'iPod'
+    ].includes(navigator.platform)
+    // iPad on iOS 13 detection
+    || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
 class YoutubeView extends React.Component {
     constructor(props) {
         super(props)
-    }
-
-    iOS() {
-        return [
-          'iPad Simulator',
-          'iPhone Simulator',
-          'iPod Simulator',
-          'iPad',
-          'iPhone',
-          'iPod'
-        ].includes(navigator.platform)
-        // iPad on iOS 13 detection
-        || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
     }
 
     componentDidMount() {
@@ -26,7 +28,7 @@ class YoutubeView extends React.Component {
             $('button').toggleClass("active");
         }
         if(that.props.autoPlay) {
-            if(!this.iOS()) {
+            if(!iOS()) {
                 ctrlVideo.play();
             }
         }

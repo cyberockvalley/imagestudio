@@ -370,8 +370,9 @@ footer .heading{
 	}
 
     #main-navigaton .navbar{
+		width: 100%;
         display: flex;
-        justify-content: end;
+		justify-content: flex-end;
     }
     #carouselFeaturesIndicators {
         margin-bottom: 13%;
@@ -461,7 +462,7 @@ footer .heading{
 		padding-left: 0;
 		padding-right: 0;
 	}
-	#main-navigaton .navbar-toggler {padding: 5px 20px 5px 5px;display: block;}
+	#main-navigaton .navbar-toggler {padding: 5px 20px 5px 5px;}
 	
 
     footer {
@@ -505,7 +506,7 @@ footer .heading{
         padding-left: 0;
         padding-right: 0;
     }
-	#main-navigaton .navbar-toggler {padding: 5px 20px 5px 5px;display: block;}
+	#main-navigaton .navbar-toggler {padding: 5px 20px 5px 5px;}
 	
 
     footer {

@@ -8,7 +8,7 @@ import Axios from "axios";
 import { BASE_URL, API_SECONDARY_ROOT_DIR, WEB_PAGE_IMAGES_ENDPOINT } from "../../../both/Constants";
 import ModalView from "../widgets/ModalView";
 import IframeView from "../widgets/IframeView";
-import YoutubeView from "./YoutubeView";
+import YoutubeView, { iOS } from "./YoutubeView";
 
 class TextEditable extends Editable {
     constructor(props) {
@@ -299,7 +299,7 @@ class TextEditable extends Editable {
                             placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()} />
                     ://else (this.props.edit && this.haveWritePermission())
                         this.props.isIframe || this.props.isYoutube?
-                            this.props.isIframe?
+                            this.props.isIframe || iOS()?
                             <IframeView {...this.props.iframeOptions} iframeSrc={iframeSrc} playListId={iframePlayListId} />
                             :
                             <YoutubeView videoId={youtubeVideoId} {...this.props.iframeOptions} />
