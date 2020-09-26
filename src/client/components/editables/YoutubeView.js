@@ -6,6 +6,19 @@ class YoutubeView extends React.Component {
         super(props)
     }
 
+    iOS() {
+        return [
+          'iPad Simulator',
+          'iPhone Simulator',
+          'iPod Simulator',
+          'iPad',
+          'iPhone',
+          'iPod'
+        ].includes(navigator.platform)
+        // iPad on iOS 13 detection
+        || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+    }
+
     componentDidMount() {
         var that = this
         var ctrlVideo = document.getElementById(that.getVideoTagId());
@@ -13,7 +26,9 @@ class YoutubeView extends React.Component {
             $('button').toggleClass("active");
         }
         if(that.props.autoPlay) {
-            ctrlVideo.play();
+            if(!this.iOS()) {
+                ctrlVideo.play();
+            }
         }
 
         $('button').click(function(){
