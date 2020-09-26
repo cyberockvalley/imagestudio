@@ -28,7 +28,7 @@ class NavBar extends React.Component {
     return (
       <section id="navigation">
         <div id="main-navigaton" className="navbar-static-top">
-          <div className="container">
+          <div className="container nav-container">
             <nav className="navbar navbar-expand-xl p-0">
               <button
                 className="navbar-toggler"
@@ -39,22 +39,8 @@ class NavBar extends React.Component {
                 aria-expanded="false"
                 aria-label="Toggle navigation"
               >
-                <svg
-                  aria-hidden="true"
-                  focusable="false"
-                  data-prefix="fas"
-                  data-icon="ellipsis-h"
-                  role="img"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                  className="svg-inline--fa fa-ellipsis-h fa-w-16 fa-5x"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"
-                    className
-                  />
-                </svg>
+                <div className="menu">MENU</div>
+                <i class="icon fa fa-2x fa-ellipsis-h"></i>
               </button>
               <div id="main-nav" className="collapse navbar-collapse">
                 <ul id="menu-upper" className="navbar-nav">

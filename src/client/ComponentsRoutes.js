@@ -51,70 +51,70 @@ class ComponentsRoutes extends React.Component {
     return (
       <Switch className="App">
         <Route exact path="/" 
-          render={(propz) => <Home {...propz} data={this.props.initialData} />}
+          render={(propz) => <Home {...propz} state={this.props.state} />}
         />
         <Route exact path="/contact" 
-          render={(propz) => <Contact {...propz} data={this.props.initialData} />}
+          render={(propz) => <Contact {...propz} state={this.props.state} />}
         />
         <Route exact path="/blog" 
-          render={(propz) => <Blog {...propz} data={this.props.initialData} />}
+          render={(propz) => <Blog {...propz} state={this.props.state} />}
         />
         <Route exact path="/blog/:title" 
-          render={(propz) => <SingleBlogSpool {...propz} data={this.props.initialData} />}
+          render={(propz) => <SingleBlogSpool {...propz} state={this.props.state} />}
         />
         <Route exact path="/about" 
-          render={(propz) => <About {...propz} data={this.props.initialData} />}
+          render={(propz) => <About {...propz} state={this.props.state} />}
         />
         <Route exact path="/reviews" 
-          render={(propz) => <Reviews {...propz} data={this.props.initialData} />}
+          render={(propz) => <Reviews {...propz} state={this.props.state} />}
         />
         <Route exact path="/videos/" 
-          render={(propz) => <Videos {...propz} data={this.props.initialData} />}
+          render={(propz) => <Videos {...propz} state={this.props.state} />}
         />
         <Route exact path="/videos/music/" 
-          render={(propz) => <VideosMusic {...propz} data={this.props.initialData} />}
+          render={(propz) => <VideosMusic {...propz} state={this.props.state} />}
         />
         <Route exact path="/videos/commercial/" 
-          render={(propz) => <VideosCommercial {...propz} data={this.props.initialData} />}
+          render={(propz) => <VideosCommercial {...propz} state={this.props.state} />}
         />
         <Route exact path="/portfolio" 
-          render={(propz) => <WeddingPhotos {...propz} data={this.props.initialData} />}
+          render={(propz) => <WeddingPhotos {...propz} state={this.props.state} />}
         />
         <Route exact path="/photo" 
-          render={(propz) => <WeddingStories {...propz} data={this.props.initialData} />}
+          render={(propz) => <WeddingStories {...propz} state={this.props.state} />}
         />
         <Route exact path="/shop" 
-          render={(propz) => <Shop {...propz} data={this.props.initialData} />}
+          render={(propz) => <Shop {...propz} state={this.props.state} />}
         />
         <Route exact path="/movies" 
-          render={(propz) => <Movies {...propz} data={this.props.initialData} />}
+          render={(propz) => <Movies {...propz} state={this.props.state} />}
         />
         <Route exact path="/admin" 
-          render={(propz) => <AdminHome {...propz} data={this.props.initialData} />}
+          render={(propz) => <AdminHome {...propz} state={this.props.state} />}
         />
         <Route exact path="/admin/up" 
-          render={(propz) => <Register {...propz} data={this.props.initialData} />}
+          render={(propz) => <Register {...propz} state={this.props.state} />}
         />
         <Route exact path="/admin/in" 
-          render={(propz) => <Login {...propz} data={this.props.initialData} />}
+          render={(propz) => <Login {...propz} state={this.props.state} />}
         />
         <Route exact path="/upload-test" 
-          render={(propz) => <FileUpload {...propz} data={this.props.initialData} />}
+          render={(propz) => <FileUpload {...propz} state={this.props.state} />}
         />
         <Route exact path="/:title" 
-          render={(propz) => <SingleStorySpool {...propz} data={this.props.initialData} />}
+          render={(propz) => <SingleStorySpool {...propz} state={this.props.state} />}
         />
         <Route exact path="/product/:title" 
-          render={(propz) => <SingleProductSpool {...propz} data={this.props.initialData} />}
+          render={(propz) => <SingleProductSpool {...propz} state={this.props.state} />}
         />
         <Route exact path={"/shop/cart"} 
-          render={(propz) => <Cart {...propz} data={this.props.initialData} />}
+          render={(propz) => <Cart {...propz} state={this.props.state} />}
         />
         <Route exact path={"/shop/license"} 
-          render={(propz) => <LicenseInfo {...propz} data={this.props.initialData} />}
+          render={(propz) => <LicenseInfo {...propz} state={this.props.state} />}
         />
         <Route exact path={PAGE_404} 
-          render={(propz) => <Error404 {...propz} data={this.props.initialData} />}
+          render={(propz) => <Error404 {...propz} state={this.props.state} />}
         />
       </Switch>
     )

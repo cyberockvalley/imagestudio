@@ -74,7 +74,7 @@ class VideoEditable extends FileEditable {
     }
 
     render() {
-        this.init()
+        //this.init()
         //console.log("VideoEditable", this.state)
         return (
             <FileChangerView

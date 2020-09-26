@@ -35,12 +35,10 @@ const FileProccessors = {
         }
 
         if(!w || w <= 0) {
-            var aspectRatio = calculateAspectRatioFit(currentWidth, currentHeight, h, h)
-            w = aspectRatio.width;
+            w = Math.round((h * currentWidth) / currentHeight)
 
         } else if(!h || h <= 0) {
-            var aspectRatio = calculateAspectRatioFit(currentWidth, currentHeight, w, w)
-            h = aspectRatio.height;
+            h = Math.round((w * currentHeight) / currentWidth)
         }
 
         if(w == 0 || h == 0) return null

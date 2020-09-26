@@ -8,7 +8,7 @@ class Footer extends React.Component {
   }
   render() {
     return (
-      <div className="footer" style={{height: "120px", display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
+      <div className="footer" style={{height: "200px", display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
         <div>
           <div>
             <TextEditable 

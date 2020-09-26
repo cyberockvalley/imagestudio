@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router } from 'react-router-dom'
 import ComponentsRoutes from './ComponentsRoutes'
 import serviceWorker from './serviceWorker'
-const initialData = window.__initialData__
-delete window.__initialData__
+const state = window.__state__
+delete window.__state__
 
 const App = () => (
     <Router>
-      <ComponentsRoutes initialData={initialData} />
+      <ComponentsRoutes state={state} />
     </Router>
 )
 

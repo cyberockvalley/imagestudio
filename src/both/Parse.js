@@ -2,10 +2,6 @@ import { isClient } from "./Functions"
 import { API_PORT, API_ROOT_DIR, BASE_URL, ROLES } from "./Constants"
 
 const ParseClient = require('parse')
-if(!isClient()) {
-        const ParseClient = require('parse/node')
-
-}
 
 ParseClient.initialize('123456A', '123456J')
 
@@ -33,8 +29,27 @@ export const ParseClasses = {
 }
 
 
-export const getParseQuery = obj => {
-        return new ParseClient.Query(obj)
+export const getParseClasses = client => {
+        var classes = {
+                Page: client.Object.extend("Page"),
+                TextElement: client.Object.extend("TextElement"),
+                ImageElement: client.Object.extend("ImageElement"),
+                VideoElement: client.Object.extend("VideoElement"),
+                IframeElement: client.Object.extend("IframeElement"),
+                ListElement: client.Object.extend("ListElement"),
+                
+                ImageData: client.Object.extend("ImageData"),
+                VideoData: client.Object.extend("VideoData"),
+                
+                ListItem: client.Object.extend("ListItemElement")
+        }
+        return classes
+}
+
+
+export const getParseQuery = (obj, parseClient) => {
+        var client = parseClient || ParseClient
+        return new client.Query(obj)
 }
 
 export const buildElementKey = (username, pageKey, section, keyTitle) => {

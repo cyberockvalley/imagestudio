@@ -308,8 +308,16 @@ footer .heading{
 .carousel-control-next, .carousel-control-prev{
     opacity: 1;
 }
-#main-navigaton .navbar-toggler svg{
+#main-navigaton .navbar-toggler {
     display: none;
+}
+#main-navigaton .navbar-toggler .icon {
+	color: #cb8512;
+}
+#main-navigaton .navbar-toggler .menu {
+	color: #fff;
+	background: #003768;
+	padding: 5px;
 }
 .page-link{
     border: 1px solid #ca8511;
@@ -355,16 +363,15 @@ footer .heading{
     }
     .fixed-top.show{
         bottom: 0;
-    }
-    #main-navigaton .navbar-toggler svg{
-        width: 30px;
-        color: #cb8512;
+	}
+	.nav-container {max-width: 100% !important; width: 100% !important;}
+    #main-navigaton .navbar-toggler {
         display: block;
-    }
+	}
 
     #main-navigaton .navbar{
-        display: block;
-        text-align: right;
+        display: flex;
+        justify-content: end;
     }
     #carouselFeaturesIndicators {
         margin-bottom: 13%;
@@ -386,10 +393,6 @@ footer .heading{
     #main-nav{
         background-color: #fff;
     }
-    #main-navigaton .navbar-toggler svg{
-        width: 60px;
-    }
-
 
 }
 @media screen and (max-width: 767px) and (min-width: 576px){
@@ -408,9 +411,6 @@ footer .heading{
 	height: 180px;
 }
 @media screen and (max-width: 575px){
-    #main-navigaton .navbar-toggler svg{
-        width: 30px;
-    }
     h1{
         font-size: 12px;
     }
@@ -457,17 +457,12 @@ footer .heading{
     }
 }
 @media screen and (max-width: 375px){
-#main-navigaton .container{
-    padding-left: 0;
-    padding-right: 0;
-}
-    #main-navigaton .navbar-toggler {
-        padding: 5px 20px 5px 5px;}
-    #main-navigaton .navbar-toggler svg {
-        width: 22px;
-        color: #cb8512;
-        display: block;
-    }
+	#main-navigaton .container{
+		padding-left: 0;
+		padding-right: 0;
+	}
+	#main-navigaton .navbar-toggler {padding: 5px 20px 5px 5px;display: block;}
+	
 
     footer {
         background-color: #f9f5ec;
@@ -510,13 +505,8 @@ footer .heading{
         padding-left: 0;
         padding-right: 0;
     }
-    #main-navigaton .navbar-toggler {
-        padding: 5px 20px 5px 5px;}
-    #main-navigaton .navbar-toggler svg {
-        width: 22px;
-        color: #cb8512;
-        display: block;
-    }
+	#main-navigaton .navbar-toggler {padding: 5px 20px 5px 5px;display: block;}
+	
 
     footer {
         background-color: #f9f5ec;
@@ -648,6 +638,12 @@ footer .heading{
 .flo-image-block-1--244 .flo-image-block-1__title, .flo-image-block-1--244 .flo-image-block-1__text-content, .flo-image-block-1--244 .flo-image-block-1__link {
 	color: #000000 !important;
 }
+@media screen and (max-width: 47.9988em) {
+	.flo-image-block-1__title {
+		margin-bottom: 2.5rem;
+	}
+}
+
 .flo-image-block-1--244 .flo-image-block-1__title, .movie-about-us > h2 {
 	font-family: Bellefair Regular;
 	font-size: 1.875rem;
@@ -2661,3 +2657,44 @@ h3.miracle-body {
 	}
 }
 .grecaptcha-badge, .yt-hide-widgets .ytp-chrome-top, .yt-hide-widgets .ytp-show-cards-title, .yt-hide-widgets .ytp-large-play-button, .yt-hide-widgets html body .ytp-button {display: none;}
+@media screen and (max-width: 767px){ 
+	.editor-grid-image-output{width: 100% !important}
+}
+.no-border{border:none!important}
+.yt-header-video {
+	position: relative;
+	background-color: #000;
+	width: 100%;
+
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+    background-color: #000;
+    overflow: hidden
+}
+@media screen and (min-width: 768px) {
+	.yt-header-video {
+		height: 0 !important;
+		padding-bottom: 56.25% !important;
+	}
+}
+button.yt-play {
+	background-color: #000;
+	opacity: 0.5;
+	border-radius: 50%;
+	border-color: transparent;
+	color: #fff;
+	font-size: 18px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	left: 0;
+	margin: 0 auto;
+	padding: 8px;
+	position: absolute;
+	right: 0;
+	top: 50%;
+	z-index: -1;
+}
+button.yt-play.active {z-index: 1;}

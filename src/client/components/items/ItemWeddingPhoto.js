@@ -10,6 +10,8 @@ class ItemWeddingPhoto extends Item {
   static contextType = EditableStateContext
   constructor(props, context) {
     super(props, context)
+    this.state = {...this.state, lensIndex: this.props.index, lensNavigator: this.props.navigator}
+    this.state.lensImageElementsProps = this.state.imageElementsProps
     
   }
 
@@ -26,11 +28,33 @@ class ItemWeddingPhoto extends Item {
   }
 
   enlarge = () => {
-    this.setState({enlargeImage: true})
+    this.setState({lensNavigator: this.props.navigator, lensIndex: this.props.index, lensImageElementsProps: this.state.imageElementsProps, enlargeImage: true})
   }
 
   closeImage = () => {
-    this.setState({enlargeImage: false})
+    this.setState({lensNavigator: this.props.navigator, lensIndex: this.props.index, lensImageElementsProps: this.state.imageElementsProps, enlargeImage: false})
+  }
+
+  prevImage = () => {
+    var neigbour = this.state.lensNavigator.getPrev()
+    if(!neigbour) neigbour = this.state.lensNavigator.getLast()
+    if(neigbour) {
+      this.setState({refresh: true})
+      this.setState({lensNavigator: neigbour.props.navigator, lensIndex: neigbour.props.index, lensImageElementsProps: neigbour.state.imageElementsProps, refresh: false})
+    } else {
+      this.closeImage()
+    }
+  }
+
+  nextImage = () => {
+    var neigbour = this.state.lensNavigator.getNext()
+    if(!neigbour) neigbour = this.state.lensNavigator.getFirst()
+    if(neigbour) {
+      this.setState({refresh: true})
+      this.setState({lensNavigator: neigbour.props.navigator, lensIndex: neigbour.props.index, lensImageElementsProps: neigbour.state.imageElementsProps, refresh: false})
+    } else {
+      this.closeImage()
+    }
   }
 
   render() {
@@ -55,6 +79,7 @@ class ItemWeddingPhoto extends Item {
               emptyHeight="400px"
               add_overlay={!this.state.page || !this.state.page.id || this.context.edit}
               beforeLoadClasses={`lh${["200", "250", "300"][parseInt(Math.random() * 3)]}`}
+              imgClasses={"no-border"}
               display={{
                 image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
                 default: {queries: `w=150`, proccessors: IMAGE_PROCCESSORS},
@@ -67,14 +92,17 @@ class ItemWeddingPhoto extends Item {
           <ModalView open={this.state.enlargeImage} onClose={this.closeImage}>
               <div style={styles.modalContainer}>
                   <div style={styles.modalLeftWidget}>
-                      <span className={`fa fa-3x fa-arrow-circle-left action white d-none`}></span>
+                      <span onClick={this.prevImage} className={`fa fa-3x fa-arrow-circle-left action white`}></span>
                   </div>
                   <div style={styles.modalCenterWidget}>
                       <div style={styles.modalIframe}>
-                          <ImageEditable 
+                          {
+                            !this.state.refresh?
+                            <ImageEditable 
+                            key={this.state.lensIndex}
                             name="photo"
-                            id={this.props.onBuildItemName(this.props.index, "photo")}
-                            {...this.state.imageElementsProps}
+                            id={this.props.onBuildItemName(this.state.lensIndex, "photo")}
+                            {...this.state.lensImageElementsProps}
                             spinnerWidth={50}
                             spinnerHeight={50}
                             spinnerThickness={7}
@@ -94,11 +122,14 @@ class ItemWeddingPhoto extends Item {
                                 {at: 768, queries: `w=768`, proccessors: IMAGE_PROCCESSORS},
                                 {at: 992, queries: `w=992`, proccessors: IMAGE_PROCCESSORS}
                               ]
-                            }} />
+                            }} /> : null
+                          }
                       </div>
                   </div>
                   <div style={styles.modalRightWidget}>
-                      <span className="fa fa-3x fa-times-circle action white" onClick={this.closeImage}></span>
+                      <span onClick={this.closeImage} className="fa fa-3x fa-times-circle action white"></span>
+                      <span onClick={this.nextImage} className={`fa fa-3x fa-arrow-circle-right action white`}></span>
+                      <span className={`fa fa-3x fa-arrow-circle-left action white`} style={{visibility: 'hidden'}}></span>
                   </div>
               </div>
           </ModalView>

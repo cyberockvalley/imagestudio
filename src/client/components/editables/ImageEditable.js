@@ -103,7 +103,7 @@ class ImageEditable extends FileEditable {
                  style={!this.haveReadPermission()? imageHide : styles.image}>
                      {
                          this.state.fileShades.length == 0 && this.props.placeholder?
-                         <img className={`lazyload ${this.props.beforeLoadClasses? this.props.beforeLoadClasses : ""}`} data-src={this.props.placeholder} style={this.props.imgStyle || this.props.style} /> : null
+                         <img className={`lazyload ${this.props.beforeLoadClasses? this.props.beforeLoadClasses + " " : " "}${this.props.imgClasses? this.props.imgClasses : ""}`} data-src={this.props.placeholder} style={this.props.imgStyle || this.props.style} /> : null
                      }
                     {
                         this.state.fileShades.length > 0?
@@ -111,9 +111,9 @@ class ImageEditable extends FileEditable {
                             {
                                 buildFileTags(this.state.fileShades[0].src, this.props.display).map((value, index) => {
                                     return value.tag == "source"? 
-                                    <source key={index} data-srcset={value.srcSet} />
+                                    <source key={index} data-srcset={value.srcSet} type={`image/${value.sub_type}`} />
                                     :
-                                    <img className={`lazyload ${this.props.beforeLoadClasses? this.props.beforeLoadClasses : ""}`} key={index} data-srcset={value.srcSet} data-src={!this.props.display? this.props.display : getSrc(this.state.fileShades[0].src, this.props.display.default)} style={this.props.imgStyle || this.props.style} />
+                                    <img className={`lazyload ${this.props.beforeLoadClasses? this.props.beforeLoadClasses + " " : " "}${this.props.imgClasses? this.props.imgClasses : ""}`} key={index} data-srcset={value.srcSet} data-src={!this.props.display? this.props.display : getSrc(this.state.fileShades[0].src, this.props.display.default)} style={this.props.imgStyle || this.props.style} />
                                 })
                             }
                         </>

@@ -38,3 +38,5 @@ export const META_VARS = {
     yandex_verification: "802d164716a2e08d",
     msvalidate: "74E9D8751C4D40F2FD68F7305E53DB82"
 }
+
+export const IMAGE_PROCCESS_VERSION = '1.0.0'

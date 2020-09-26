@@ -301,7 +301,22 @@ class ListEditable extends Editable {
                         this.state.items.map((page, index) => {
                             return this.props.onItem(page, page.index || index, this.props.onBuildItemName, (ref) => {
                                 this.pageRefs.push(ref)
-                            }, this.props.edit && this.haveWritePermission() || page.singleEdit)
+                            }, this.props.edit && this.haveWritePermission() || page.singleEdit, {
+                                getPrev: () => {
+                                    var i = (page.index || index) - 1
+                                    return i > -1? this.pageRefs[i] : null
+                                },
+                                getNext: () => {
+                                    var i = (page.index || index) + 1
+                                    return i < this.state.items.length? this.pageRefs[i] : null
+                                },
+                                getFirst: () => {
+                                    return this.pageRefs[0]
+                                },
+                                getLast: () => {
+                                    return this.pageRefs[this.state.items.length - 1]
+                                }
+                            })
                         })
                         :
                         <></>

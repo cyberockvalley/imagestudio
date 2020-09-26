@@ -31,10 +31,11 @@ class HeaderVideoBanner extends React.Component {
             disableFullscreen: true,
             hideInfo: true,
             loop: true,
-            mute: true,
+            mute: false,
             containerStyle: styles.inlineContainer,
-            containerClass: "yt-hide-widgets",
-            style: styles.iframe
+            containerClass: "yt-hide-widgets yt-header-video",
+            style: styles.iframe,
+            customPlayButton: true
           }}
           id="introIframeMobile"
           name="site_info_header_iframe"
@@ -79,11 +80,21 @@ class HeaderVideoBanner extends React.Component {
 }
 
 const styles = {
-  inlineContainer: {
+  mobileInlineContainer: {
+    position: "relative",
+    backgroundPosition: "center center",
+    backgroundRepeat: "no-repeat",
+    height: "100vh",
+    width: "100%",
+    backgroundColor: "#000",
+    overflow: "hidden"
+  },
+  inlineContainer: {/*
+    backgroundColor: "#000",
     position: "relative",
     width: "100%",
     height: 0,
-    paddingBottom: "56.25%"
+    paddingBottom: "56.25%"*/
   },
   iframe: {
     position: "absolute",

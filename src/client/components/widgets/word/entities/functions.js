@@ -18,7 +18,7 @@ export const getSize = (maxWidth, containerWidth, isAuto, cssWidth, cssWidthType
   }
   var s = (parseInt(cssWidth) * maxWidth) / 100
   console.log("getSizeW", cssWidth, maxWidth, s)
-  return Math.round(s)
+  return s < 500? 500 : Math.round(s)
 }
 
 const customEntityTransform = (entity, text) => {
@@ -63,7 +63,7 @@ const customEntityTransform = (entity, text) => {
         height: ${image.autoHeight? "auto" : image.height + image.heightType};
         padding-right: ${gridItemsSpacing + "px"};
         padding-bottom: ${gridItemsSpacing + "px"}
-    " class="editor-image-container">
+    " class="editor-image-container editor-grid-image-output">
         <picture style="width: 100%; height: 100%">
           ${imageTags}
           <div style="position: relative"></div>
@@ -72,7 +72,7 @@ const customEntityTransform = (entity, text) => {
     })
     return `<div style="width: 100%; display: flex; justify-content: ${justify}">
       <div 
-          style="display: flex; flex-wrap: wrap; width: ${entity.data.width || 100}%">
+          style="display: flex; flex-wrap: wrap; width: ${entity.data.width || 100}%" class="editor-grid-image-output">
           ${
             children
           }

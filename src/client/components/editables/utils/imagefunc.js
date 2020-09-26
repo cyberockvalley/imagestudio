@@ -1,4 +1,5 @@
 import { fileAndExt } from "../../../../both/Functions"
+import { IMAGE_PROCCESS_VERSION } from "../../../../both/Constants"
 
 export const convertFilename = (url, ext) => {
     if(!ext || !url) return url
@@ -15,7 +16,8 @@ export const getSrcSet = (url, manifests, proccessorEditor) => {
     if(manifests) {
         for(var i = 0; i < manifests.length; i++) {
             var manifest = manifests[i]
-            srcSet += `, ${url}${manifest.queries? `${url.includes("?")? "&" : "?"}${manifest.queries}&p=${proccessorEditor? proccessorEditor(manifest.proccessors) : manifest.proccessors}` : ""}${manifest.at? ` ${manifest.at}w` : ""}`
+
+            srcSet += `, ${url}${manifest.queries? `${url.includes("?")? "&" : "?"}${manifest.queries + `&v=${IMAGE_PROCCESS_VERSION}`}&p=${proccessorEditor? proccessorEditor(manifest.proccessors) : manifest.proccessors}` : ""}${manifest.at? ` ${manifest.at}w` : ""}`
         }
         //console.log("Manifest", "getSrcSet", srcSet)
         //console.log("Manifest", "getSrcSet", 2, manifests)
@@ -37,7 +39,8 @@ export const buildFileTags = (url, display) => {
                     tag: "source",
                     srcSet: getSrcSet(convertFilename(url, image_exts[i].name), manifests, (proccessors) => {
                         return (proccessors? proccessors + "." : "") + image_exts[i].proccessors
-                    })
+                    }),
+                    sub_type: image_exts[i].name
                 })
             }
         }

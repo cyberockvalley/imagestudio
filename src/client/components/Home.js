@@ -39,14 +39,15 @@ class Home extends Page {
     this.weddingPhotosList = weddingPhotosList
   }
 
-  buildWeddingPhotosItem = (item, index, onBuildItemName, refGetter) => {
+  buildWeddingPhotosItem = (item, index, onBuildItemName, refGetter, isSingleEdit, navigator) => {
     return (
       <ItemWeddingPhoto 
         key={index}
         index={index}
         page={item}
         onBuildItemName={onBuildItemName}
-        refGetter={refGetter} />
+        refGetter={refGetter}
+        navigator={navigator} />
     )
   }
 

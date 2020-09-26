@@ -45,7 +45,7 @@ class TextEditable extends Editable {
     
     getText = () => {
         //console.log("getText", this.props.userRole, this.props.user, this.Element? this.Element.get("ACL") : "")
-        var text = this.Element && this.haveReadPermission()? this.Element.get("data") : this.state.data;
+        var text = this.Element && this.haveReadPermission()? this.Element.get? this.Element.get("data") : this.Element.data : this.state.data;
         if(text && !this.props.edit && this.props.enable_line_break) {
             text = text.replace(/\n/g, "<br />")
         }
@@ -53,13 +53,13 @@ class TextEditable extends Editable {
     }
 
     getEditorRawContent = () => {
-        var data = this.Element && this.haveReadPermission()? this.Element.get("json_data") : this.state.data;
+        var data = this.Element && this.haveReadPermission()? this.Element.get? this.Element.get("json_data") : this.Element.json_data : this.state.data;
         //console.log("rawContent", "getEditorRawContent", data, this.componentKey)
         return data
     }
 
     getEditorDisplayContent = () => {
-        var data = this.Element && this.haveReadPermission()? this.Element.get("json_data") : this.state.data;
+        var data = this.Element && this.haveReadPermission()? this.Element.get? this.Element.get("json_data") : this.Element.json_data : this.state.data;
         data = data? customDraftToHtml(data) : ""
         //console.log("getEd",  this.Element, this.haveReadPermission(), data, this.Element? this.Element.get("json_data") : this.state.data)
         return data
@@ -173,8 +173,8 @@ class TextEditable extends Editable {
     handleChange = e => {
         if(!this.state.initialData) {
             this.setState({
-                initialData: this.Element? this.Element.get("data") : "",
-                initialTags: this.Element? this.Element.get("tags") : ""
+                initialData: this.Element? this.Element.get? this.Element.get("data") : this.Element.data : "",
+                initialTags: this.Element? this.Element.get? this.Element.get("tags") : this.Element.tags : ""
             })
         }
         this.setState({data: e.target.value})
@@ -185,8 +185,8 @@ class TextEditable extends Editable {
     handleEditorChange = rawContent => {
         if(!this.state.initialData) {
             this.setState({
-                initialData: this.Element? this.Element.get("json_data") : undefined,
-                initialTags: this.Element? this.Element.get("tags") : ""
+                initialData: this.Element? this.Element.get? this.Element.get("json_data") : this.Element.json_data : undefined,
+                initialTags: this.Element? this.Element.get? this.Element.get("tags") : this.Element.tags : ""
             })
         }
         
@@ -257,14 +257,14 @@ class TextEditable extends Editable {
     }
 
     getIframeSource = () => {
-        return this.Element && this.haveReadPermission()? "https://www.youtube.com/embed/" + this.Element.get("data") : null
+        return this.Element && this.haveReadPermission()? "https://www.youtube.com/embed/" + (this.Element.get? this.Element.get("data") : this.Element.data) : null
     }
     getYoutubeVideoId = () => {
-        return this.Element && this.haveReadPermission()? this.Element.get("data") : null
+        return this.Element && this.haveReadPermission()? (this.Element.get? this.Element.get("data") : this.Element.data) : null
     }
 
     getIframePlayListId = () => {
-        return this.Element && this.haveReadPermission()? this.Element.get("data") : null
+        return this.Element && this.haveReadPermission()? (this.Element.get? this.Element.get("data") : this.Element.data) : null
     }
 
     render() {

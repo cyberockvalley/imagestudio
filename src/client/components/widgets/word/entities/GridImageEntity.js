@@ -176,7 +176,7 @@ class GridImageEntity extends React.Component {
                         style={{ width: "100%" }}
                     >
                         <div 
-                        style={{display: "flex", flexWrap: "wrap", width: `${width || 100}%`}}>
+                        style={{display: "flex", flexWrap: "wrap", width: `${width || 100}%`}} className="editor-grid-image-output">
                             {
                                 images.map((image, index) => (
                                     <div key={index} style={{
@@ -184,7 +184,7 @@ class GridImageEntity extends React.Component {
                                         height: image.autoHeight? "auto" : image.height + image.heightType,
                                         paddingRight: gridItemsSpacing + "px",
                                         paddingBottom: gridItemsSpacing + "px"
-                                    }}>
+                                    }} className="editor-grid-image-output">
                                         <picture style={{width: "100%", height: "100%"}}>
                                         {
                                             buildFileTags(image.src, this.getImageDisplay(image, width)).map((value, index) => {

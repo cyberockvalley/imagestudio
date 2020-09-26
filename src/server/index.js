@@ -3,7 +3,7 @@ import view from './view'
 import error404 from './errors/error404'
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
-import { StaticRouter as Router } from 'react-router-dom'
+import { matchPath, StaticRouter as Router } from 'react-router-dom'
 import ComponentsRoutes from '../client/ComponentsRoutes'
 import Paths, {FILE_PATHS} from './utils/Paths'
 import { Helmet } from 'react-helmet'
@@ -37,7 +37,7 @@ if(dotenvConfig.error) {
 }
 var app = express()
 
-app.use(`/`, CacheRoute)
+app.use(`*`, CacheRoute)
 app.set('etag', 'strong')
 
 const compression = require('compression')
@@ -153,7 +153,7 @@ app.use(logger("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-app.use('/client', express.static(path.resolve(__dirname, '../client'), { maxAge: 31557600000 }))
+app.use('/client', express.static(path.resolve(__dirname, '../client'), {maxAge: "356d"}))
 
 var api = new ParseServer({
     databaseURI: process.env.DATABASE_URL,
@@ -260,20 +260,21 @@ app.use("/dashboard", dashboard);
 
 app.use("/" + API_SECONDARY_ROOT_DIR, SecondaryApi)
 
-app.use("*", InitialData)
+app.use(Paths, InitialData)
 app.get(Paths, (req, res) => {
-  var initialData = res.locals.initialData
+  var state = res.locals.state
+  matchPath
 
   var body = ReactDOMServer.renderToString(
     <Router location={req.url}>
-      <ComponentsRoutes initialData={initialData}/>
+      <ComponentsRoutes state={state}/>
     </Router>
   )
 
   res.set("Content-Type", "text/html")
   
   const helmet = Helmet.renderStatic();
-  res.status(200).send(view(helmet, initialData, body))
+  res.status(200).send(view(helmet, state, body))
 })
 
 app.use("*", (req, res) => {
