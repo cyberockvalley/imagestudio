@@ -25,7 +25,7 @@ export default (helmet, state, body) => {
 
             <link rel='stylesheet' media='print' onload="this.media='all'" id='bootstrap-min-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?ver=5.4.1' type='text/css' media='all'/>
             <link rel='stylesheet' media="print" onload="this.media='all'" id='font-awesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.1' type='text/css' media='all'/>
-            <link rel="stylesheet" media="print" onload="this.media='all'" href="/client/css/styles.css">
+            <link rel="stylesheet" media="print" onload="this.media='all'" href="/client/css/styles.min.css">
             <noscript>
                 <link rel='stylesheet' id='bootstrap-min-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?ver=5.4.1' type='text/css' media='all'/>
                 <link rel='stylesheet' id='font-awesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.1' type='text/css' media='all'/>
