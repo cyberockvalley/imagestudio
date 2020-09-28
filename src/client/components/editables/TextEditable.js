@@ -299,7 +299,7 @@ class TextEditable extends Editable {
                             placeholder={this.props.placeholder || `${this.keyToText()}...`} onChange={this.handleChange} style={this.getStyle()} />
                     ://else (this.props.edit && this.haveWritePermission())
                         this.props.isIframe || this.props.isYoutube?
-                            this.props.isIframe || iOS()?
+                            this.props.isIframe?
                             <IframeView {...this.props.iframeOptions} iframeSrc={iframeSrc} playListId={iframePlayListId} />
                             :
                             <YoutubeView videoId={youtubeVideoId} {...this.props.iframeOptions} />

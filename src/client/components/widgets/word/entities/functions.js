@@ -50,7 +50,7 @@ const customEntityTransform = (entity, text) => {
       var imageTags = ""
       buildFileTags(image.src, display).forEach(value => {
         if(value.tag == "source") {
-          imageTags += `<source data-srcset="${value.srcSet}"/>`
+          imageTags += `<source data-srcset="${value.srcSet}" type="image/${value.sub_type}" />`
 
         } else {
           imageTags += `<img alt="${alt}" style="width: 100%; height: 100%" class="lazyload" data-srcset="${value.srcSet}" data-src="${getSrc(image.src, display.default)}" />`

@@ -309,7 +309,8 @@ footer .heading{
     opacity: 1;
 }
 #main-navigaton .navbar-toggler {
-    display: none;
+	display: none;
+	font-size: 9px !important;
 }
 #main-navigaton .navbar-toggler .icon {
 	color: #cb8512;
@@ -317,7 +318,8 @@ footer .heading{
 #main-navigaton .navbar-toggler .menu {
 	color: #fff;
 	background: #003768;
-	padding: 5px;
+	padding: 4px !important;
+	border-radius: 3px;
 }
 .page-link{
     border: 1px solid #ca8511;
@@ -358,13 +360,18 @@ footer .heading{
     .navbar-static-top:not(.fixed-top){
         z-index: 999 !important;
         position: absolute;
-        right: 0;
+		right: 0;
+		top: 0;
         width: 100%;
     }
     .fixed-top.show{
         bottom: 0;
 	}
 	.nav-container {max-width: 100% !important; width: 100% !important;}
+	#main-navigaton .container {
+		padding-right: 0px!important;
+		padding-left: 0px!important;
+	}
     #main-navigaton .navbar-toggler {
         display: block;
 	}
@@ -422,7 +429,7 @@ footer .heading{
         color: #fff;
         text-align: left;
         font-size: 12px;
-        height: 7vh;
+        /*height: 7vh;*/
     }
     .navbar-nav .dropdown-menu{
         border: none;
@@ -459,10 +466,10 @@ footer .heading{
 }
 @media screen and (max-width: 375px){
 	#main-navigaton .container{
-		padding-left: 0;
-		padding-right: 0;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
 	}
-	#main-navigaton .navbar-toggler {padding: 5px 20px 5px 5px;}
+	#main-navigaton .navbar-toggler {padding: 5px;}
 	
 
     footer {
@@ -506,7 +513,7 @@ footer .heading{
         padding-left: 0;
         padding-right: 0;
     }
-	#main-navigaton .navbar-toggler {padding: 5px 20px 5px 5px;}
+	#main-navigaton .navbar-toggler {padding: 5px;}
 	
 
     footer {
@@ -2699,3 +2706,6 @@ button.yt-play {
 	z-index: -1;
 }
 button.yt-play.active {z-index: 1;}
+@media screen and (max-width:768px){.header-banner-image{
+    display: none!important
+}}

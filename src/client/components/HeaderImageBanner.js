@@ -18,11 +18,12 @@ class HeaderImageBanner extends React.Component {
         }}
       >
         <ImageEditable
+          className="header-banner-image"
           style={{
-            position: "relative",
+            display: "block",
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
-            height: "100vh",
+            height: "70vh",
             width: "100%",
             backgroundColor: "#000",
             overflow: "hidden"

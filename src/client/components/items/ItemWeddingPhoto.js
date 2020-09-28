@@ -107,6 +107,10 @@ class ItemWeddingPhoto extends Item {
                             spinnerHeight={50}
                             spinnerThickness={7}
                             spinnerRunnerColor="#f33"
+                            imgStyle={{
+                              width: "100%",
+                              height: "auto"
+                            }}
                             style={{
                               width: "100%",
                               height: "100%"

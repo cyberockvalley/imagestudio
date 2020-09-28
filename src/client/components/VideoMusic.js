@@ -11,6 +11,7 @@ import { HTML_DESCRIPTION_LENGTH, SEO_BASE_URL, ROLES, ROWS_PER_LIST } from "../
 import EditableStateContext from "./editables/EditableStateContext";
 import ItemVideo from "./items/ItemVideo";
 import ListEditable from "./editables/ListEditable";
+import { VIDEOS_PER_PAGE } from "./Videos";
 
 const VIDEO_TYPES = {
   "videos": {
@@ -181,7 +182,7 @@ class VideosMusic extends Page {
               readableName={this.getListReadableName()}
               itemReadableName={this.getListItemReadableName()}
               {...this.state.listElementsProps}
-              rowsPerPage={ROWS_PER_LIST}
+              rowsPerPage={VIDEOS_PER_PAGE}
               privateRef={this.videosRef}
               onItem={this.buildVideosItem}
               itemDraggable={true}

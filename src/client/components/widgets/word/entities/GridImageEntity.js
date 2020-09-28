@@ -189,7 +189,7 @@ class GridImageEntity extends React.Component {
                                         {
                                             buildFileTags(image.src, this.getImageDisplay(image, width)).map((value, index) => {
                                                 return value.tag == "source"? 
-                                                <source key={index} data-srcset={value.srcSet} />
+                                                <source key={index} data-srcset={value.srcSet} type={`image/${value.sub_type}`} />
                                                 :
                                                 <img alt={alt} className="lazyload" key={index} data-srcset={value.srcSet} data-src={getSrc(image.src, this.getImageDisplay(image).default)} style={{width: "100%", height: "100%"}} />
                                             })

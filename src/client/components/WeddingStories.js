@@ -119,7 +119,7 @@ class WeddingStories extends Page {
               readableName="Wedding stories"
               itemReadableName="Wedding story"
               {...this.state.listElementsProps}
-              rowsPerPage={ROWS_PER_LIST}
+              rowsPerPage={6}
               privateRef={this.weddingStoriesRef}
               onItem={this.buildWeddingStoriesItem}
               itemDraggable={true}

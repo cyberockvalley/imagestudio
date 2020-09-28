@@ -8,7 +8,7 @@ class Footer extends React.Component {
   }
   render() {
     return (
-      <div className="footer" style={{height: "200px", display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
+      <div className="footer" style={{height: "auto", display: "flex", flexDirection: "column"}}>
         <div>
           <div>
             <TextEditable 
@@ -21,7 +21,7 @@ class Footer extends React.Component {
               {...this.props.textEditableProps} is_input_text/>
           </Link>
         </div>
-        <div style={{fontSize: "11px", textAlign: "center"}}>
+        <div style={{fontSize: "11px", textAlign: "center", marginTop: "15px"}}>
           <div>Site protected by reCAPTCHA</div> 
           <div class="rc-anchor-pt">
             <a href="https://www.google.com/intl/en/policies/privacy/" target="_blank">reCAPTCHA Privacy</a>

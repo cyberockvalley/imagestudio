@@ -170,7 +170,7 @@ class Movies extends Page {
               readableName="Movies"
               itemReadableName="Movie"
               {...this.state.listElementsProps}
-              rowsPerPage={ROWS_PER_LIST}
+              rowsPerPage={6}
               privateRef={this.moviesRef}
               onItem={this.buildMoviesItem}
               itemDraggable={true}

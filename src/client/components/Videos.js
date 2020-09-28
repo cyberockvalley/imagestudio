@@ -36,6 +36,7 @@ const VIDEO_TYPES = {
   }
 }
 
+export const VIDEOS_PER_PAGE = 9
 class Videos extends Page {
   static contextType = EditableStateContext
   constructor(props){
@@ -181,7 +182,7 @@ class Videos extends Page {
               readableName={this.getListReadableName()}
               itemReadableName={this.getListItemReadableName()}
               {...this.state.listElementsProps}
-              rowsPerPage={ROWS_PER_LIST}
+              rowsPerPage={VIDEOS_PER_PAGE}
               privateRef={this.videosRef}
               onItem={this.buildVideosItem}
               itemDraggable={true}

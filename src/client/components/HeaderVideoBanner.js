@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import EditableStateContext from "./editables/EditableStateContext";
 import TextEditable from "./editables/TextEditable";
+import { iOS } from "./editables/YoutubeView";
 import { IFRAME_STYLES } from "./widgets/IframeView";
 
 class HeaderVideoBanner extends React.Component {
@@ -18,7 +19,9 @@ class HeaderVideoBanner extends React.Component {
           marginTop: this.context.edit? "80px" : "0px"
         }}
       >
-        <TextEditable 
+        {
+          iOS()? null :
+          <TextEditable 
           isYoutube
           iframeOptions={{
             showIframe: !this.context.edit,
@@ -42,6 +45,7 @@ class HeaderVideoBanner extends React.Component {
           placeholder="Enter youtube video id..."
           {...this.props.textEditableProps}
           is_input_text />
+        }
           <div style={this.context.edit? {display: "none"} : styles.overlay}></div>
           {/*
         <VideoEditable
