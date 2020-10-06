@@ -5,6 +5,7 @@ import EditableStateContext from "../editables/EditableStateContext";
 import Item from "./Item";
 import { IMAGE_PROCCESSORS, IMAGE_PICTURE_SOURCE_EXTENSIONS } from "../../../both/Constants";
 import ModalView from "../widgets/ModalView";
+import { buildFileTags, getSrc } from "../editables/utils/imagefunc";
 
 class ItemWeddingPhoto extends Item {
   static contextType = EditableStateContext
@@ -94,8 +95,11 @@ class ItemWeddingPhoto extends Item {
                   <div style={styles.modalLeftWidget}>
                       <span onClick={this.prevImage} className={`fa fa-3x fa-arrow-circle-left action white`}></span>
                   </div>
-                  <div style={styles.modalCenterWidget}>
-                      <div style={styles.modalIframe}>
+                  <div style={styles.modalCenterWidget}>{/*
+                    
+                    
+                        */}
+                      <>
                           {
                             !this.state.refresh?
                             <ImageEditable 
@@ -107,16 +111,23 @@ class ItemWeddingPhoto extends Item {
                             spinnerHeight={50}
                             spinnerThickness={7}
                             spinnerRunnerColor="#f33"
-                            imgStyle={{
-                              width: "100%",
-                              height: "auto"
+                            imgStyle={styles.centerImage}
+                            style={styles.centerImage}
+                            onDisplay={(imgSrc, display) => {
+                              return (
+                                <picture style={{width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                                  {
+                                    buildFileTags(imgSrc, display).map((value, index) => {
+                                      return value.tag == "source"? 
+                                      <source key={index} data-srcset={value.srcSet} type={`image/${value.sub_type}`} />
+                                      :
+                                      <img style={styles.centerImage} className={`lazyload`} key={index} data-srcset={value.srcSet} data-src={!display? display : getSrc(imgSrc, display.default)} />
+                                  })
+                                  }
+                                  <div style={{position: "relative"}}></div>
+                                </picture>
+                              )
                             }}
-                            style={{
-                              width: "100%",
-                              height: "100%"
-                            }}
-                            emptyWidth="100%"
-                            emptyHeight="100%"
                             display={{
                               image_exts: IMAGE_PICTURE_SOURCE_EXTENSIONS,
                               default: {queries: `w=300`, proccessors: IMAGE_PROCCESSORS},
@@ -128,7 +139,7 @@ class ItemWeddingPhoto extends Item {
                               ]
                             }} /> : null
                           }
-                      </div>
+                      </>
                   </div>
                   <div style={styles.modalRightWidget}>
                       <span onClick={this.closeImage} className="fa fa-3x fa-times-circle action white"></span>
@@ -143,6 +154,13 @@ class ItemWeddingPhoto extends Item {
 }
 
 const styles = {
+  centerImage: {
+    width: "auto",
+    height: "auto",
+    maxWidth: "100%",
+    maxHeight: "100%",
+    display: "block"
+  },
   modalContainer: {
       display: "flex",
       flexDirection: "row",
@@ -172,7 +190,11 @@ const styles = {
   modalCenterWidget: {
       padding: "50px 0px",
       width: "70%",
-      height: "100%"
+      height: "100%",
+      position: "relative",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
   },
   modalIframe: {
       background: "#000",

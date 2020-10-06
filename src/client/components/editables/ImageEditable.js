@@ -76,6 +76,14 @@ class ImageEditable extends FileEditable {
         this.init()
         //console.log("UploadTracker", "ImageEditable", this.props.link, this.props.id)
         const style = this.getStyle()
+        if(!this.props.edit && this.props.onDisplay) {
+            if(!this.haveReadPermission() || this.state.fileShades.length == 0) {
+                return null
+
+            } else {
+                return this.props.onDisplay(this.state.fileShades[0].src, this.props.display)
+            }
+        }
         return super.render(
             <FileChangerView
                 key={this.props.key}

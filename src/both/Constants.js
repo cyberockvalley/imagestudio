@@ -39,4 +39,4 @@ export const META_VARS = {
     msvalidate: "74E9D8751C4D40F2FD68F7305E53DB82"
 }
 
-export const IMAGE_PROCCESS_VERSION = '1.0.0'
+export const IMAGE_PROCCESS_VERSION = '3.0.0'

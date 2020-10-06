@@ -198,6 +198,9 @@ h1, h2, h3, h4, h5, h6 {
     padding: 1px 0px 2px;
     font-family: Avenir Medium;
 }
+#top-panel .row > div:not(:nth-child(1)) {
+	word-break: keep-all !important;
+}
 #page-intro{
     overflow: hidden;
     height: 100vh;

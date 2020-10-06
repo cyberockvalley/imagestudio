@@ -50,6 +50,8 @@ const getUploadLocation = (req, filename) => {
   return path.resolve(__dirname, '../client/images/uploads/' + (req.params.year_folder? `${req.params.year_folder}/${req.params.month_folder}/` : "") + filename)
 }
 
+const HONNY_PORT_404_LOG_FILE = path.resolve(__dirname, '../../../logs/imagestudio/honny_port_404.txt')
+
 app.use("/youtube", Youtube)
 
 app.get(FILE_PATHS, (req, res, next) => {
@@ -279,6 +281,14 @@ app.get(Paths, (req, res) => {
 
 app.use("*", (req, res) => {
   res.set("Content-Type", "text/html")
+  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  var today = new Date();
+  var day = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
+  var log = `${ip} => ${req.originalUrl} at ${day} ${time}`
+  var stream = fs.createWriteStream(HONNY_PORT_404_LOG_FILE, {flags:'a'});
+  stream.write(log + "\n\n")
+  stream.end()
   res.status(404).send(error404())
 })
 

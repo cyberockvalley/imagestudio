@@ -25,10 +25,12 @@ export default (helmet, state, body) => {
 
             <link rel='stylesheet' media='print' onload="this.media='all'" id='bootstrap-min-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?ver=5.4.1' type='text/css' media='all'/>
             <link rel='stylesheet' media="print" onload="this.media='all'" id='font-awesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.1' type='text/css' media='all'/>
+            <link rel='stylesheet' media="print" onload="this.media='all'" id='vc_google_fonts_sailregular-css'  href='//fonts.googleapis.com/css?family=Sail%3Aregular&#038;ver=5.3.4' type='text/css' />
             <link rel="stylesheet" media="print" onload="this.media='all'" href="/client/css/styles.min.css">
             <noscript>
                 <link rel='stylesheet' id='bootstrap-min-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?ver=5.4.1' type='text/css' media='all'/>
                 <link rel='stylesheet' id='font-awesome-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=5.4.1' type='text/css' media='all'/>
+                <link rel='stylesheet' id='vc_google_fonts_sailregular-css'  href='//fonts.googleapis.com/css?family=Sail%3Aregular&#038;ver=5.3.4' type='text/css' media='all' />
                 <link rel="stylesheet" href="/client/css/styles.min.css">
             </noscript>
             ${helmet.title.toString()}
