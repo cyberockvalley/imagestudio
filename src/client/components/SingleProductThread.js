@@ -455,6 +455,7 @@ class SingleProductThread extends Page {
                     <div>
                       <span>License Type </span>
                       <Link
+                        className="d-none"
                         to="/shop/license"
                         target="_blank"
                         rel="noreferrer"

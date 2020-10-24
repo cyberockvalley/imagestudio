@@ -167,9 +167,13 @@ class VideosCommercial extends Page {
             onCancelEdit={this.handleCancelEdit}
             textEditableProps={this.state.textElementsProps} />
           <NavBar />
-          <HeaderImageBanner  
+          {
+            /**
+             * <HeaderImageBanner  
               name={this.getBannerName()}
               imageEditableProps={this.state.imageElementsProps} />
+             */
+          }
           <ListEditable 
               requestPageMetasOnNewItem={false}
               role={ROLES.mod}

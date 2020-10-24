@@ -14,7 +14,7 @@ export const iOS = () => {
       'iPod'
     ].includes(navigator.platform)
     // iPad on iOS 13 detection
-    || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+    || (navigator.userAgent.includes("Mac")/* && "ontouchend" in document*/)
 }
 class YoutubeView extends React.Component {
     constructor(props) {

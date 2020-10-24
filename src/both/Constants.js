@@ -1,7 +1,7 @@
 export const HTML_DESCRIPTION_LENGTH = 65
 export const API_PORT = 1337
-export const BASE_URL = `http://dev.domain.com:${API_PORT}/`
-export const SEO_BASE_URL = `http://dev.domain.com:${API_PORT}/`
+export const BASE_URL = `https://imagestudio.com/`
+export const SEO_BASE_URL = `https://imagestudio.com/`
 export const PAGE_404 = '/errors/404'
 export const API_ROOT_DIR = "parse"
 export const API_SECONDARY_ROOT_DIR = "api_secondary/v1/"

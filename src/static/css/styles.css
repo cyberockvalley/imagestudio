@@ -2669,7 +2669,11 @@ h3.miracle-body {
 }
 .grecaptcha-badge, .yt-hide-widgets .ytp-chrome-top, .yt-hide-widgets .ytp-show-cards-title, .yt-hide-widgets .ytp-large-play-button, .yt-hide-widgets html body .ytp-button {display: none;}
 @media screen and (max-width: 767px){ 
-	.editor-grid-image-output{width: 100% !important}
+    .editor-grid-image-output{width: 100% !important; height: auto !important;}
+    .call-to-action.footer-button {
+        display: block !important;
+        width: 150px;
+    }
 }
 .no-border{border:none!important}
 .yt-header-video {

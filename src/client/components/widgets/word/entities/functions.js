@@ -11,13 +11,13 @@ export const customDraftToHtml = rawContentState => {
 
 export const getSize = (maxWidth, containerWidth, isAuto, cssWidth, cssWidthType) => {
   if(isAuto || cssWidthType != "%") return maxWidth
-  console.log("getSizeWB", cssWidth, containerWidth)
+  //console.log("getSizeWB", cssWidth, containerWidth)
   if(containerWidth && !isNaN(containerWidth)) {
     cssWidth = (parseInt(cssWidth) * parseInt(containerWidth)) / 100
-    console.log("getSizeWA", cssWidth, containerWidth)
+    //console.log("getSizeWA", cssWidth, containerWidth)
   }
   var s = (parseInt(cssWidth) * maxWidth) / 100
-  console.log("getSizeW", cssWidth, maxWidth, s)
+  //console.log("getSizeW", cssWidth, maxWidth, s)
   return s < 500? 500 : Math.round(s)
 }
 

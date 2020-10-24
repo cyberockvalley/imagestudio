@@ -3,4 +3,5 @@ node_modules/*
 ignore/*
 dist/*
 logs/*
+bk/*
 package-lock.json

@@ -71,11 +71,11 @@ class FooterContactUs extends React.Component {
             </div>
             <Link 
               to="/contact"
-              className="call-to-action"
+              className="call-to-action footer-button"
               style={{
                 display: "inline-block",
                 height: "auto",
-                marginTop: "70px"
+                marginTop: "40px"
               }}
             >
               <TextEditable 

@@ -300,16 +300,60 @@ class Page extends Markup {
         }
     }
 
-    loadPage = (key, options) => {
+    loadPage = (key, options, onLoad, onPageData) => {
         if(isObject(key)) {
             this.setState({page: key})
         }
+        
         this.getPage(key, options)
         .then(page => {
             if(page) {
                 this.setState({page: page})
             }
+            if(onPageData) {
+                onPageData()
+            }
+            if(options.nav_key) {
+                var pageQueryPrev = getParseQuery(ParseClasses.Page)
+                
+                pageQueryPrev.equalTo("key", options.nav_key)
+                pageQueryPrev.lessThan("createdAt", this.state.page.get("createdAt"))
+                pageQueryPrev.descending('createdAt')
+                pageQueryPrev.first()
+                .then(p => {
+                    //console.log("PPP", 1, p)
+                    if(p) {
+                        //console.log("PPP", "prev", p.get("title"))
+                        if(onLoad) onLoad({
+                            cursor: "prev", page: p
+                        })
+                    }
+                })
+                .catch(e => {
+                    //console.log("PPP", 6, JSON.stringify(e))
+                })
 
+                var pageQueryNext = getParseQuery(ParseClasses.Page)
+                
+                pageQueryNext.equalTo("key", options.nav_key)
+                pageQueryNext.greaterThan("createdAt", this.state.page.get("createdAt"))
+                pageQueryNext.ascending('createdAt')
+                pageQueryNext.first()
+                .then(p => {
+                   //console.log("PPP", 2, p)
+                    if(p) {
+                        //console.log("PPP", "next", p.get("title"))
+                        if(onLoad) onLoad({
+                            cursor: "next", page: p
+                        })
+                    }
+                })
+                .catch(e => {//console.log("PPP", 7, JSON.stringify(e))
+            })
+            
+            } else {
+                //console.log("PPP", 9, options)
+            }
             this.onPageDataLoaded()
             
             if(!this.state.page) {
