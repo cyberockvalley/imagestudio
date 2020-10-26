@@ -948,7 +948,7 @@ a:link, a:visited, a:active {
 	position: absolute; left: 0; right: 0;
 }
 #navigation + :not(#intro) {
-	padding-top: 50px !important;
+	padding-top: 100px !important;
 }
 .fixed-top {
 	position: fixed !important;

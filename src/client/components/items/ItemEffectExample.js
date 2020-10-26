@@ -33,15 +33,20 @@ class ItemEffectExample extends Item {
     this.updateSlider(e)
     window.addEventListener('mousemove', this.updateSlider)
     window.addEventListener('mouseup', this.stopSlider)
+
+    
+    window.addEventListener('touchmove', this.updateSlider)
+    window.addEventListener('touchend', this.stopSlider)
   }
 
   stopSlider = e => {
     window.removeEventListener('mousemove', this.updateSlider)
+    window.removeEventListener('touchmove', this.updateSlider)
   }
 
   updateSlider = e => {
     if(this.context.edit) return
-    const xPos = e.pageX
+    const xPos = e.pageX || e.touches[0].pageX
     const container = this.getContainer()
     var offsetX = container.offsetLeft
     var width = container.clientWidth
@@ -57,7 +62,7 @@ class ItemEffectExample extends Item {
       sliderPercentage = 100
     }
     
-    this.setState({sliderXpos: sliderPercentage})
+    this.setState({sliderXpos: sliderPercentage, xPos: xPos, offsetX: offsetX, width: width})
   }
 
   events = {
@@ -73,7 +78,8 @@ class ItemEffectExample extends Item {
       <div className={`effect col-11 col-md-8 effect-height-1 ${this.props.onBuildItemName(this.props.index, "class")}`} 
       style={this.context.edit? {
         display: "flex", flexDirection: "row"
-      } : {}} {...(this.context.edit? null : {onMouseDown: this.handleMouseDown})}>
+      } : {}} {...(this.context.edit? null : {onMouseDown: this.handleMouseDown, onTouchStart: this.handleMouseDown})}>
+        
         <ImageEditable 
           name="photo1"
           id={this.props.onBuildItemName(this.props.index, "photo1")}
